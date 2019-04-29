@@ -1,21 +1,106 @@
-/** Найти числа от 1 до 100,которые:
- 1.Если делятся на 3 то пишем Физ.
- 2.Если делятся на 5 то пишем Баз
- 3. Если и на 3 и на 5 то пишем ФизБаз.
- */
 
-var test = 1;
+var readlineSync = require('readline-sync');
 
-function counter() {
-
-for (var i = 1; i <= 100; i++) {
-
-    console.log(i);
-
-    i % 3 === 0 && process.stdout.write("Fizz");
-    i % 5 === 0 && process.stdout.write("Buzz");
-    console.log("");
-    i +=1;
+/* function year (num) {
+    if (num % 4 === 0 && num % 400 === 0) {
+        console.log('Високосный год');
+    } else {
+        console.log("Обычный год");
+    }  
 };
+*/ 
+
+ /*var n3 = parseInt(readlineSync.question("Task 3 \nType a number "));
+
+function task3(n3) {
+    for ( var i = 1; i < n3; i++) {
+        process.stdout.write(i+", ");
+    };
+    process.stdout.write(""+i);
 };
-console.log (counter(test));
+task3(n3);
+
+
+var n4 = parseInt(readlineSync.question("\nTask 4 \nType a number "));
+function task4(n4) {
+
+    
+    for( var i = 1; i <= n4; i++) {
+
+    for( var j = 1; j < n4; j++) {
+        process.stdout.write("*");
+       }; 
+       console.log('*')
+    };
+};
+task4(n4);
+
+var n5 = parseInt(readlineSync.question("\nTask 5 \nType a number "));
+
+function task5(n5) {
+
+var result = '';
+    for( var i = 1; i <= n5; i++) {
+        
+        result = `${result}*`
+        console.log(result)
+    }   
+}
+task5(n5);
+*/
+/* var n6 = parseInt(readlineSync.question("\nTask 6 \nType a number "));
+
+function task6(n6) {
+
+    
+    for( var i = 0; i < n6; n6--) {
+
+        for( var j = 1; j < n6; j++) {
+        process.stdout.write("*");
+        };
+        console.log('*');
+    }; 
+    
+};
+task6(n6);
+*/
+ var n7 = parseInt(readlineSync.question("\nTask 7 \nType a number "));
+
+function task7(n7) {
+    
+    var newN = n7;
+
+        for ( var i = 0; i < n7; n7--) {
+
+            for ( var j = 1; j < n7; j++) {
+                process.stdout.write("*");
+                };
+
+                console.log('*');    
+         };
+
+         for( var i = 0; i < n5a; i++) {
+
+            for( var j = 1; j <= i; j++) {
+            process.stdout.write("*");
+            };
+            console.log('*');
+        }; 
+        };
+task7(n7);
+
+var n5a = parseInt(readlineSync.question("\nTask 6 \nType a number "));
+
+function task5a(n5a) {
+
+    
+    for( var i = 0; i < n5a; i++) {
+
+        for( var j = 1; j <= i; j++) {
+        process.stdout.write("*");
+        };
+        console.log('*');
+    }; 
+    
+};
+task5a(n5a);

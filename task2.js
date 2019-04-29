@@ -8,5 +8,10 @@ var secondNum = parseInt(readlineSync.question("Okey, its a first number,now typ
 c = (firstNum ** 2 + 2*secondNum -4) / (firstNum * secondNum);
 console.log("The answer is " + c);
 
-/**** */
-xswd
+function asd(num) {
+    if (num % 100 === 0 && num % 400 !== 0) {
+        console.log("Високосный год");
+    } else {
+        console.log("Обычный год")
+    };
+};

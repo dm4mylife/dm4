@@ -125,30 +125,74 @@ function task8(n8) {
     };     
 };
 task8(n8);
-*/
-var n9 = parseInt(readlineSync.question("\nTask 8 \nType a number "));
+
+/*var n9 = parseInt(readlineSync.question("\nTask 8 \nType a number "));
 
 function task8(n9) {
 
-    
-    for ( var k = 0; k < n9; k++) {
-        process.stdout.write("*")
-    };
-    console.log('');
-    process.stdout.write(" ");
-    for( var i = 1; i < n9; i++) {
-        process.stdout.write("*");
-    }
-    console.log('');
-    process.stdout.write("  ");
-    for( var k = 2; k < n9; k++) {
-        process.stdout.write("*");
-    }
-    console.log('');
-    process.stdout.write("   ");
-    for( var m = 3; m < n9; m++) {
-        process.stdout.write("*");
-    };
+        
+            for ( var g = 0; g < n9; g++) {
+                    process.stdout.write('*');
+            }; 
+                console.log('');
 
-};
+                    for( var i = 0; i <= n9; i++) {
+
+                        for( var j = 0; j <= i; j++) {
+                            process.stdout.write(" ");
+                        };
+                    
+                        for( var l = 1; l < n9; l++) {
+                            process.stdout.write("*");
+                
+                        };
+                        console.log('');
+                        n9 -= 1; 
+                    };                        
+                };
+                            
 task8(n9);
+*/
+var n10 = parseInt(readlineSync.question("\nTask 10 \nType a number "));
+function task10(n10) {
+
+    var n10a = 0;
+    var n10a = n10;
+    console.log('');
+
+for ( var i = 0; i < n10; i++) {
+    process.stdout.write("*");
+    };
+    console.log('');
+
+        var k = 0;
+        for (var h = 2; h < n10; n10-=2) {
+
+            for( var j = 0; j <= k; j++) {
+                process.stdout.write(" ");
+            };
+            k += 1;
+            for ( var i = 2; i < n10; i++) {
+                process.stdout.write("*");
+            };
+            console.log('');
+        };
+        var k = 3;
+        for (var h = 3; h < n10a; n10a-=2) {
+
+            for( var j = 3; j < n10a; j+=2) {
+                process.stdout.write(" ");
+            };
+            for ( var i = 0; i < k; i++) {
+                process.stdout.write("*");
+            };
+            k += 2;
+            console.log('');
+        };
+
+for ( var n = 0; n < k; n++) {
+        process.stdout.write("*");
+    };
+    console.log('');
+};     
+task10(n10);

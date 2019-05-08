@@ -1,5 +1,5 @@
 
-
+/*
 human = {
     name: "Nick",
     age: 28,
@@ -14,3 +14,21 @@ function obj(human) {
 }
 
 console.log(obj(human));
+*/;
+
+var readlineSync = require('readline-sync');
+
+var n = parseInt(readlineSync.question("Task 1 \nType a number "));
+a=1;
+b=1;
+var c=1;
+;
+function fibo(n) {
+for (var i = 3; i <= n && n !==1 && n !==2; i++) {
+    c=a+b;
+    a=b;
+    b=c;
+};
+return c;
+};
+console.log(fibo(n));

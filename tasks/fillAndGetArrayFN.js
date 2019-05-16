@@ -12,8 +12,10 @@ function fillArray() {
     var min = 0;
 
     var random =  Math.floor(Math.random() * (max-min+1) + min);
+
     newArray.push(random);
     };
+    
     console.log(newArray);
     return newArray;
 };
@@ -26,12 +28,19 @@ function findIndexArray(newArray) {
     for (var i = 0; i < newArray.length; i++) {
 
         if (newArray[i] === n) {
-        
-            console.log('Found ' + newArray[i]);
             return newArray[i];
         }; 
     };
-    console.log('Current number index not found');
     return -1;
 };
 findIndexArray(newArray);
+
+var neededIndex = findIndexArray(newArray);
+
+if ( neededIndex === -1) {
+
+    console.log('Current number index is not found')
+} else {
+
+    console.log('Found ' + neededIndex);
+}

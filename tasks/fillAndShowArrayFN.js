@@ -26,7 +26,7 @@ for (var i = 0; i < newArray.length-1 ; i++) {
 process.stdout.write(newArray[i]+', ');
 };
 
-console.log(newArray[newArray.length-1]); /** эта строчка выводит желтым + не срабатывает если process.stdout.write(newArray[newArray.length-1])    */
+process.stdout.write(''+newArray[newArray.length-1])
 return newArray;
 console.log('')
 };

@@ -1,5 +1,5 @@
 var readlineSync = require('readline-sync');
-
+/**
 var n = parseInt(readlineSync.question("Lucky ticket6\n Type a number "));
 
 function luckyTicket6(n) {
@@ -33,7 +33,6 @@ if ( Math.floor(firstPart) === Math.round(lastPart)) {
 };
 luckyTicket6(n);
 
-
 var n = parseInt(readlineSync.question("Lucky ticket11\n Type a number "));
 
 function luckyTicket11(n) {
@@ -60,6 +59,41 @@ function luckyTicket11(n) {
     };
 
     
+if ( Math.round(lastPart) === Math.round(firstPart)) {
+    
+    console.log('\nCongratilation, you are the winner!!!\n');
+
+} else {
+
+    console.log('\nSorry,next time will be luck :(\n')
+};
+};
+luckyTicket11(n);
+*/
+var n = parseInt(readlineSync.question("Lucky ticket11\n Type a number "));
+
+function luckyTicket11(n) {
+
+    var lastPart = 0;
+    var firstPart = 0;
+
+    for ( var i = 0; i < 5; i++) {
+
+        firstPart = n % 10 + firstPart;
+        n = Math.floor(n / 10);
+
+    };
+
+    n = Math.floor(n / 10);
+    
+    for ( var j = 0; j < 5; j++ ) {
+
+        lastPart = n % 10 + lastPart;
+        n = Math.floor(n / 10);
+            
+    };
+   
+
 if ( Math.round(lastPart) === Math.round(firstPart)) {
     
     console.log('\nCongratilation, you are the winner!!!\n');

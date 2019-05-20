@@ -26,7 +26,7 @@ function sort(newArray) {
 
     for (var i = 0; i < newArray.length ; i++) {
 
-        for ( var j = 0; j < newArray.length-1 - i; j++) {
+        for ( var j = 0; j < newArray.length-1; j++) {
 
             if (newArray[j] > newArray[j+1]) {
                 var swap = newArray[j];
@@ -35,7 +35,7 @@ function sort(newArray) {
             };
         };  
     };
-    
+
     console.log('');   
     console.log(newArray);
     return newArray;

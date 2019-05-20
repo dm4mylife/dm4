@@ -1,28 +1,38 @@
 
-/*
-human = {
-    name: "Nick",
-    age: 28,
-    gender: 'male',
-};
-var gNick = 'age'
-human.age = 30;
-function obj(human) {
-    for (var key in human) {
-        console.log(key + human.key);
-    }
-}
-
-console.log(obj(human));
-*/;
-
 var readlineSync = require('readline-sync');
 
-var n = parseInt(readlineSync.question("Task 1 \nType a number "));
+
+var n = parseInt(readlineSync.question("Factorial in for\n Type a number "));
+
+ function factorial(n) {
+
+    var current = 1;
+
+        for (var i = 1; i < n ; i++) {
+            
+         current = current * (i + 1) ;
+        };
+        return current;
+};
+console.log(factorial(n))
+
+n = parseInt(readlineSync.question("Factorial in iter.process\n Type a number "));
+
+ function factorial1(n) {
+
+   if ( n === 1 ){
+       return 1;
+   } else {
+       n = n * factorial1(n-1)
+   };
+};
+console.log(factorial1(n));
+
+/*
+n = parseInt(readlineSync.question("Task 1 Fibonacci in for \nType a number "));
 a=1;
 b=1;
 var c=1;
-;
 function fibo(n) {
 for (var i = 3; i <= n && n !==1 && n !==2; i++) {
     c=a+b;
@@ -32,3 +42,22 @@ for (var i = 3; i <= n && n !==1 && n !==2; i++) {
 return c;
 };
 console.log(fibo(n));
+
+
+n = parseInt(readlineSync.question("Task 2 Fibonacci in iter.process \nType a number "));
+a=1;
+b=1;
+var c=1;
+
+function fibo1(n) {
+if ( n === 1 || n === 2) {
+    return a;
+} else {
+    c = fibo1(n-1) + fibo1(n-2);
+}
+return c;
+};
+
+console.log(fibo1(n));
+*/
+

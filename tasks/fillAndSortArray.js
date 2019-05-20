@@ -21,6 +21,8 @@ function fillArray() {
 };
 fillArray();
 console.log('');
+
+/** 
 function sort(newArray) {
 
 
@@ -38,6 +40,25 @@ function sort(newArray) {
 
     console.log('');   
     console.log(newArray);
+    return newArray;
+};
+sort(newArray);
+*/
+
+function sort(newArray) {
+
+       number = newArray[0]; 
+        
+    for (var i = 0; i < newArray.length ; i++) {
+       
+        if ( number > newArray[i]) {
+        number = newArray[i];    
+        };
+    };
+
+    
+    console.log('');   
+    console.log(number);
     return newArray;
 };
 sort(newArray);

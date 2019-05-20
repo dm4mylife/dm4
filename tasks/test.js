@@ -4,21 +4,20 @@ var readlineSync = require('readline-sync');
 var n = parseInt(readlineSync.question("Type a number "));
 
 function isPerfectNumber(n) {
+     var a = false;
+     var counter = 5;
 
-var divisor = 0;
-    for ( var i = 0; i < n; i++ ) {
-    
-        if ( n % i === 0 ) {
-        divisor = divisor + i;
-        console.log(divisor)
+    for (var i = 0; i < n;i++) {
+
+        console.log(i)
+       
+        if ( i === 3) {
+            a = true;
+            counter = 10
         };
-    };   
-    if ( divisor === n) {
-        console.log('Success');
-        return true;
-    }  else {
-        console.log('Failed');
-        return false;
-    };
-};
-isPerfectNumber(n);
+        if (!a) break;
+        
+    }; 
+    return counter;      
+}; 
+console.log(isPerfectNumber(n));

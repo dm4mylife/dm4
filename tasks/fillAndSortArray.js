@@ -22,7 +22,6 @@ function fillArray() {
 fillArray();
 console.log('');
 
-/** 
 function sort(newArray) {
 
 
@@ -30,12 +29,18 @@ function sort(newArray) {
 
         for ( var j = 0; j < newArray.length-1; j++) {
 
+            var wasSwap = false;
+
             if (newArray[j] > newArray[j+1]) {
                 var swap = newArray[j];
                 newArray[j] = newArray[j+1];
                 newArray[j+1] = swap;
+                wasSwap = true;
             };
-        };  
+            
+        };
+        
+          if (!wasSwap)  break ;
     };
 
     console.log('');   
@@ -43,8 +48,8 @@ function sort(newArray) {
     return newArray;
 };
 sort(newArray);
-*/
 
+/** 
 function sort(newArray) {
 
        number = newArray[0]; 
@@ -62,3 +67,4 @@ function sort(newArray) {
     return newArray;
 };
 sort(newArray);
+*/

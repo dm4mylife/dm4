@@ -26,14 +26,16 @@ function sort(newArray) {
 
     for ( var i = 1; i < newArray.length; i++) {
 
-        var current = newArray[i]
-        
-        for ( var j = i; newArray[j -1 ] > current ; j--) {
+        for ( var j = i;  j >= 0; j--) {
+            
+            if (newArray[j-1] > newArray[j]) {
 
-              newArray[j] = newArray[j-1];  
-        
-        };
-        newArray[j] = current;
+            var swap = newArray[j];  
+            newArray[j] = newArray[j-1];
+            newArray[j-1] = swap;
+
+            };
+        }; 
     };
     return newArray;
 };

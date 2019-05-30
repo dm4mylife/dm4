@@ -7,88 +7,62 @@ function tellANumber(n) {
     var arr0 = [ 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine' ];
     var arr1 = [ 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifthteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
     var arr2 = ['twenty', 'thirty', 'fourty', 'fifthy', 'sixty', 'seventy', 'eighty', 'ninety'];
-    var arr3 = [ 'hundred' ];
-    var arr4 = [ 'thousand' ];
-    var arr5 = [ 'million' ];
-    var arr6 = [ 'billion' ];
+    var arr3 = [ 'hundred' , ' thousand', 'million', 'billion'];
+
     var result = '';
+    var sepNum = 0;
     
+
+
+
+
+
+
+
+        if ( n === 0) {
+
+            process.stdout.write(arr0[0]); 
+
+        };
 
         if ( n >= 100 && n <= 999 ) {
 
             var sepNum = Math.floor( n / 100 );
-            var currentArray = arr0;
+            
+            process.stdout.write(arr0[sepNum]+' '+arr3[0]); 
 
-            for ( var i = 0; i < arr0.length; i++ ) { 
+            if ( n % 100 !== 0 ) {
 
-                    var currentIndex = currentArray[i];
-
-                if ( currentArray[i] === currentArray[sepNum] ) {
-                    
-                    result = `${currentIndex} ${result}`;
-                };
-            }; 
-
-            if ( n % 100 === 0) {
-                currentIndex = arr3[0];
-                 result = `${result}${currentIndex}`;
-            } else {
-                currentIndex = arr3[0];
-                result = `${result}${currentIndex} and `;
+            process.stdout.write(' and ');   
 
             };
 
-            n = n - (Math.floor( n / 100) * 100);
-        }; 
-
+        };
+           
+        n = n - (Math.floor( n / 100) * 100);
+         
         if (  n > 20 && n < 100  ) {
 
             sepNum = Math.floor( n / 10 ) - 2;
-            currentArray = arr2;
-
-            for ( var i = 0; i < arr2.length; i++ ) {
-
-                    currentIndex = currentArray[i];
-
-                if ( currentArray[i] === currentArray[sepNum] ) {
-                    
-                    result = `${result}${currentIndex}`;
-                };
-            };
+            
+            process.stdout.write(arr2[sepNum]);
 
         n = n % 10;   
+
         };
+
         sepNum = n % 10;
 
         if (  n >= 10 && n <= 20   ) {
-
         
-        currentArray = arr1;
+        process.stdout.write(arr1[sepNum]);
 
-            for ( var i = 0; i < arr1.length; i++ ) { 
-
-                    currentIndex = currentArray[i];
-
-                if ( currentArray[i] === currentArray[sepNum] ) {
-                    
-                    result = `${result}${currentIndex}`;
-                };
-            }; 
         };
 
         if ( n <= 9 && n !== 0) {
 
-        currentArray = arr0;  
-
-            for ( var i = 0; i < arr0.length; i++ ) {
-
-                    currentIndex = currentArray[i];
-
-                if ( currentArray[i] === currentArray[sepNum]) {
-                
-                    result = `${result}${currentIndex}`;
-                };
-            };
+        process.stdout.write(arr0[sepNum]);
+            
         };
         
         return result;

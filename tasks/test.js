@@ -1,12 +1,16 @@
 
-var readlineSync = require('readline-sync');
+var n =5
 
-var n = parseInt(readlineSync.question("Type a number "));
+var m =5;
+var result =1;
 
-var arr0 = [ 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten' ];
+for ( var i = 1 ; i < n; i++) {
+var k = i % m;
+result = result * k + 2;
+console.log(result)
+
+}
 
 
 
-
-
-  console.log(arr0[n] === arr0[4])  
+  console.log(result)  

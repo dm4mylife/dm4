@@ -1,5 +1,5 @@
 var readlineSync = require('readline-sync');
-
+/* 
 var n = readlineSync.question("Word\n"); 
 var m = readlineSync.question("Char\n"); 
 
@@ -19,7 +19,26 @@ function findChar(n,m) {
     return counter;
 
 };
-console.log(findChar(n,m));
+console.log(findChar(n,m)); */
+
+/* var n = readlineSync.question("Word\n"); 
+
+function reverseString(n) {
+
+    var k = 0;
+
+    for ( var i = n.length-1; i >= 0; i--) {
+
+        if ( n[i] !== n[k] ) {
+
+            return console.log('Не является палиндромом')
+            break;
+        };
+        k++;
+    };
+    return console.log('Палидром')
+};
+console.log(reverseString(n));
 
 var n = readlineSync.question("Word\n"); 
 
@@ -40,23 +59,34 @@ function reverseString(n) {
     return result;
 
 };
-console.log(reverseString(n)); 
+console.log(reverseString(n)); */ 
 
 var n = readlineSync.question("Word\n"); 
 
 function reverseString(n) {
 
-    var k = 0;
+    var i = 0;
+    var k = n.length - 1;
+    var empty = ' ';
 
-    for ( var i = n.length-1; i >= 0; i--) {
-
-        if ( n[i] !== n[k] ) {
+    while ( i < k ) {
+        
+        while ( n[i] === empty ) {
+            i++;
+        };
+        while ( n[k] === empty ) {
+            k--; 
+        };
+        if  ( n[i] !== n[k] ) {
 
             return console.log('Не является палиндромом')
             break;
         };
-        k++;
+        k--;
+        i++;
+
     };
-    return console.log('Палидром')
-};
-console.log(reverseString(n));
+     return console.log('Палидром')   
+    };
+
+console.log(reverseString(n)); 

@@ -28,12 +28,10 @@ function tellANumber(n) {
         if ( n === 0 && i === 0) { 
 
             process.stdout.write(arr0[0]+' '); 
-            i = 3;
+            i = 4;
+            clone = -1;
         };
 
-       if ( clone === 0 ) {
-        
-       };
         if ( ( clone / kkk ) > 1 ) {
     
             clone = n % kkk;
@@ -52,10 +50,9 @@ function tellANumber(n) {
             i =  1;
   
           } else if  ( clone % k === 0 ) {
-            clone = n % k;
-            sepNum = Math.floor( n / k );
-            process.stdout.write(arr0[sepNum]+' '+arr3[1]);
             
+            n = Math.floor( n / k  );
+            clone = n % k;
             i = 3;
 
         } else if ( ( clone / k ) > 1 ) {
@@ -66,16 +63,16 @@ function tellANumber(n) {
             
           } else {
 
-              i = 3;
+              i = 4;
 
           };
-    
+         
        
         if ( n >= 100 && n <= 999 ) {
 
             var sepNum = Math.floor( n / 100 );
             
-            process.stdout.write(arr0[sepNum]+' '+arr3[0]+' '); 
+            process.stdout.write(arr0[sepNum]+' '+arr3[0]+' '+' and '); 
 
             n = n % 100;
 
@@ -135,6 +132,10 @@ function tellANumber(n) {
             n = clone
             
         };
+        if ( i === 3 ) {
+            process.stdout.write(' '+arr3[1]);
+
+        }
 
     };
 

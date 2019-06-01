@@ -19,8 +19,12 @@ class Square extends React.Component {
   }
   
   class Board extends React.Component {
-    renderSquare(i) {
+    renderSquare() {
       return <Square />;
+    }
+
+    componentDidMount() {
+      console.log(this.props)
     }
   
     render() {
@@ -54,7 +58,7 @@ class Square extends React.Component {
       return (
         <div className="game">
           <div className="game-board">
-            <Board />
+            <Board size='900' />
           </div>
           <div className="game-info">
             <div>{/* status */}</div>

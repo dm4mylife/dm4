@@ -1,22 +1,19 @@
-var readlineSync = require('readline-sync');
-var length = parseInt(readlineSync.question("Type width \n"));
-var width = parseInt(readlineSync.question("Type length \n"));
 
 function arr2d(width,length) {
 
-var y = [];
+    var y = [];
 
     for ( var i = 0; i < width; i++ ) {
 
-    var x = [];
+        var x = [];
 
         for (var k = 0; k < length; k++) {
 
-        var max = 100;
-        var min = 0;
-        var random =  Math.floor(Math.random() * (max-min+1) + min);
+            var max = 100;
+            var min = 0;
+            var random =  Math.floor(Math.random() * (max-min+1) + min);
 
-        x.push(random);
+            x.push(random);
 
         };
 
@@ -28,10 +25,32 @@ return y;
 
 }; 
 
-function print() {
-    console.log(arr2d(width,length))
+
+function print(r) {
+
+    for ( var i = 0; i < r.length; i++) {
+
+        for ( var j = 0; j < r[i].length; j++ ) {
+
+            process.stdout.write(r[i][j]+'\t');
+
+        };
+        
+        process.stdout.write('\n');
+
+    };
+    
+    
 };
-print(arr2d)
+
+var readlineSync = require('readline-sync');
+var l = parseInt(readlineSync.question("Type width \n"));
+var w = parseInt(readlineSync.question("Type length \n"));
+
+var r = arr2d(w, l);
+console.log(r);
+print(r);
+
 
 
 

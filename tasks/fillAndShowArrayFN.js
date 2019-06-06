@@ -22,12 +22,12 @@ console.log('\nPrinting array index\n');
 
 function showArray(newArray) {
 
-for (var i = 0; i < newArray.length-1 ; i++) {
-process.stdout.write(newArray[i]+', ');
-};
+    for (var i = 0; i < newArray.length-1 ; i++) {
+        process.stdout.write(newArray[i]+', ');
+    };
 
-process.stdout.write(''+newArray[newArray.length-1])
-return newArray;
-console.log('')
+    process.stdout.write(''+newArray[newArray.length-1])
+    return newArray;
+    console.log('')
 };
 showArray(newArray);

@@ -23,6 +23,24 @@ function fill(width,length) {
 return y;
 
 };
+function createSum(r) { 
+
+    var newArray = [];
+    var amount = 0;
+
+    for ( var i = 0; i < l; i++ ) {
+
+        for ( var j = 0; j < r[i].length; j++) {
+
+            var counter = r[i][j];
+            amount = amount + counter;
+            
+        };
+        
+        newArray.push(amount);
+        amount = 0;
+    };
+};
 function print() {
 
     console.log(r);
@@ -33,7 +51,10 @@ function print() {
     
     for ( var i = 0; i < r.length; i++) {
 
+          var team = i;
 
+    process.stdout.write('team '+team+'\t'+'\t');
+    
             for ( var j = 0; j < r[i].length; j++ ) {
                 
                 var counter = r[i][j];
@@ -46,7 +67,7 @@ function print() {
     process.stdout.write(' | \t'+currentCounter)
     process.stdout.write('\n');
     currentCounter = 0;
-
+            
     }; 
 
     console.log('\n'+'___\t'.repeat(l)+'\n')
@@ -69,44 +90,34 @@ function print() {
     };    
     
 console.log(`\n\nTotal: ${resultAll}\n`);
-
-}; 
-function sort() {
-
-var newArray = [];
-var amount = 0;
-
-    for ( var i = 0; i < l; i++ ) {
-
-        for ( var j = 0; j < r[i].length; j++) {
-
-            var counter = r[i][j];
-            amount = amount + counter;
-            
-        };
-
-    newArray.push(amount);
-    };
-    console.log(newArray);
     
-            for ( var i = 0; i < l; i++ ) {
+}; 
+function sort(r) {
 
-                for ( var j = i + 1; j < newArray; j++ ) {
-        
-                    var wasSwap = false;
-        
-                    if ( newArray[i] > newArray[j] ) {
-         
-                        var swap = newArray[i];
-                        newArray[i] = newArray[j];
-                        newArray[j] = swap;
-                        wasSwap = true;
-        
-                    };   
-                };
+    for ( var i = 0; i < newArray.length-1; i++ ) {
+    
+    let wasSwap = false;
 
-                if ( !wasSwap ) break;
+        for ( var j = i + 1; j < newArray.length; j++ ) {
+
+            if ( newArray[i] < newArray[j] ) {
+    
+                var swap = newArray[i];
+                newArray[i] = newArray[j];
+                newArray[j] = swap;
+                wasSwap = true;
+
+                var swapI = r[i];
+                r[i] = r[j];
+                r[j] = swapI;
+                
             };   
+        };
+        
+        if ( !wasSwap ) break;
+        
+    }; 
+     
 };     
 
 var readlineSync = require('readline-sync');
@@ -114,16 +125,13 @@ var l = parseInt(readlineSync.question("Type length \n"));
 var w = parseInt(readlineSync.question("Type width \n"));
 console.log('');
 
+
 fill(l,w);
 var r = fill(l,w);
 
+createSum(r);
+
 print(r);
 
-sort(r);    
-
-
-
-
-
-
+sort(r); 
 

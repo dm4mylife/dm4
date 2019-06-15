@@ -1,9 +1,9 @@
-function fill(width,length) {
+function teams(length,width) {
 
     var y = [];
-
+    
     for ( var i = 0; i < width; i++ ) {
-
+        team = i;
         var x = [];
 
         for (var k = 0; k < length; k++) {
@@ -23,42 +23,72 @@ function fill(width,length) {
 return y;
 
 };
-function createSum(r) { 
+function createSum(result) { 
 
     var newArray = [];
     var amount = 0;
 
-    for ( var i = 0; i < l; i++ ) {
+    for ( var i = 0; i < w; i++ ) {
 
-        for ( var j = 0; j < r[i].length; j++) {
+        for ( var j = 0; j < l; j++) {
 
-            var counter = r[i][j];
+            var counter = result[i][j];
             amount = amount + counter;
             
         };
         
         newArray.push(amount);
         amount = 0;
-    };
+    }; 
+
+    return newArray;
+    
 };
+function sort(result,sums) {
+    
+    for ( var i = 0; i < sums.length-1; i++ ) {
+    
+    let wasSwap = false;
+
+        for ( var j = i + 1; j < sums.length; j++ ) {
+
+            if ( sums[i] < sums[j] ) {
+    
+                var swap = sums[i];
+                sums[i] = sums[j];
+                sums[j] = swap;
+                wasSwap = true;
+
+                var swapI = result[i];
+                result[i] = result[j];
+                result[j] = swapI;
+                
+            };   
+        };
+        
+        if ( !wasSwap ) break;
+        
+    };
+    return sums;
+  
+}; 
 function print() {
 
-    console.log(r);
+    console.log(result);
     console.log('');
     var resultAll = 0;
-    var result = 0;
+    var result1 = 0;
     var currentCounter = 0;
     
-    for ( var i = 0; i < r.length; i++) {
-
-          var team = i;
-
+    for ( var i = 0; i < result.length; i++) {
+        var team  = i;
+    
     process.stdout.write('team '+team+'\t'+'\t');
     
-            for ( var j = 0; j < r[i].length; j++ ) {
+            for ( var j = 0; j < result[i].length; j++ ) {
                 
-                var counter = r[i][j];
-                process.stdout.write(r[i][j]+'\t');
+                var counter = result[i][j];
+                process.stdout.write(result[i][j]+'\t');
                 currentCounter = currentCounter + counter;
                 resultAll = resultAll + counter;
                 
@@ -70,55 +100,30 @@ function print() {
             
     }; 
 
-    console.log('\n'+'___\t'.repeat(l)+'\n')
+    process.stdout.write('\n'+'\t'.repeat(2)+'___\t'.repeat(l)+'\n'+'\n'+'\t'.repeat(2));
+    
 
     for ( var k = 0; k < l; k++ ) {
 
-         for ( var i = 0; i < r.length; i++ ) {
+         for ( var i = 0; i < result.length; i++ ) {
 
             for ( var j = k; j <= k; j++ ) {
 
-                var currentII = r[i][j];
-                result = result + currentII;
+                var currentII = result[i][j];
+                result1 = result1 + currentII;
                     
             };
         };
             
-    process.stdout.write(result + '\t')
-    result = 0;
+    process.stdout.write(result1 + '\t')
+    result1 = 0;
 
     };    
     
 console.log(`\n\nTotal: ${resultAll}\n`);
     
 }; 
-function sort(r) {
-
-    for ( var i = 0; i < newArray.length-1; i++ ) {
     
-    let wasSwap = false;
-
-        for ( var j = i + 1; j < newArray.length; j++ ) {
-
-            if ( newArray[i] < newArray[j] ) {
-    
-                var swap = newArray[i];
-                newArray[i] = newArray[j];
-                newArray[j] = swap;
-                wasSwap = true;
-
-                var swapI = r[i];
-                r[i] = r[j];
-                r[j] = swapI;
-                
-            };   
-        };
-        
-        if ( !wasSwap ) break;
-        
-    }; 
-     
-};     
 
 var readlineSync = require('readline-sync');
 var l = parseInt(readlineSync.question("Type length \n"));
@@ -126,12 +131,13 @@ var w = parseInt(readlineSync.question("Type width \n"));
 console.log('');
 
 
-fill(l,w);
-var r = fill(l,w);
+var result = teams(l,w);
 
-createSum(r);
+print(result);
 
-print(r);
+var sums = createSum(result);
 
-sort(r); 
+var st = sort(result,sums);
 
+print(st)
+ 

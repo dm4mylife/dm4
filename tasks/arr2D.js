@@ -1,5 +1,6 @@
-function teams(length,width) {
+function createArray2d(length,width) {
 
+ 
     var y = [];
     
     for ( var i = 0; i < width; i++ ) {
@@ -44,7 +45,7 @@ function createSum(result) {
     return newArray;
     
 };
-function sort(result,sums) {
+function sort(teams,result,sums) {
     
     for ( var i = 0; i < sums.length-1; i++ ) {
     
@@ -59,6 +60,10 @@ function sort(result,sums) {
                 sums[j] = swap;
                 wasSwap = true;
 
+                var swapT = teams[i];
+                teams[i] = teams[j];
+                teams[j] = swapT;
+
                 var swapI = result[i];
                 result[i] = result[j];
                 result[j] = swapI;
@@ -72,58 +77,35 @@ function sort(result,sums) {
     return sums;
   
 }; 
-function print() {
-
-    console.log(result);
-    console.log('');
-    var resultAll = 0;
+function print(teams, result, sums) {
     var result1 = 0;
-    var currentCounter = 0;
     
     for ( var i = 0; i < result.length; i++) {
-        var team  = i;
-    
-    process.stdout.write('team '+team+'\t'+'\t');
-    
-            for ( var j = 0; j < result[i].length; j++ ) {
-                
-                var counter = result[i][j];
-                process.stdout.write(result[i][j]+'\t');
-                currentCounter = currentCounter + counter;
-                resultAll = resultAll + counter;
-                
-            };
+        process.stdout.write(teams[i]+'\t'+'\t');
+        for ( var j = 0; j < result[i].length; j++ ) {
+            process.stdout.write(result[i][j]+'\t');
+        };
 
-    process.stdout.write(' | \t'+currentCounter)
-    process.stdout.write('\n');
-    currentCounter = 0;
-            
+        process.stdout.write(' | \t'+sums[i]);
+        process.stdout.write('\n');            
     }; 
 
     process.stdout.write('\n'+'\t'.repeat(2)+'___\t'.repeat(l)+'\n'+'\n'+'\t'.repeat(2));
     
 
-    for ( var k = 0; k < l; k++ ) {
+   for ( var i = 0; i < result.length; i++) {
+        var team  = i;
 
-         for ( var i = 0; i < result.length; i++ ) {
+        currentCounter = 0;
 
-            for ( var j = k; j <= k; j++ ) {
-
-                var currentII = result[i][j];
-                result1 = result1 + currentII;
-                    
-            };
+        for ( var j = 0; j < result[i].length; j++ ) {
+            currentCounter= currentCounter + result[j][i];
         };
-            
-    process.stdout.write(result1 + '\t')
-    result1 = 0;
 
-    };    
-    
-console.log(`\n\nTotal: ${resultAll}\n`);
-    
-}; 
-    
+    }; 
+    console.log('')
+        
+};    
 
 var readlineSync = require('readline-sync');
 var l = parseInt(readlineSync.question("Type length \n"));
@@ -131,13 +113,18 @@ var w = parseInt(readlineSync.question("Type width \n"));
 console.log('');
 
 
-var result = teams(l,w);
+var result = createArray2d(l,w);
 
-print(result);
+var teams = [];
+
+for ( var i = 1; i <= w; ++i ) {
+    teams.push("Team " + i);
+};
 
 var sums = createSum(result);
 
-var st = sort(result,sums);
+print(teams, result, sums);
 
-print(st)
- 
+var st = sort(teams, result,sums);
+
+print(teams, result, sums);

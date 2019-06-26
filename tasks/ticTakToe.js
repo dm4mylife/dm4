@@ -1,83 +1,87 @@
 function game() {
 
-var readlineSync = require('readline-sync');
+    var readlineSync = require('readline-sync');
 
-function tictactoe(result) {
+    function tictactoe(result) {
 
-    console.log('');
+        console.log('');
 
-    for ( var i = 0; i < 3; i++ ) {
+        for ( var i = 0; i < 3; i++ ) {
 
-        process.stdout.write('* ')
+            process.stdout.write('* ')
 
-            for ( var j = 0; j < 3; j++ ) {
+                for ( var j = 0; j < 3; j++ ) {
 
-                process.stdout.write('- * ');
+                    process.stdout.write('- * ');
 
+                }; 
+
+                console.log('');
+                    
+                    for ( var j = 0; j < 3; j++ ) {
+                        
+                        
+                        process.stdout.write('| '+result[i][j]);   
+    
+                };
+                process.stdout.write('|');
+                console.log('');              
+        };
+
+        process.stdout.write('* - * - * - *')
+        console.log('');
+    };
+
+    function createArray2d() {
+
+        var arr = [];
+        
+        for ( var i = 0; i < 3; i++ ) {
+            
+            var arr1 = [];
+
+            for (var k = 0; k < 3; k++) {
+                    arr1.push('  ');
             }; 
 
-            console.log('');
-                
-                for ( var j = 0; j < 3; j++ ) {
-                    
-                    
-                    process.stdout.write('| '+result[i][j]);   
- 
-            };
-            process.stdout.write('|');
-            console.log('');              
+            arr[i] = arr1; 
+
+        };
+
+        console.log(arr)
+        return arr;
+
     };
-
-    process.stdout.write('* - * - * - *')
-    console.log('');
-};
-
-function createArray2d() {
-
-    var arr = [];
-    
-    for ( var i = 0; i < 3; i++ ) {
         
-        var arr1 = [];
+    var result1 = createArray2d();
+    tictactoe(result1);
 
-        for (var k = 0; k < 3; k++) {
+    var char = 'X '
+    var flag = false;
 
-            if ( i === x1 && k === y1 ) {
+        for ( var i = 0; i < 9; i++ ) {
 
-                arr1.push('X ')
-
-            } else if ( i === x2 && k === y2 ) {
-
-                arr1.push('O ')
-
-             } else {
-
-                arr1.push('  ')
-            }
             
-        }; 
+    var x1 = parseInt(readlineSync.question("Player 1: Type X \n"));
+    var y1 = parseInt(readlineSync.question("Player 1: Type Y\n"));
+    result1[y1][x1] = char;
 
-        arr[i] = arr1; 
+    
 
+    tictactoe(result1);
+
+    if (!flag) char = 'O '
+
+    var x2 = parseInt(readlineSync.question("Player 2: Type X \n"));
+    var y2 = parseInt(readlineSync.question("Player 2: Type Y\n"));
+    result1[y2][x2] = char;
+
+    
+    tictactoe(result1);
+
+    if (!flag) char = 'X '
+    
     };
-
-console.log(arr)
-return arr;
-
-};
-       
-var x1 = parseInt(readlineSync.question("Player 1: Type X \n"));
-var y1 = parseInt(readlineSync.question("Player 1: Type Y\n"));
-var result1 = createArray2d(x1,y1);
-
-tictactoe(result1) 
-
-
-var x2 = parseInt(readlineSync.question("Player 2: Type X \n"));
-var y2 = parseInt(readlineSync.question("Player 2: Type Y\n"));
-var result2 = createArray2d(x2,y2);
-
-tictactoe(result2) 
 
 };
 game();

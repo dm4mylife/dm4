@@ -31,7 +31,6 @@ function game() {
         process.stdout.write('* - * - * - *')
         console.log('');
     };
-
     function createArray2d() {
 
         var arr = [];
@@ -52,7 +51,22 @@ function game() {
         return arr;
 
     };
-        
+    function isCorrect(y,x,result1) {
+
+
+                            while ( ( y > 3 || y < 1 ) || ( x > 3 || x < 1 ) || ( result1[y-1][x-1] === 'X ' || result1[y-1][x-1] === 'O ') ) {
+
+                                console.log('Error');
+                                y = parseInt(readlineSync.question("Player:"+player+"  Type Y\n"));
+                                x = parseInt(readlineSync.question("Player:"+player+"  Type X \n"));
+                            }; 
+                                
+                            var arrN = {'y': y,'x':x}
+                            console.log(arrN)
+                            return arrN;
+
+    };    
+
     var result1 = createArray2d();
     tictactoe(result1);
 
@@ -63,56 +77,17 @@ function game() {
     var endGame = false;
 
         for ( var k = 0; k < 9; k++ ) {
-
-            console.log(k)
-
-            function isCorrect(y,x) {
-
-
-                            while( ( y > 3 || y < 1 ) || ( x > 3 || x < 1 ) ) {
-
-                                console.log('Wrong number, type again');
-                                y = parseInt(readlineSync.question("Player:"+player+"  Type Y\n"));
-                                x = parseInt(readlineSync.question("Player:"+player+"  Type X \n"));
-                            }; 
-                                
-                            var arrN = {"y":y,'x':x}
-                            
-                            return arrN;
-
-            };
-
-            function isEmptyField(y,x,result1) {
-
-
-                                    while ( result1[y-1][x-1] === 'X ' || result1[y-1][x-1] === 'O ') {
-
-                                        console.log("Field is full, type again");
-
-                                        y = parseInt(readlineSync.question("Player:"+player+"  Type Y\n"));
-                                        x = parseInt(readlineSync.question("Player:"+player+"  Type X \n"));
-                                        
-                                    };
-                                    
-                                    var arrN = {"y":y,"x":x}
-                                    
-                                    return arrN;
-                                    
-
-            };
-                
+              
                 var y = parseInt(readlineSync.question("Player:"+player+"  Type Y\n"));
                 var x = parseInt(readlineSync.question("Player:"+player+"  Type X \n"));
 
-                var i = isCorrect(y,x);
-                y = i.y;
-                x = i.x;
+                var p = isCorrect(y,x,result1);
 
-                var p = isEmptyField(y,x,result1);
                 y = p.y;
                 x = p.x;
 
                 result1[y-1][x-1] = char;
+
                 tictactoe(result1);
 
                 
@@ -161,11 +136,11 @@ function game() {
         };
         
         
-        if ( i === 8 ) {
+        if ( k === 8 ) {
 
             console.log('Endgame');
 
-        }
+        };
 
         if ( endGame ) break;
 

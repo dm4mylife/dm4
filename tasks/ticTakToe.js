@@ -48,7 +48,7 @@ function game() {
 
         };
 
-        console.log(arr)
+        
         return arr;
 
     };
@@ -56,32 +56,73 @@ function game() {
     var result1 = createArray2d();
     tictactoe(result1);
 
-    var char = 'X '
+    
     var flag = false;
+    var player = 1;
+    var char = 'X '
+    var endGame = false;
 
         for ( var i = 0; i < 9; i++ ) {
 
-            
-    var x1 = parseInt(readlineSync.question("Player 1: Type X \n"));
-    var y1 = parseInt(readlineSync.question("Player 1: Type Y\n"));
-    result1[y1][x1] = char;
+    
+            var y = parseInt(readlineSync.question("Player:"+player+"  Type Y\n"));
+            var x = parseInt(readlineSync.question("Player:"+player+"  Type X \n"));
+
+            result1[y][x] = char;
+            tictactoe(result1);
+
+            if ( (result1[0][0] === 'X ' && result1[0][1] === 'X ' && result1[0][2] === 'X ') || 
+                ( result1[1][0] === 'X ' && result1[1][1] === 'X ' && result1[1][2] === 'X ') || 
+                ( result1[2][0] === 'X ' && result1[2][1] === 'X ' && result1[2][2] === 'X ') || 
+                ( result1[0][0] === 'X ' && result1[1][0] === 'X ' && result1[2][0] === 'X ') ||
+                ( result1[0][1] === 'X ' && result1[1][1] === 'X ' && result1[2][1] === 'X ') ||
+                ( result1[0][2] === 'X ' && result1[1][2] === 'X ' && result1[2][2] === 'X ') ||
+                ( result1[0][0] === 'X ' && result1[1][1] === 'X ' && result1[2][2] === 'X ') ||
+                ( result1[0][2] === 'X ' && result1[1][1] === 'X ' && result1[0][0] === 'X ') ) {
+
+                console.log('Win player 1');
+                endGame = true;
+
+            };
+
+            if ( (result1[0][0] === 'O ' && result1[0][1] === 'O ' && result1[0][2] === 'O ') || 
+                ( result1[1][0] === 'O ' && result1[1][1] === 'O ' && result1[1][2] === 'O ') || 
+                ( result1[2][0] === 'O ' && result1[2][1] === 'O ' && result1[2][2] === 'O ') || 
+                ( result1[0][0] === 'O ' && result1[1][0] === 'O ' && result1[2][0] === 'O ') ||
+                ( result1[0][1] === 'O ' && result1[1][1] === 'O ' && result1[2][1] === 'O ') ||
+                ( result1[0][2] === 'O ' && result1[1][2] === 'O ' && result1[2][2] === 'O ') ||
+                ( result1[0][0] === 'O ' && result1[1][1] === 'O ' && result1[2][2] === 'O ') ||
+                ( result1[0][2] === 'O ' && result1[1][1] === 'O ' && result1[0][0] === 'O ') ) {
+
+                console.log('Win player 2');
+                endGame = true;
+
+            };
 
     
+        if (!flag) {
 
-    tictactoe(result1);
+            char = 'O ';
+            flag = true;
+            player = 2;
 
-    if (!flag) char = 'O '
+        } else {
 
-    var x2 = parseInt(readlineSync.question("Player 2: Type X \n"));
-    var y2 = parseInt(readlineSync.question("Player 2: Type Y\n"));
-    result1[y2][x2] = char;
+            char = 'X '
+            flag = false;
+            player = 1;
 
-    
-    tictactoe(result1);
+        };
+        
+        
+        if ( i === 8 ) {
 
-    if (!flag) char = 'X '
-    
-    };
+            console.log('Endgame');
 
+        }
+
+        if ( endGame ) break;
+
+        };
 };
 game();

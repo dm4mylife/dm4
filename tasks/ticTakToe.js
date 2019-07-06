@@ -2,6 +2,9 @@ function game() {
 
     var readlineSync = require('readline-sync');
 
+    var player1 = readlineSync.question('Type your name player 1\n');
+    var player2 = readlineSync.question('Type your name player 2\n');
+
     function tictactoe(result) {
 
         console.log('');
@@ -57,8 +60,8 @@ function game() {
                             while ( ( y > 3 || y < 1 ) || ( x > 3 || x < 1 ) || ( result1[y-1][x-1] === 'X ' || result1[y-1][x-1] === 'O ') ) {
 
                                 console.log('Error');
-                                y = parseInt(readlineSync.question("Player:"+player+"  Type Y\n"));
-                                x = parseInt(readlineSync.question("Player:"+player+"  Type X \n"));
+                                y = parseInt(readlineSync.question('Please, '+player+", type X\n"));
+                                x = parseInt(readlineSync.question('Please, '+player+", type Y \n"));
                             }; 
                                 
                             var arrN = {'y': y,'x':x}
@@ -72,14 +75,15 @@ function game() {
 
     
     var flag = false;
-    var player = 1;
-    var char = 'X '
+    var flagWinner = false;
+    player = player1;
+    var char = 'X ';
     var endGame = false;
 
         for ( var k = 0; k < 9; k++ ) {
               
-                var y = parseInt(readlineSync.question("Player:"+player+"  Type Y\n"));
-                var x = parseInt(readlineSync.question("Player:"+player+"  Type X \n"));
+                var y = parseInt(readlineSync.question('Please, '+player+", type X\n"));
+                var x = parseInt(readlineSync.question('Please, '+player+", type Y \n"));
 
                 var p = isCorrect(y,x,result1);
 
@@ -100,8 +104,9 @@ function game() {
                 ( result1[0][0] === 'X ' && result1[1][1] === 'X ' && result1[2][2] === 'X ') ||
                 ( result1[0][2] === 'X ' && result1[1][1] === 'X ' && result1[0][0] === 'X ') ) {
 
-                console.log('Win player 1');
+                console.log('Winner is '+player);
                 endGame = true;
+                flagWinner = true;
 
             };
             
@@ -115,23 +120,26 @@ function game() {
                 ( result1[0][0] === 'O ' && result1[1][1] === 'O ' && result1[2][2] === 'O ') ||
                 ( result1[0][2] === 'O ' && result1[1][1] === 'O ' && result1[0][0] === 'O ') ) {
 
-                console.log('Win player 2');
+                console.log('Winner is '+player);
                 endGame = true;
+                flagWinner = true;
+
 
             };
+            
 
     
         if (!flag) {
 
             char = 'O ';
             flag = true;
-            player = 2;
+            player = player2;
 
         } else {
 
             char = 'X '
             flag = false;
-            player = 1;
+            player = player1;
 
         };
         
@@ -145,5 +153,22 @@ function game() {
         if ( endGame ) break;
 
         };
+
+        if (!flagWinner) {
+
+            var winner = {};
+            winner.player = 1;
+            };
+
+            for (player in winner ) {
+                if ( player === 'player' ) {
+                winner.player += 1;
+            } else {
+                winner.player = 1;
+            };
+
+            var fs = require('fs');
+            fs.writeFileSync('score.txt', winner, function(err,data) {}
+                console.log(data) );
 };
 game();

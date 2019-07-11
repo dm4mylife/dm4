@@ -1,9 +1,10 @@
 function game() {
 
     var readlineSync = require('readline-sync');
-
-    var player1 = readlineSync.question('Type your name player 1\n');
-    var player2 = readlineSync.question('Type your name player 2\n');
+    var fs = require('fs');
+    var JSON5 = require('json5');
+    var player1 = readlineSync.question("Type your name player 1\n");
+    var player2 = readlineSync.question("Type your name player 2\n");
 
     function tictactoe(result) {
 
@@ -65,7 +66,6 @@ function game() {
                             }; 
                                 
                             var arrN = {'y': y,'x':x}
-                            console.log(arrN)
                             return arrN;
 
     };    
@@ -77,11 +77,13 @@ function game() {
     var flag = false;
     var flagWinner = false;
     player = player1;
-    var char = 'X ';
     var endGame = false;
+    var char = 'X ';
+    var winner = {};
+    var winnerName;
 
         for ( var k = 0; k < 9; k++ ) {
-              
+
                 var y = parseInt(readlineSync.question('Please, '+player+", type X\n"));
                 var x = parseInt(readlineSync.question('Please, '+player+", type Y \n"));
 
@@ -93,7 +95,6 @@ function game() {
                 result1[y-1][x-1] = char;
 
                 tictactoe(result1);
-
                 
             if ( (result1[0][0] === 'X ' && result1[0][1] === 'X ' && result1[0][2] === 'X ') || 
                 ( result1[1][0] === 'X ' && result1[1][1] === 'X ' && result1[1][2] === 'X ') || 
@@ -104,9 +105,10 @@ function game() {
                 ( result1[0][0] === 'X ' && result1[1][1] === 'X ' && result1[2][2] === 'X ') ||
                 ( result1[0][2] === 'X ' && result1[1][1] === 'X ' && result1[0][0] === 'X ') ) {
 
-                console.log('Winner is '+player);
+                console.log('Winner is '+player1);
                 endGame = true;
-                flagWinner = true;
+                winner[player1] = 0;
+                winnerName = player1;
 
             };
             
@@ -120,55 +122,78 @@ function game() {
                 ( result1[0][0] === 'O ' && result1[1][1] === 'O ' && result1[2][2] === 'O ') ||
                 ( result1[0][2] === 'O ' && result1[1][1] === 'O ' && result1[0][0] === 'O ') ) {
 
-                console.log('Winner is '+player);
+                console.log('Winner is '+player2);
                 endGame = true;
-                flagWinner = true;
+                winner[player2] = 0;
+                winnerName = player2;
 
-
-            };
+            }; 
             
-
-    
         if (!flag) {
 
             char = 'O ';
             flag = true;
             player = player2;
-
+             
         } else {
 
             char = 'X '
             flag = false;
             player = player1;
 
-        };
-        
-        
+        };   
         if ( k === 8 ) {
 
             console.log('Endgame');
 
         };
+        
+            if (endGame) {
+                
+                if (!fs.existsSync('score.txt')) {
+                    console.log("The file created");
+                    winner = JSON5.stringify(winner);
+                    console.log(winner)
+                    fs.writeFileSync('score.txt',winner,function(err,data){
+                    console.log(data+"File doesnt exists, create new one")})
 
-        if ( endGame ) break;
+                }; 
 
+                    var data = fs.readFileSync('score.txt');
+                    var dataObj = JSON5.parse(data);
+                    console.log(dataObj);
+                    
+                    var counter = 1;
+                for (var key in dataObj ) {
+                    
+                    console.log(winnerName)
+
+                    if ( key === winnerName && counter === 1) {
+
+                        dataObj[key] += 1;
+                        dataObj = JSON5.stringify(dataObj)
+                        console.log("Success add stat one player")
+                        fs.writeFileSync('score.txt',dataObj, function(err,data){ console.log(data)})
+                        break;
+
+                    } else {
+
+                        dataObj[winnerName] = 1;
+                        dataObj = JSON5.stringify(dataObj)
+                        console.log("Success add stat second player")
+                        fs.writeFileSync('score.txt',dataObj, function(err,data){ console.log(data)})
+                        break;
+                    }; 
+                    counter++;
+                        
+                    };
+                    
+                break;    
+                };
+                
+            };
+                
         };
+    
 
-        if (!flagWinner) {
-
-            var winner = {};
-            winner.player = 1;
-            };
-
-            for (player in winner ) {
-                if ( player === 'player' ) {
-                winner.player += 1;
-            } else {
-                winner.player = 1;
-            };
-
-            var fs = require('fs');
-            fs.writeFileSync('score.txt', winner, function(err,data) {}
-                console.log(data) );
-};
 game();

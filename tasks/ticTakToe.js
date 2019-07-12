@@ -68,7 +68,24 @@ function game() {
                             var arrN = {'y': y,'x':x}
                             return arrN;
 
-    };    
+    };
+    function conv2obj(str) {
+        var obj = {};
+        
+        for ( var i = 0; i < str.length; i+=2) {
+
+            var e = obj[i];
+            var d =obj[i+1];
+            obj.e = d;
+        };
+        
+        return obj;
+    };
+    function conv2str(obj) {
+
+        return obj.split(RegExp(' |\n'));
+
+    };
 
     var result1 = createArray2d();
     tictactoe(result1);
@@ -82,59 +99,59 @@ function game() {
     var winner = {};
     var winnerName;
 
-        for ( var k = 0; k < 9; k++ ) {
+    for ( var k = 0; k < 9; k++ ) {
 
-                var y = parseInt(readlineSync.question('Please, '+player+", type X\n"));
-                var x = parseInt(readlineSync.question('Please, '+player+", type Y \n"));
+        var y = parseInt(readlineSync.question('Please, '+player+", type X\n"));
+        var x = parseInt(readlineSync.question('Please, '+player+", type Y \n"));
 
-                var p = isCorrect(y,x,result1);
+        var p = isCorrect(y,x,result1);
 
-                y = p.y;
-                x = p.x;
+        y = p.y;
+        x = p.x;
 
-                result1[y-1][x-1] = char;
+        result1[y-1][x-1] = char;
 
-                tictactoe(result1);
-                
-            if ( (result1[0][0] === 'X ' && result1[0][1] === 'X ' && result1[0][2] === 'X ') || 
-                ( result1[1][0] === 'X ' && result1[1][1] === 'X ' && result1[1][2] === 'X ') || 
-                ( result1[2][0] === 'X ' && result1[2][1] === 'X ' && result1[2][2] === 'X ') || 
-                ( result1[0][0] === 'X ' && result1[1][0] === 'X ' && result1[2][0] === 'X ') ||
-                ( result1[0][1] === 'X ' && result1[1][1] === 'X ' && result1[2][1] === 'X ') ||
-                ( result1[0][2] === 'X ' && result1[1][2] === 'X ' && result1[2][2] === 'X ') ||
-                ( result1[0][0] === 'X ' && result1[1][1] === 'X ' && result1[2][2] === 'X ') ||
-                ( result1[0][2] === 'X ' && result1[1][1] === 'X ' && result1[0][0] === 'X ') ) {
-
-                console.log('Winner is '+player1);
-                endGame = true;
-                winner[player1] = 0;
-                winnerName = player1;
-
-            };
+        tictactoe(result1);
             
+        if ( (result1[0][0] === 'X ' && result1[0][1] === 'X ' && result1[0][2] === 'X ') || 
+            ( result1[1][0] === 'X ' && result1[1][1] === 'X ' && result1[1][2] === 'X ') || 
+            ( result1[2][0] === 'X ' && result1[2][1] === 'X ' && result1[2][2] === 'X ') || 
+            ( result1[0][0] === 'X ' && result1[1][0] === 'X ' && result1[2][0] === 'X ') ||
+            ( result1[0][1] === 'X ' && result1[1][1] === 'X ' && result1[2][1] === 'X ') ||
+            ( result1[0][2] === 'X ' && result1[1][2] === 'X ' && result1[2][2] === 'X ') ||
+            ( result1[0][0] === 'X ' && result1[1][1] === 'X ' && result1[2][2] === 'X ') ||
+            ( result1[0][2] === 'X ' && result1[1][1] === 'X ' && result1[0][0] === 'X ') ) {
 
-            if ( (result1[0][0] === 'O ' && result1[0][1] === 'O ' && result1[0][2] === 'O ') || 
-                ( result1[1][0] === 'O ' && result1[1][1] === 'O ' && result1[1][2] === 'O ') || 
-                ( result1[2][0] === 'O ' && result1[2][1] === 'O ' && result1[2][2] === 'O ') || 
-                ( result1[0][0] === 'O ' && result1[1][0] === 'O ' && result1[2][0] === 'O ') ||
-                ( result1[0][1] === 'O ' && result1[1][1] === 'O ' && result1[2][1] === 'O ') ||
-                ( result1[0][2] === 'O ' && result1[1][2] === 'O ' && result1[2][2] === 'O ') ||
-                ( result1[0][0] === 'O ' && result1[1][1] === 'O ' && result1[2][2] === 'O ') ||
-                ( result1[0][2] === 'O ' && result1[1][1] === 'O ' && result1[0][0] === 'O ') ) {
+            console.log('Winner is '+player1);
+            endGame = true;
+            winner[player1] = 0;
+            winnerName = player1;
 
-                console.log('Winner is '+player2);
-                endGame = true;
-                winner[player2] = 0;
-                winnerName = player2;
+        };
+        
 
-            }; 
-            
+        if ( (result1[0][0] === 'O ' && result1[0][1] === 'O ' && result1[0][2] === 'O ') || 
+            ( result1[1][0] === 'O ' && result1[1][1] === 'O ' && result1[1][2] === 'O ') || 
+            ( result1[2][0] === 'O ' && result1[2][1] === 'O ' && result1[2][2] === 'O ') || 
+            ( result1[0][0] === 'O ' && result1[1][0] === 'O ' && result1[2][0] === 'O ') ||
+            ( result1[0][1] === 'O ' && result1[1][1] === 'O ' && result1[2][1] === 'O ') ||
+            ( result1[0][2] === 'O ' && result1[1][2] === 'O ' && result1[2][2] === 'O ') ||
+            ( result1[0][0] === 'O ' && result1[1][1] === 'O ' && result1[2][2] === 'O ') ||
+            ( result1[0][2] === 'O ' && result1[1][1] === 'O ' && result1[0][0] === 'O ') ) {
+
+            console.log('Winner is '+player2);
+            endGame = true;
+            winner[player2] = 0;
+            winnerName = player2;
+
+        }; 
+        
         if (!flag) {
 
             char = 'O ';
             flag = true;
             player = player2;
-             
+            
         } else {
 
             char = 'X '
@@ -147,53 +164,57 @@ function game() {
             console.log('Endgame');
 
         };
-        
-            if (endGame) {
-                
-                if (!fs.existsSync('score.txt')) {
-                    console.log("The file created");
-                    winner = JSON5.stringify(winner);
-                    console.log(winner)
-                    fs.writeFileSync('score.txt',winner,function(err,data){
-                    console.log(data+"File doesnt exists, create new one")})
-
-                }; 
-
-                    var data = fs.readFileSync('score.txt');
-                    var dataObj = JSON5.parse(data);
-                    console.log(dataObj);
-                    
-                    var counter = 1;
-                for (var key in dataObj ) {
-                    
-                    console.log(winnerName)
-
-                    if ( key === winnerName && counter === 1) {
-
-                        dataObj[key] += 1;
-                        dataObj = JSON5.stringify(dataObj)
-                        console.log("Success add stat one player")
-                        fs.writeFileSync('score.txt',dataObj, function(err,data){ console.log(data)})
-                        break;
-
-                    } else {
-
-                        dataObj[winnerName] = 1;
-                        dataObj = JSON5.stringify(dataObj)
-                        console.log("Success add stat second player")
-                        fs.writeFileSync('score.txt',dataObj, function(err,data){ console.log(data)})
-                        break;
-                    }; 
-                    counter++;
-                        
-                    };
-                    
-                break;    
-                };
-                
-            };
-                
-        };
     
+        if (endGame) {
+            
+            if (!fs.existsSync('score.txt')) {
+                console.log("The file created");
+                winner = JSON5.stringify(winner);
+                console.log(winner)
+                fs.writeFileSync('score.txt',winner,function(err,data){
+                console.log(data+"File doesnt exists, create new one")})
+
+            }; 
+
+                var data = fs.readFileSync('score.txt');
+                var dataObj = JSON5.parse(data);
+              
+                
+            var flagObj = false;
+
+            for (var key in dataObj ) {
+                
+                
+
+                if ( key === winnerName ) {
+
+                    dataObj[key] += 1;
+                    dataObj = JSON5.stringify(dataObj)
+                    console.log("Success add stat first player\n"+dataObj))
+                    fs.writeFileSync('score.txt',dataObj, function(err,data){ console.log(data)})
+                    flagObj = true;
+                    break;
+                };  
+
+            };
+                if (!flagObj) {
+
+                dataObj[winnerName] = 1;
+                dataObj = JSON5.stringify(dataObj)
+                console.log("Success add stat second player\n"+dataObj)
+                fs.writeFileSync('score.txt',dataObj, function(err,data){ console.log(data)})
+                
+                };
+                break; 
+            
+            
+                
+            
+        };
+        
+    };
+        
+};
+
 
 game();

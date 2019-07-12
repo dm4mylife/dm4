@@ -69,22 +69,31 @@ function game() {
                             return arrN;
 
     };
-    function conv2obj(str) {
+    function obj2str(obj) {
+
+        var result = '';
+        for (var key in obj) {
+          result += key + ' ' + obj[key] + '\n';
+           
+        }
+        result = result.split(RegExp(' |\n'));
+        console.log(result);
+        return result;
+    };
+    function str2obj(str) {
+
+        
         var obj = {};
         
-        for ( var i = 0; i < str.length; i+=2) {
-
-            var e = obj[i];
-            var d =obj[i+1];
-            obj.e = d;
+        for ( var i = 0; i < str.length-1; i+=2 ) {
+          
+            var element = str[i];
+            var count = +str[i+1];
+            obj[element] = count;
+            
         };
-        
+        console.log(obj)
         return obj;
-    };
-    function conv2str(obj) {
-
-        return obj.split(RegExp(' |\n'));
-
     };
 
     var result1 = createArray2d();
@@ -125,6 +134,7 @@ function game() {
             console.log('Winner is '+player1);
             endGame = true;
             winner[player1] = 0;
+            console.log(winner)
             winnerName = player1;
 
         };
@@ -142,6 +152,7 @@ function game() {
             console.log('Winner is '+player2);
             endGame = true;
             winner[player2] = 0;
+            console.log(winner)
             winnerName = player2;
 
         }; 
@@ -169,15 +180,18 @@ function game() {
             
             if (!fs.existsSync('score.txt')) {
                 console.log("The file created");
-                winner = JSON5.stringify(winner);
-                console.log(winner)
-                fs.writeFileSync('score.txt',winner,function(err,data){
+                var string = obj2str(winner);
+                console.log(string)
+                fs.writeFileSync('score.txt',string,function(err,data){
                 console.log(data+"File doesnt exists, create new one")})
 
             }; 
 
                 var data = fs.readFileSync('score.txt');
-                var dataObj = JSON5.parse(data);
+                data = data.split(RegExp(' |\n'))
+                console.log(data+ 'это дата');
+                var dataObj = str2obj(data);
+                console.log(dataObj)
               
                 
             var flagObj = false;
@@ -189,10 +203,12 @@ function game() {
                 if ( key === winnerName ) {
 
                     dataObj[key] += 1;
-                    dataObj = JSON5.stringify(dataObj)
-                    console.log("Success add stat first player\n"+dataObj))
-                    fs.writeFileSync('score.txt',dataObj, function(err,data){ console.log(data)})
+                    console.log('Current stat \n'+ dataObj)
+                    var string = obj2str(dataObj)
+                    console.log("Success add stat first player\n"+string)
+                    fs.writeFileSync('score.txt',string, function(err,data){ console.log(data)})
                     flagObj = true;
+                    
                     break;
                 };  
 
@@ -200,9 +216,10 @@ function game() {
                 if (!flagObj) {
 
                 dataObj[winnerName] = 1;
-                dataObj = JSON5.stringify(dataObj)
-                console.log("Success add stat second player\n"+dataObj)
-                fs.writeFileSync('score.txt',dataObj, function(err,data){ console.log(data)})
+                console.log('Current stat \n'+ dataObj)
+                var string = obj2str(dataObj)
+                console.log("Success add stat second player\n"+string)
+                fs.writeFileSync('score.txt',string, function(err,data){ console.log(data)})
                 
                 };
                 break; 

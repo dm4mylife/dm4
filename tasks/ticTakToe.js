@@ -6,6 +6,12 @@ function game() {
     var player1 = readlineSync.question("Type your name player 1\n");
     var player2 = readlineSync.question("Type your name player 2\n");
 
+    while ( player1 === player2 ) {
+
+        console.log('Error');
+        var player2 = readlineSync.question("Type your name player 2 again\n");
+    };
+   
     function tictactoe(result) {
 
         console.log('');
@@ -61,8 +67,8 @@ function game() {
                             while ( ( y > 3 || y < 1 ) || ( x > 3 || x < 1 ) || ( result1[y-1][x-1] === 'X ' || result1[y-1][x-1] === 'O ') ) {
 
                                 console.log('Error');
-                                y = parseInt(readlineSync.question('Please, '+player+", type X\n"));
-                                x = parseInt(readlineSync.question('Please, '+player+", type Y \n"));
+                                x = parseInt(readlineSync.question('Please, '+player+", type X\n"));
+                                y = parseInt(readlineSync.question('Please, '+player+", type Y \n"));
                             }; 
                                 
                             var arrN = {'y': y,'x':x}
@@ -76,12 +82,10 @@ function game() {
           result += key + ' ' + obj[key] + '\n';
            
         }
-        result = result.split(RegExp(' |\n'));
-        console.log(result);
         return result;
     };
     function str2obj(str) {
-
+        str = str.split(RegExp(' |\n'))
         
         var obj = {};
         
@@ -110,9 +114,11 @@ function game() {
 
     for ( var k = 0; k < 9; k++ ) {
 
-        var y = parseInt(readlineSync.question('Please, '+player+", type X\n"));
-        var x = parseInt(readlineSync.question('Please, '+player+", type Y \n"));
+        var x = parseInt(readlineSync.question('Please, '+player+", type X\n"));
+        
+        var y = parseInt(readlineSync.question('Please, '+player+", type Y \n"));
 
+       
         var p = isCorrect(y,x,result1);
 
         y = p.y;
@@ -181,48 +187,41 @@ function game() {
             if (!fs.existsSync('score.txt')) {
                 console.log("The file created");
                 var string = obj2str(winner);
-                console.log(string)
-                fs.writeFileSync('score.txt',string,function(err,data){
-                console.log(data+"File doesnt exists, create new one")})
+                fs.writeFileSync('score.txt',string)
 
             }; 
 
-                var data = fs.readFileSync('score.txt');
-                data = data.split(RegExp(' |\n'))
-                console.log(data+ 'это дата');
-                var dataObj = str2obj(data);
-                console.log(dataObj)
+            var data = fs.readFileSync('score.txt').toString();
+            var dataObj = str2obj(data);
               
-                
             var flagObj = false;
 
             for (var key in dataObj ) {
-                
-                
+                console.log(dataObj);
 
                 if ( key === winnerName ) {
 
                     dataObj[key] += 1;
-                    console.log('Current stat \n'+ dataObj)
+                    console.log('Current stat \n')
+                    console.log(dataObj)
                     var string = obj2str(dataObj)
-                    console.log("Success add stat first player\n"+string)
-                    fs.writeFileSync('score.txt',string, function(err,data){ console.log(data)})
+                    fs.writeFileSync('score.txt',string)
                     flagObj = true;
                     
                     break;
                 };  
 
             };
-                if (!flagObj) {
+            if (!flagObj) {
 
                 dataObj[winnerName] = 1;
-                console.log('Current stat \n'+ dataObj)
                 var string = obj2str(dataObj)
-                console.log("Success add stat second player\n"+string)
-                fs.writeFileSync('score.txt',string, function(err,data){ console.log(data)})
+                console.log('Current stat \n')
+                console.log(dataObj)
+                fs.writeFileSync('score.txt',string)
                 
-                };
-                break; 
+            };
+            break; 
             
             
                 

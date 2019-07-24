@@ -1,0 +1,21 @@
+.App {
+  text-align: center;
+}
+
+
+.App-header {
+  background-color: #282c34;
+  text-align: center;
+  height: 100px;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+.logo {
+
+  color: rgb(10, 13, 192);
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 40px;
+  float: left;
+  padding: 20px;
+  
+}

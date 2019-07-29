@@ -6,6 +6,12 @@ function game() {
     var player1 = readlineSync.question("Type your name player 1\n");
     var player2 = readlineSync.question("Type your name player 2\n");
 
+    while ( player1 === player2 ) {
+
+        console.log('Error');
+        var player2 = readlineSync.question("Type your name player 2 again\n");
+    };
+   
     function tictactoe(result) {
 
         console.log('');
@@ -61,8 +67,8 @@ function game() {
                             while ( ( y > 3 || y < 1 ) || ( x > 3 || x < 1 ) || ( result1[y-1][x-1] === 'X ' || result1[y-1][x-1] === 'O ') ) {
 
                                 console.log('Error');
-                                y = parseInt(readlineSync.question('Please, '+player+", type X\n"));
-                                x = parseInt(readlineSync.question('Please, '+player+", type Y \n"));
+                                x = parseInt(readlineSync.question('Please, '+player+", type X\n"));
+                                y = parseInt(readlineSync.question('Please, '+player+", type Y \n"));
                             }; 
                                 
                             var arrN = {'y': y,'x':x}
@@ -76,12 +82,10 @@ function game() {
           result += key + ' ' + obj[key] + '\n';
            
         }
-        result = result.split(RegExp(' |\n'));
-        console.log(result);
         return result;
     };
     function str2obj(str) {
-
+        str = str.split(RegExp(' |\n'))
         
         var obj = {};
         
@@ -96,6 +100,68 @@ function game() {
         return obj;
     };
 
+    function writeBuff(obj) {
+
+  
+        var count = 1;
+      
+          for (var key in obj ) {
+            console.log(key + key.length)
+            count = count + key.length + 2;
+          }
+      
+        var buffer = Buffer.alloc(count)
+        var offset = buffer.writeInt8(Object.keys(obj).length);
+        
+        for (var key in obj) {
+          
+          offset = buffer.writeInt8(key.length,offset);
+          buffer.write(key,offset);
+          offset = buffer.writeInt8(obj[key],offset+key.length)
+      
+        };
+        fs.writeFileSync('Buffer.txt',buffer);
+         
+      
+      };
+      
+      
+      function readBuffer() {
+      
+        var readFile = fs.readFileSync('Buffer.txt','binary');
+        var buffer = Buffer.from(readFile);
+        var maxPlayers = buffer.readInt8();
+        console.log(buffer)
+        
+        var result = '';
+        var offset = 2;
+        var empty = 1;
+      
+        for (var i = 1; i <= maxPlayers; i++) {
+      
+          var count = buffer.readInt8(empty);
+          var playerName = buffer.toString('utf8',offset,offset+count);
+          result += playerName;
+          var score = buffer.readInt8(playerName.length+offset);
+          
+          if ( i === maxPlayers ) {
+            result +=": "+score; 
+          } else {
+            result +=": "+score+',';
+          }
+      
+          offset += 2 + playerName.length; 
+          empty = offset-1;
+          
+         
+        };
+      
+        result = `{ ${result} }`;
+        result = JSON5.parse(result);
+        console.log(result);
+        return result;
+      };
+      
     var result1 = createArray2d();
     tictactoe(result1);
 
@@ -110,9 +176,11 @@ function game() {
 
     for ( var k = 0; k < 9; k++ ) {
 
-        var y = parseInt(readlineSync.question('Please, '+player+", type X\n"));
-        var x = parseInt(readlineSync.question('Please, '+player+", type Y \n"));
+        var x = parseInt(readlineSync.question('Please, '+player+", type X\n"));
+        
+        var y = parseInt(readlineSync.question('Please, '+player+", type Y \n"));
 
+       
         var p = isCorrect(y,x,result1);
 
         y = p.y;
@@ -178,54 +246,40 @@ function game() {
     
         if (endGame) {
             
-            if (!fs.existsSync('score.txt')) {
+            if (!fs.existsSync('Buffer.txt')) {
                 console.log("The file created");
-                var string = obj2str(winner);
-                console.log(string)
-                fs.writeFileSync('score.txt',string,function(err,data){
-                console.log(data+"File doesnt exists, create new one")})
+                writeBuff(winner);      
 
             }; 
 
-                var data = fs.readFileSync('score.txt');
-                data = data.split(RegExp(' |\n'))
-                console.log(data+ 'это дата');
-                var dataObj = str2obj(data);
-                console.log(dataObj)
+            
+            var dataObj = readBuffer();
               
-                
             var flagObj = false;
 
             for (var key in dataObj ) {
-                
-                
+                console.log(dataObj);
 
                 if ( key === winnerName ) {
 
                     dataObj[key] += 1;
-                    console.log('Current stat \n'+ dataObj)
-                    var string = obj2str(dataObj)
-                    console.log("Success add stat first player\n"+string)
-                    fs.writeFileSync('score.txt',string, function(err,data){ console.log(data)})
+                    console.log('Current stat \n')
+                    writeBuff(dataObj)
                     flagObj = true;
                     
                     break;
                 };  
 
             };
-                if (!flagObj) {
+            if (!flagObj) {
 
                 dataObj[winnerName] = 1;
-                console.log('Current stat \n'+ dataObj)
-                var string = obj2str(dataObj)
-                console.log("Success add stat second player\n"+string)
-                fs.writeFileSync('score.txt',string, function(err,data){ console.log(data)})
+                console.log('Current stat \n')
+                writeBuff(dataObj)
                 
-                };
-                break; 
-            
-            
-                
+            };
+
+            break;         
             
         };
         

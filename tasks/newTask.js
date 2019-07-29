@@ -6,20 +6,19 @@ var testStr = 'vot eto jopa';
 var resultColumn =[];
 var resultRow = [];
 for ( var i = 1; i <= n; i++ ) {
-     resultRow.push(i);
+     resultRow.push(+i.toString(2));
 };
-var bufRow = Buffer.from(resultRow);
 
+console.log(resultRow.join(' '));
 
-console.log(bufRow)
-
-
-/* fs.writeFileSync('row.txt',bufRow,'utf-8'); */
-/* 
 for ( var i = 1; i <= n; i++ ) {
-    resultColumn.push(i)
+    resultColumn.push(+i.toString(2));
 };
-resultColumn = resultColumn.join('\n')
-console.log(resultColumn)
 
-fs.writeFileSync('column.txt',resultColumn); */
+console.log(resultColumn.join('\n'));
+
+var buffer = Buffer.alloc(10);
+console.log(buffer.length)
+buffer.writeInt32BE(resultColumn)
+
+console.log(buffer)

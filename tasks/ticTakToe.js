@@ -99,6 +99,30 @@ function game() {
         console.log(obj)
         return obj;
     };
+    function writeScore2Buffer(obj) {
+
+        var bufferSize=0;
+        
+          for ( var key in obj ) {
+        
+            bufferSize += key.length+2;
+        
+          };
+          
+          var buffer = Buffer.alloc(bufferSize+1);
+          var offset = buffer.writeInt8(Object.keys(obj).length);
+        
+        for ( var key in obj) {
+        
+            
+            offset = buffer.writeInt8(key.length,offset);
+            offset += buffer.write(key,offset);
+            offset = buffer.writeInt8(obj[key],offset);
+            
+          
+        };
+        fs.writeFileSync('score.txt',buffer);
+        };
 
     var result1 = createArray2d();
     tictactoe(result1);
@@ -186,26 +210,21 @@ function game() {
             
             if (!fs.existsSync('score.txt')) {
                 console.log("The file created");
-                var string = obj2str(winner);
-                fs.writeFileSync('score.txt',string)
-
+                writeScore2Buffer(winner)
             }; 
-
-            var data = fs.readFileSync('score.txt').toString();
-            var dataObj = str2obj(data);
               
             var flagObj = false;
 
-            for (var key in dataObj ) {
-                console.log(dataObj);
+            for (var key in winner ) {
+
+                console.log(winner);
 
                 if ( key === winnerName ) {
 
-                    dataObj[key] += 1;
+                    winner[key] += 1;
                     console.log('Current stat \n')
-                    console.log(dataObj)
-                    var string = obj2str(dataObj)
-                    fs.writeFileSync('score.txt',string)
+                    console.log(winner)
+                    writeScore2Buffer(winner)
                     flagObj = true;
                     
                     break;
@@ -214,23 +233,19 @@ function game() {
             };
             if (!flagObj) {
 
-                dataObj[winnerName] = 1;
-                var string = obj2str(dataObj)
+                winner[winnerName] = 1;
                 console.log('Current stat \n')
-                console.log(dataObj)
-                fs.writeFileSync('score.txt',string)
+                console.log(winner)
+                writeScore2Buffer(winner)
                 
             };
+
             break; 
-            
-            
-                
             
         };
         
     };
         
 };
-
 
 game();

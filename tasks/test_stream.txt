@@ -1,0 +1,1 @@
+[{name:'1Ivanov I2van',group:234,marks:{math:2,english:4,science:3,biology:4,geogpraphy:3,politology:4}},{name:'Petrov Ivan',group:134,marks:{math:2,english:3,science:2,biology:2,geogpraphy:2,politology:3}},{name:'Crasnov Ivan',group:334,marks:{math:3,english:2,science:5,biology:4,geogpraphy:3,politology:4}}]

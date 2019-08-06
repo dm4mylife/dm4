@@ -115,9 +115,10 @@ function sortListStudents() {
 listStudents.sort(
 
     function(x,y) {
+        //return x['name'].localeCompare(y['name']);
 
-        if ( x['name'].slice(0,1) > y['name'].slice(0,1)) {return 1}
-        if ( x['name'].slice(0,1) < y['name'].slice(0,1)) {return -1};
+        if ( x['name'] > y['name']) {return 1}
+        if ( x['name'] < y['name']) {return -1};
         return 0;
     
     
@@ -193,8 +194,8 @@ function isCorrectGroupNumber(numGroup) {
     return numGroup;
 };
 function isCorrectNameStudent(fio) {
-    var re = /(\b^\D+\s\D+$)\C/;
-
+    //var re = /^ \D+\s\D+ $/;
+    var re = /^[a-zA-Z]+\s[a-zA-Z]+$/;
         while (fio.search(re)) {
             console.log('Некорректное имя. Введите имя заного\n')
             fio = readLineSync.question('');
@@ -226,8 +227,8 @@ function writeStream(listStudents) {
 
     var number = readLineSync.questionInt();
     number = isCorrectMenuNumber(number,1,6);
-    
-    if ( number == 1 ) { // ---- ТЕСТ,ВЫВОД ГОТОВ
+    console.log(number)
+    if ( number === 1 ) { // ---- ТЕСТ,ВЫВОД ГОТОВ
 
         sortListStudents(listStudents);
         
@@ -236,7 +237,7 @@ function writeStream(listStudents) {
             writeMarks(listStudents[i].marks);
         }
 
-    } else if ( number == 2 ) { // ---- ТУТ ВРОДЕ ВСЁ ОГОНЬ,ДЕКОР?
+    } else if ( number === 2 ) { // ---- ТУТ ВРОДЕ ВСЁ ОГОНЬ,ДЕКОР?
 
         console.log("\nСписок отличников:\n");
 
@@ -245,10 +246,10 @@ function writeStream(listStudents) {
 
         for ( let i = 0; i < excArray.length; i++ ) {
 
-            console.log(`${excArray[i].name} ${excArray[i].group}\n`)
+            console.log(`${i+1}. ${excArray[i].name} ${excArray[i].group}\n`)
         };
 
-    } else if ( number == 3) { // ---ОГОНЬ,ДЕКОР?
+    } else if ( number === 3 ) { // ---ОГОНЬ,ДЕКОР?
 
         console.log('\nСписок не успевающих:\n');
         var failArray = fail(listStudents);
@@ -256,10 +257,10 @@ function writeStream(listStudents) {
 
         for ( let i = 0; i < failArray.length; i++ ) {
 
-            console.log(`${failArray[i].name} ${failArray[i].group}\n`)
+            console.log(`${i+1}. ${failArray[i].name} ${failArray[i].group}\n`)
         };
 
-    }  else if ( number == 4 ) {
+    } else if ( number === 4 ) {
 
         console.log('\nВведите ФИО нового студента\n');
         var fio = readLineSync.question(' ');
@@ -295,15 +296,9 @@ function writeStream(listStudents) {
         
     } else if ( number === 5 ) {
 
-
-        console.log('\n1. Изменить ФИО студента\n2. Изменить номер группы\n3. Изменить оценки студента\n');
-        console.log('\nВведите номер для выбора меню\n');
-
-        var number = readLineSync.questionInt();
-        number = isCorrectMenuNumber(number,1,3)
+        console.log('\nВведите номер студента, которого хотите изменить\n');
         
-        if ( number === 1 ) { // ВРОДЕ ОГОНЬ,ДЕКОР?
-
+        
             sortListStudents(listStudents)
 
             for ( let i = 0; i < listStudents.length; i++ ) {
@@ -311,92 +306,97 @@ function writeStream(listStudents) {
                 console.log(i+1+".  "+listStudents[i].name+"  "+listStudents[i].group+"  ");
                             
             };
-            
-            console.log('\nВведите номер студента, которого хотите изменить\n');
-            
-            var rewriteNumber = readLineSync.questionInt('');
-            rewriteNumber = isCorrectMenuNumber(rewriteNumber,1,listStudents.length);
-            // сделать RegExp
-            console.log('\nВведите новое имя и фамилию\n');
-            var rewriteName = readLineSync.question('');
-            rewriteName = isCorrectNameStudent(rewriteName);
-            
-            listStudents[rewriteNumber-1]["name"] = rewriteName;
-            console.log('Данные изменены');
-            
-        } else if ( number === 2) {
 
-            console.log('\nВведите номер студента для изменения\n');
+            var studentNumber = readLineSync.questionInt();
+            studentNumber = isCorrectMenuNumber(studentNumber,1,listStudents.length)
+
             
-            sortListStudents(listStudents);
+            var flag = false;
+            while (!flag) {
 
-            for ( let i = 0; i < listStudents.length; i++ ) {
+                console.log(`Студент \n${listStudents[studentNumber-1].name} ${listStudents[studentNumber-1].group}`);
+                console.log('\n1. Изменить ФИО студента\n2. Изменить номер группы\n3. Изменить оценки студента\n4. Удалить студента.\n5. Отмена\n');
+                
+                console.log('\nВведите номер для выбора меню\n');
+                number = readLineSync.questionInt('');
+                number = isCorrectMenuNumber(number,1,5);
+                
+                if ( number === 1 ) { // ВРОДЕ ОГОНЬ,ДЕКОР?
 
-                console.log(i+1+".  "+listStudents[i].name+"  "+listStudents[i].group+"  ");
-                            
+                    console.log('\nВведите новое имя и фамилию\n');
+                    var rewriteName = readLineSync.question('');
+                    rewriteName = isCorrectNameStudent(rewriteName);
+                    
+                    listStudents[studentNumber-1]["name"] = rewriteName;
+                    console.log('Данные изменены');
+                    
+                    
+                } else if ( number === 2 ) {
+
+                    console.log('\nВведите новую группу\n');
+                    let groupNumber = readLineSync.questionInt('');
+                    groupNumber = isCorrectGroupNumber(groupNumber);
+
+                    listStudents[studentNumber-1]['group'] = groupNumber; 
+                    console.log('Данные изменены');
+
+                } else if ( number === 3 ) {
+
+                    console.log("\nВыберете предмет для изменения\n");
+                    let count = 1;
+                    
+                for ( let key in listStudents[studentNumber-1].marks ) {
+
+                    console.log(count+'. '+ key+' : '+listStudents[studentNumber-1].marks[key]+"\n");
+                    count +=1;
+
+                };
+
+                var numberStudy = readLineSync.questionInt('');
+                numberStudy = isCorrectMenuNumber(numberStudy,1,Object.keys(listStudents[studentNumber-1].marks).length);
+
+                console.log('\nВведите новую оценку\n');
+                var newMark = readLineSync.questionInt('');
+                newMark = isCorrectMenuNumber(newMark,1,5);
+                count = 1;
+
+                for ( let key in listStudents[studentNumber-1].marks) {
+
+                    if (count === numberStudy ) {
+
+                        listStudents[studentNumber-1].marks[key] = newMark;
+
+                    };
+                    count++;
+                };
+
+                console.log(`Данные изменены\n${listStudents[studentNumber-1].name}\n`)
+                for ( var key in listStudents[studentNumber-1].marks ) {
+
+                    console.log(`\t ${key}:${listStudents[studentNumber-1].marks[key]}\n`)
+                }
+
+                } else if ( number === 4 ) {
+
+                    console.log(listStudents[studentNumber-1].splice(studentNumber,1))
+                    
+                    console.log('Удалить')
+
+                } else if ( number === 5 ) {
+
+                    flag = true;
+
+                };
+
             };
-
-            let number = readLineSync.questionInt('');
-            number = isCorrectMenuNumber(number,1,listStudents.length);
-
-            console.log('\nВведите новую группу\n');
-            let groupNumber = readLineSync.questionInt('');
-            groupNumber = isCorrectGroupNumber(groupNumber);
-
-            listStudents[number-1]['group'] = groupNumber; 
-            console.log('Данные изменены');
-
-        } else if ( number === 3) {
-
-            console.log('\nВведите номер студента для изменения\n');
-            
-            sortListStudents(listStudents);
-
-            for ( let i = 0; i < listStudents.length; i++ ) {
-
-                console.log(i+1+".  "+listStudents[i].name+"  "+listStudents[i].group+"  ");
-                            
-            };
-
-            var numberStudent = readLineSync.questionInt('');
-            numberStudent = isCorrectMenuNumber(numberStudent,1,listStudents.length);
-
-            console.log("\nВыберете предмет для изменения\n");
-            let count = 1;
-            
-        for ( let key in listStudents[numberStudent-1].marks ) {
-
-            console.log(count+'. '+ key+' : '+listStudents[numberStudent-1].marks[key]+"\n");
-            count +=1;    
-        };
-
-        var numberStudy = readLineSync.questionInt('');
-        numberStudy = isCorrectMenuNumber(numberStudy,1,Object.keys(listStudents[numberStudent-1].marks).length);
-
-        console.log('\nВведите новую оценку\n');
-        var newMark = readLineSync.questionInt('');
-        newMark = isCorrectMenuNumber(newMark,1,5);
-        count = 1;
-
-        for ( let key in listStudents[numberStudent-1].marks) {
-
-            if (count === numberStudy ) {
-
-                listStudents[numberStudent-1].marks[key] = newMark;
-
-            };
-            count++;
-        };
-
-           console.log(listStudents[numberStudent-1].name,listStudents[numberStudent-1].marks)
 
     } else if ( number === 6 ) {
 
+        console.log('Konec')
+
         exit = true;
 
-    } 
-
-    };
+    }; 
 
 };
 };

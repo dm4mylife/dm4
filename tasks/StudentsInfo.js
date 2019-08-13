@@ -213,13 +213,52 @@ function isCorrectMenuNumber(number,min,max) {
 };
 function writeStream(listStudents) {
 
-    listStudents = json5.stringify(listStudents);
-    var buffer = Buffer.from(listStudents);
-    var wstream = fs.createWriteStream('students_list.txt');
+    var wstream = fs.createWriteStream('students_list.bin');
+    
+    
+    writeInt(listStudents.length)
+    
+    function writeInt(value) {
+    var buffer = Buffer.alloc(4);
+    buffer.writeInt32BE(value);
     wstream.write(buffer);
-    wstream.end();
-
-};
+    };
+    function writeStr(value) {
+    var buffer = Buffer.alloc(4);
+    buffer.write(value);
+    wstream.write(buffer)
+    };
+    
+    for ( let i = 0; i < listStudents.length; i++ ) {
+    
+    writeInt(listStudents[i].name.length);
+    writeStr(listStudents[i]['name'])
+    writeInt(listStudents[i]['group'])
+    writeInt(Object.keys(listStudents[i].marks).length)
+    
+    var count = 0;
+    
+    for ( var key in listStudents[i].marks) {
+    
+        count++;
+        
+    };
+    
+    writeInt(count);
+    
+    for (var key in listStudents[i].marks) {
+    
+        writeStr(key);
+        writeInt(listStudents[i].marks['key']);
+    
+    }
+    
+    };
+    wstream.end(function () {
+        console.log('done');
+    });
+    
+    };
     while (!exit) {
 
     console.log("\n1. Список студентов\n2. Отличники.\n3. Неуспевающие.\n4. Добавить студента.\n5. Редактировать студента.\n6. Выход.\n")
@@ -277,6 +316,7 @@ function writeStream(listStudents) {
 
         console.log(`\nСохранить студента ${newStudent.name} ${newStudent.group} , Yes/No?\n`);
         var answer = readLineSync.question('');
+        
 
         while ( answer != 'Yes' && answer != 'No') {
             
@@ -286,11 +326,11 @@ function writeStream(listStudents) {
         };
         if ( answer === 'Yes') {
 
-            listStudents.push(newStudent)
+            listStudents.push(newStudent);
+            writeStream(listStudents);
             console.log('\n Студент '+newStudent.name+' добавлен\n')
         };
         
-        writeStream(listStudents);
             
         /* fs.writeFileSync('students.txt'); */ // ---- ЗДЕСЬ БУДЕТ ЗАПИСЬ В БУФЕР И ДВОИЧНЫМ В ТХТ
         
@@ -328,6 +368,7 @@ function writeStream(listStudents) {
                     rewriteName = isCorrectNameStudent(rewriteName);
                     
                     listStudents[studentNumber-1]["name"] = rewriteName;
+                    writeStream(listStudents);
                     console.log('Данные изменены');
                     
                     
@@ -337,7 +378,8 @@ function writeStream(listStudents) {
                     let groupNumber = readLineSync.questionInt('');
                     groupNumber = isCorrectGroupNumber(groupNumber);
 
-                    listStudents[studentNumber-1]['group'] = groupNumber; 
+                    listStudents[studentNumber-1]['group'] = groupNumber;
+                    writeStream(listStudents);
                     console.log('Данные изменены');
 
                 } else if ( number === 3 ) {
@@ -369,7 +411,7 @@ function writeStream(listStudents) {
                     };
                     count++;
                 };
-
+                writeStream(listStudents);
                 console.log(`Данные изменены\n${listStudents[studentNumber-1].name}\n`)
                 for ( var key in listStudents[studentNumber-1].marks ) {
 
@@ -378,9 +420,10 @@ function writeStream(listStudents) {
 
                 } else if ( number === 4 ) {
 
-                    console.log(listStudents[studentNumber-1].splice(studentNumber,1))
-                    
-                    console.log('Удалить')
+                    sortListStudents(listStudents);
+                    listStudents.splice(studentNumber-1,1);
+                    writeStream(listStudents);
+                    console.log(`\nСтудент ${listStudents[studentNumber-1].name} удален\n`);
 
                 } else if ( number === 5 ) {
 

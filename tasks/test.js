@@ -46,14 +46,78 @@ var fs = require('fs')
 var listStudents = [];
 listStudents.push(test1,test2,test3);
 
-listStudents = json5.stringify(listStudents)
-console.log(listStudents)
-var buffer = Buffer.from(listStudents);
+/* listStudents = json5.stringify(listStudents) */
+/* 
+function writeStream() {
 
-console.log(buffer)
-var w = fs.createWriteStream('test_stream.txt');
-w.write(buffer);
-w.end()
+var wstream = fs.createWriteStream('students_list.bin');
+
+
+writeInt(listStudents.length)
+
+function writeInt(value) {
+var buffer = Buffer.alloc(4);
+buffer.writeInt32BE(value);
+wstream.write(buffer);
+};
+function writeStr(value) {
+var buffer = Buffer.alloc(4);
+buffer.write(value);
+wstream.write(buffer)
+};
+
+for ( let i = 0; i < listStudents.length; i++ ) {
+
+writeInt(listStudents[i].name.length);
+writeStr(listStudents[i]['name'])
+writeInt(listStudents[i]['group'])
+writeInt(Object.keys(listStudents[i].marks).length)
+
+var count = 0;
+
+for ( var key in listStudents[i].marks) {
+
+    count++;
+    
+};
+
+writeInt(count);
+
+for (var key in listStudents[i].marks) {
+
+    writeStr(key);
+    writeInt(listStudents[i].marks['key']);
+
+}
+
+};
+wstream.end(function () {
+    console.log('done');
+});
+
+};
+writeStream(listStudents) */
+
+function readStream() {
+
+var fsExt = require('./fsExt');
+ 
+var rstreamSync = fsExt.createReadStream('students_list.bin');
+ 
+
+var buf = rstreamSync.read(4);
+var result = '';
+console.log(buf)
+while (buf != null) {
+    console.log(buf);
+    buf = rstreamSync.read(4);
+    result += buf.readInt8()
+}
+ 
+rstreamSync.close();
+};
+readStream();
+
 
 /* function writeStream(listStudents) {
 

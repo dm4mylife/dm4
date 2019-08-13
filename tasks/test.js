@@ -107,11 +107,13 @@ var rstreamSync = fsExt.createReadStream('students_list.bin');
 
 var buf = rstreamSync.read(4);
 var result = '';
-console.log(buf)
+var i = 3;
 while (buf != null) {
     console.log(buf);
     buf = rstreamSync.read(4);
-    result += buf.readInt8()
+    result += buf.readInt8(i)
+    console.log(result)
+    
 }
  
 rstreamSync.close();

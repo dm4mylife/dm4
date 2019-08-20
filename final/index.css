@@ -1,11 +1,7 @@
 #canvas {
-    height: 150px; 
-    width: 600px;
+    height: 250px; 
+    width: 800px;
     border: 2px solid black;
     /* background-image: url('setka1.png') */
    
-}
-body {
-    width: auto;
-    padding: auto;
 }

@@ -1,32 +1,43 @@
 
+
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d')
 
 
 
-    /* if ( x === 1100 ) {
-        x = 0;
-    } else {
-        x += 110;
-    }; */
-    
-var pictures  = [];
-/* for ( var i = 1; i <= 6; i++ ) {
+/* if ( x === 1100 ) {
+    x = 0;
+} else {
+    x += 110;
+}; */
 
-var sprite = new Image('');
-sprite.src = `${i}.png`;
-pictures.push(sprite)
-} */
+var pictures  = [];
+
+for ( var i = 1; i <= 12; i++ ) {
+
+    var sprite = new Image();
+    sprite.src = `${i}.png`;
+    pictures.push(sprite);
+
+}
 console.log(pictures)
 var sprite = new Image('');
 sprite.src = '1.png';
 
  var godzilla = {
 
-    y_pos : 50
+    frame_id : 0,
+    y_pos : 50,
+    time : 0
 
     }
-
+var arr = [1,2,3,4]
+console.log(arr[-2])
+if ( 'abc' > 'df'){
+    console.log('true')}
+else {
+    console.log('nj')
+}
 /* function drawGodzilla(pictures) {
 
     for ( var i = 1; i <= 6; i++ ) {
@@ -41,44 +52,49 @@ sprite.src = '1.png';
     drawGodzilla(pictures) 
 
     };*/
+time = 0;
+frame_id = 0;
 
-    function moveGodzilla() {
+function moveGodzilla() {
 
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 
-        ctx.clearRect(0,0,canvas.width,canvas.height)
-        ctx.drawImage(sprite,0,godzilla.y_pos,50,70);
-        
+if ( godzilla.time > 1000) {
 
-        };
+        godzilla.time = 0;
+    }
+
+    frame_id = Math.floor(godzilla.time / 1000 * pictures.length);
+    console.log(frame_id)
+
+    ctx.drawImage(pictures[frame_id],0,godzilla.y_pos,50,70);
+    
+    godzilla.time +=30;
+
+    
+
+};
             
         
-    setTimeout(moveGodzilla, 30);
+setInterval(moveGodzilla, 30);
     
 document.onkeydown = function (event) {
    
 
    if ( event.keyCode === 38 ) {
 
-            console.log(event.keyCode)
-            
-            console.log(godzilla.y_pos)
+        console.log(event.keyCode)
+        
+        console.log(godzilla.y_pos)
 
-            for ( ;godzilla.y_pos === 30; ) {
-                
-            setInterval(moveGodzilla, 30);
-                console.log('Work')
-            godzilla.y_pos -= 1;
-            console.log(godzilla.y_pos)
 
-            }  
-                console.log('Eto xyuna done')
-                setInterval(moveGodzilla, 30);
-                godzilla.y_pos = 20;
+        godzilla.y_pos -= 1;
 
-            }
+
+    }
           
 
-                
+        
 
-        };
-                
+};
+        

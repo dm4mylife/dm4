@@ -1,4 +1,4 @@
-/* var test1 = {
+var test1 = {
 
     name : "1Ivanov I2van",
     group : 234,
@@ -49,59 +49,64 @@ listStudents.push(test1,test2,test3);
  
 function writeStream() {
 
-var wstream = fs.createWriteStream('students_list.bin');
+    var wstream = fs.createWriteStream('students_list.bin');
 
-function writeInt(value) {
-var buffer = Buffer.alloc(4);
-buffer.writeInt32BE(value);
-console.log(buffer)
-wstream.write(buffer);
-};
-function writeStr(value) {
-var buffer = Buffer.alloc(4);
-buffer.write(value);
-console.log(buffer)
-wstream.write(buffer)
-};
-
-writeInt(listStudents.length);
-
-for ( let i = 0; i < listStudents.length; i++ ) {
-console.log(listStudents[i].name.length)
-writeInt(listStudents[i].name.length);
-console.log(listStudents[i]['name'])
-writeStr(listStudents[i]['name'])
-console.log(listStudents[i]['group'])
-writeInt(listStudents[i]['group'])
-console.log(Object.keys(listStudents[i].marks).length)
-writeInt(Object.keys(listStudents[i].marks).length)
-
-var count = 0;
-
-for ( var key in listStudents[i].marks) {
-
-    count++;
+    function writeInt(value) {
+        var buffer = Buffer.alloc(4);
+        buffer.writeInt32BE(value);
+        console.log(buffer)
+        wstream.write(buffer);
+    };
     
-};
-console.log(count)
-writeInt(count);
+    function writeStr(value) {
+        var buffer = Buffer.alloc(4);
+        buffer.write(value);
+        console.log(buffer)
+        wstream.write(buffer)
+    };
 
-for (var key in listStudents[i].marks) {
-    console.log(key);
-    writeStr(key);
-    console.log(listStudents[i].marks[key])
-    writeInt(listStudents[i].marks[key]);
+    writeInt(listStudents.length);
 
-}
+    for ( let i = 0; i < listStudents.length; i++ ) {
 
-};
-wstream.end(function () {
+        console.log(listStudents[i].name.length)
+        writeInt(listStudents[i].name.length);
+        console.log(listStudents[i]['name'])
+        writeStr(listStudents[i]['name'])
+        console.log(listStudents[i]['group'])
+        writeInt(listStudents[i]['group'])
+        console.log(Object.keys(listStudents[i].marks).length)
+        writeInt(Object.keys(listStudents[i].marks).length)
+
+        var count = 0;
+
+        for ( var key in listStudents[i].marks) {
+
+            count++;
+        
+        };
+
+        console.log(count)
+        writeInt(count);
+
+        for (var key in listStudents[i].marks) {
+
+            console.log(key);
+            writeStr(key);
+            console.log(listStudents[i].marks[key])
+            writeInt(listStudents[i].marks[key]);
+
+        };
+
+    };
+
+    wstream.end(function () {
     console.log('done');
 });
 
 };
 writeStream(listStudents) 
- */
+
 
 
  function readStream() {

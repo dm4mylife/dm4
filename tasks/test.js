@@ -1,4 +1,4 @@
-var test1 = {
+/* var test1 = {
 
     name : "1Ivanov I2van",
     group : 234,
@@ -59,10 +59,7 @@ function writeStream() {
     };
     
     function writeStr(value) {
-        var buffer = Buffer.alloc(4);
-        buffer.write(value);
-        console.log(buffer)
-        wstream.write(buffer)
+        wstream.write(value);
     };
 
     writeInt(listStudents.length);
@@ -106,7 +103,7 @@ function writeStream() {
 
 };
 writeStream(listStudents) 
-
+ */
 
 
  function readStream() {
@@ -119,39 +116,32 @@ var result = ' ';
 
 
 function readInt(value) {
-var buffer = rstreamSync.read(4);
-console.log(buffer)
-result += buffer.readInt32BE();
-console.log(result)
+
+    var buffer = rstreamSync.read(4);
+    console.log(buffer);
+    result += buffer;
+    console.log(result);
 
 };
-function readStr(value) {
-    var buffer = rstreamSync.read(4);
-    console.log(buffer)
-    result += buffer.toString('utf8');
-    console.log(result)
-    
-};
+
+
 rstreamSync.read(4);
 
  var buf = rstreamSync.read(4);
  buf = rstreamSync.read(4);
+
  while ( buf != null ) {
 
-    readStr();
     readInt();
-    
 
  };
  
-
-
 /* for ( let i = 0; i < listStudents.length; i++ ) {
 
 writeInt(listStudents[i].name.length);
-writeStr(listStudents[i]['name'])
-writeInt(listStudents[i]['group'])
-writeInt(Object.keys(listStudents[i].marks).length)
+writeStr(listStudents[i]['name']);
+writeInt(listStudents[i]['group']);
+writeInt(Object.keys(listStudents[i].marks).length);
 
 var count = 0;
 
@@ -168,13 +158,11 @@ for (var key in listStudents[i].marks) {
     writeStr(key);
     writeInt(listStudents[i].marks['key']);
 
-}
+};
 
 };
 */
  
-
-
 rstreamSync.close();
 };
 readStream(); 

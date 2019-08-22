@@ -73,6 +73,7 @@ function writeStream() {
 
         for (var key in listStudents[i].marks) {
 
+            writeInt(key.length);
             writeStr(key);
             writeInt(listStudents[i].marks[key]);
 
@@ -85,7 +86,7 @@ function writeStream() {
 });
 
 };
-writeStream(listStudents)  */
+
 
 
 function readStream() {
@@ -100,41 +101,43 @@ function readStream() {
     
     console.log(countStudents)
     
-    for ( var i = 0; i < countStudents; i++ ) {
-    
-        var nameLength = readInt();
-        console.log(nameLength);
-        var name = readStr(nameLength);
-        console.log(name)
-        var obj = {};
-        obj.name = name;
-        var group = readInt();
-        obj.group = group;
-        console.log(obj)
-        let count = readInt();
-        console.log(count)
-        console.log(readInt())
+        for ( var i = 0; i < countStudents; i++ ) {
         
-        for ( let k = 0; k < count; k++ ) {
+            var nameLength = readInt();
+            console.log(nameLength);
+            var name = readStr(nameLength);
+            console.log(name);
+            var obj = {};
+            obj.name = name;
+            var group = readInt();
+            obj.group = group;
+            console.log(obj);
+            let count = readInt();
+            console.log(count);
+            var marksObj = {};
 
-            var marks = {};
-            var subjectLength = readInt();
-            console.log(subjectLength+' eto dlina')
-            let nameSubject = readStr(subjectLength);
-            console.log(nameSubject)
-            var mark = readInt();
-            marks[name] = mark;
-            console.log(marks)
+                for ( let k = 0; k < count; k++ ) {
+
+                    
+                    var subjectLength = readInt();
+                   
+                    let nameSubject = readStr(subjectLength);
+                   
+                    var mark = readInt();
+                    
+                    marksObj[nameSubject] = mark;
+                    
+                    
             
+                };
+
+                    
+                    obj.marks = marksObj;
+                    
+                    listStudents[i] = obj;
+                    console.log(listStudents[i]);
     
-        };
-        console.log(marks)
-        obj.marks = marks;
-        listStudents[i] = obj;
-        console.log(listStudents[i])
-    
-    }
-    
+    };
     
     function readInt() {
      
@@ -146,15 +149,18 @@ function readStream() {
     
     function readStr(value) {
     
-            var buffer = rstreamSync.read(value);
-            var value = buffer.toString('utf8',buffer);
-            return value;
+        var buffer = rstreamSync.read(value);
+        var value = buffer.toString('utf8',buffer);
+        return value;
             
-    
     };
     
+
     rstreamSync.close();
     console.log(listStudents);
-    };
-    readStream();
- 
+};
+    readStream(); */
+ var obj = {
+     name: 1
+ };
+ console.log(obj.length)

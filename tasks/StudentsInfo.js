@@ -107,7 +107,7 @@ function StudentsInfo() {
             } }]
             
 
-    var listStudents = testList;
+    /* var listStudents = testList; */
     var exit = false;
 
 function sortListStudents() {
@@ -213,52 +213,119 @@ function isCorrectMenuNumber(number,min,max) {
 };
 function writeStream(listStudents) {
 
-    var wstream = fs.createWriteStream('students_list.bin');
+        var wstream = fs.createWriteStream('students_list.bin');
     
+        function writeInt(value) {
     
-    writeInt(listStudents.length)
-    
-    function writeInt(value) {
-    var buffer = Buffer.alloc(4);
-    buffer.writeInt32BE(value);
-    wstream.write(buffer);
-    };
-    function writeStr(value) {
-    var buffer = Buffer.alloc(4);
-    buffer.write(value);
-    wstream.write(buffer)
-    };
-    
-    for ( let i = 0; i < listStudents.length; i++ ) {
-    
-    writeInt(listStudents[i].name.length);
-    writeStr(listStudents[i]['name'])
-    writeInt(listStudents[i]['group'])
-    writeInt(Object.keys(listStudents[i].marks).length)
-    
-    var count = 0;
-    
-    for ( var key in listStudents[i].marks) {
-    
-        count++;
+            var buffer = Buffer.alloc(4);
+            buffer.writeInt32BE(value);
+            wstream.write(buffer);
+        };
         
-    };
+        function writeStr(value) {
+            wstream.write(value);
+        };
     
-    writeInt(count);
+        writeInt(listStudents.length);
     
-    for (var key in listStudents[i].marks) {
+        for ( let i = 0; i < listStudents.length; i++ ) {
     
-        writeStr(key);
-        writeInt(listStudents[i].marks['key']);
+            writeInt(listStudents[i].name.length);
+            writeStr(listStudents[i]['name'])
+            writeInt(listStudents[i]['group'])
+            writeInt(Object.keys(listStudents[i].marks).length)
     
-    }
+            for (var key in listStudents[i].marks) {
     
-    };
-    wstream.end(function () {
+                writeInt(key.length);
+                writeStr(key);
+                writeInt(listStudents[i].marks[key]);
+    
+            };
+    
+        };
+    
+        wstream.end(function () {
         console.log('done');
     });
     
-    };
+};
+function readStream(listStudents) {
+    
+        var fsExt = require('./fsExt');
+         
+        var rstreamSync = fsExt.createReadStream('students_list.bin');
+        
+        var listStudents= [];
+        
+        var countStudents = readInt();
+        
+        
+            for ( var i = 0; i < countStudents; i++ ) {
+            
+                var nameLength = readInt();
+                var name = readStr(nameLength);
+                var obj = {};
+                obj.name = name;
+                var group = readInt();
+                obj.group = group;
+                let count = readInt();
+                var marksObj = {};
+    
+                    for ( let k = 0; k < count; k++ ) {
+    
+                        
+                        var subjectLength = readInt();
+                       
+                        let nameSubject = readStr(subjectLength);
+                       
+                        var mark = readInt();
+                        
+                        marksObj[nameSubject] = mark;
+                        
+                    
+                    };
+    
+                        
+                        obj.marks = marksObj;
+                        
+                        listStudents[i] = obj;
+                        return listStudents;
+                        
+        
+        };
+        
+        function readInt() {
+         
+            var buffer = rstreamSync.read(4);
+            var value = buffer.readInt32BE();
+            return value;
+        
+        };
+        
+        function readStr(value) {
+        
+            var buffer = rstreamSync.read(value);
+            var value = buffer.toString('utf8',buffer);
+            return value;
+                
+        };
+        
+    
+        rstreamSync.close();
+        
+        return listStudents;
+};
+
+if( !fs.existsSync('students_list.bin' )) {
+
+    fs.writeFileSync('students_list.bin', Buffer.alloc(4));
+    
+
+} 
+    
+    var listStudents = readStream();
+
     while (!exit) {
 
     console.log("\n1. Список студентов\n2. Отличники.\n3. Неуспевающие.\n4. Добавить студента.\n5. Редактировать студента.\n6. Выход.\n")
@@ -267,7 +334,7 @@ function writeStream(listStudents) {
     var number = readLineSync.questionInt();
     number = isCorrectMenuNumber(number,1,6);
     console.log(number)
-    if ( number === 1 ) { // ---- ТЕСТ,ВЫВОД ГОТОВ
+    if ( number === 1 ) { 
 
         sortListStudents(listStudents);
         
@@ -276,10 +343,10 @@ function writeStream(listStudents) {
             writeMarks(listStudents[i].marks);
         }
 
-    } else if ( number === 2 ) { // ---- ТУТ ВРОДЕ ВСЁ ОГОНЬ,ДЕКОР?
+    } else if ( number === 2 ) { 
 
         console.log("\nСписок отличников:\n");
-
+        
         var excArray = exc(listStudents);
         sortListStudents(excArray);
 
@@ -288,7 +355,7 @@ function writeStream(listStudents) {
             console.log(`${i+1}. ${excArray[i].name} ${excArray[i].group}\n`)
         };
 
-    } else if ( number === 3 ) { // ---ОГОНЬ,ДЕКОР?
+    } else if ( number === 3 ) { 
 
         console.log('\nСписок не успевающих:\n');
         var failArray = fail(listStudents);
@@ -307,10 +374,12 @@ function writeStream(listStudents) {
         
         var newStudent = {};
         newStudent.name = fio;
+        newStudent.marks = {};
 
         console.log('\nВведите номер группы нового студента\n')
         var numGroup = readLineSync.questionInt();
         numGroup = isCorrectGroupNumber(numGroup,999,1);
+        
         
         newStudent.group = numGroup;
 
@@ -325,14 +394,12 @@ function writeStream(listStudents) {
             
         };
         if ( answer === 'Yes') {
-
+            
             listStudents.push(newStudent);
             writeStream(listStudents);
             console.log('\n Студент '+newStudent.name+' добавлен\n')
         };
         
-            
-        /* fs.writeFileSync('students.txt'); */ // ---- ЗДЕСЬ БУДЕТ ЗАПИСЬ В БУФЕР И ДВОИЧНЫМ В ТХТ
         
     } else if ( number === 5 ) {
 
@@ -353,15 +420,16 @@ function writeStream(listStudents) {
             
             var flag = false;
             while (!flag) {
-
+                if (listStudents.length > 0 ) {
                 console.log(`Студент \n${listStudents[studentNumber-1].name} ${listStudents[studentNumber-1].group}`);
-                console.log('\n1. Изменить ФИО студента\n2. Изменить номер группы\n3. Изменить оценки студента\n4. Удалить студента.\n5. Отмена\n');
+                }
+                console.log('\n1. Изменить ФИО студента\n2. Изменить номер группы\n3. Изменить предмет\n4. Изменить оценки студента\n5. Удалить студента.\n6. Отмена\n');
                 
                 console.log('\nВведите номер для выбора меню\n');
                 number = readLineSync.questionInt('');
-                number = isCorrectMenuNumber(number,1,5);
+                number = isCorrectMenuNumber(number,1,6);
                 
-                if ( number === 1 ) { // ВРОДЕ ОГОНЬ,ДЕКОР?
+                if ( number === 1 ) { 
 
                     console.log('\nВведите новое имя и фамилию\n');
                     var rewriteName = readLineSync.question('');
@@ -383,24 +451,79 @@ function writeStream(listStudents) {
                     console.log('Данные изменены');
 
                 } else if ( number === 3 ) {
-
-                    console.log("\nВыберете предмет для изменения\n");
-                    let count = 1;
                     
-                for ( let key in listStudents[studentNumber-1].marks ) {
+                    
 
-                    console.log(count+'. '+ key+' : '+listStudents[studentNumber-1].marks[key]+"\n");
-                    count +=1;
+                    var empty = 0;
 
-                };
+                    for (var key in listStudents[studentNumber-1].marks) {
 
-                var numberStudy = readLineSync.questionInt('');
-                numberStudy = isCorrectMenuNumber(numberStudy,1,Object.keys(listStudents[studentNumber-1].marks).length);
+                        empty++;
 
-                console.log('\nВведите новую оценку\n');
-                var newMark = readLineSync.questionInt('');
-                newMark = isCorrectMenuNumber(newMark,1,5);
-                count = 1;
+                    };
+
+                    if ( empty > 0 ) {
+
+                        console.log("\nВыберете предмет для изменения\n");
+                        for ( let key in listStudents[studentNumber-1].marks ) {
+
+                        console.log(count+'. '+ key+' : '+listStudents[studentNumber-1].marks[key]+"\n");
+                        count +=1;
+                        };
+    
+                    } else {
+
+                        console.log('Введите предмет ');
+                        var subject = readLineSync.question('');
+                        console.log('Введите оценку ');
+                        let mark = readLineSync.question('');
+                        listStudents[studentNumber-1].marks[subject] = mark;
+                        writeStream(listStudents)
+                        
+
+                    };
+                } else if ( number === 4 ) {        
+
+                        
+                        var count = 1;
+
+                        if ( count > 1) { 
+
+                            console.log('Введите номер предмета');
+                            for ( let key in listStudents[studentNumber-1].marks ) {
+
+                        console.log(count+'. '+ key+' : '+listStudents[studentNumber-1].marks[key]+"\n");
+                        count++;
+                        };
+                        var subject = readLineSync.questionInt('');
+
+                        console.log('Введите предмет ');
+                
+
+                        var numberStudy = readLineSync.questionInt('');
+                        numberStudy = isCorrectMenuNumber(numberStudy,1,Object.keys(listStudents[studentNumber-1].marks).length);
+
+                        console.log('\nВведите новую оценку\n');
+                        var newMark = readLineSync.questionInt('');
+                        newMark = isCorrectMenuNumber(newMark,1,5);
+                        console.log('Данные изменены');
+                        writeStream(listStudents);
+
+
+                    } else {
+
+                        console.log('Введите предмет ');
+                        var subject = readLineSync.question('');
+                        console.log('Введите оценку ');
+                        let mark = readLineSync.question('');
+                        listStudents[studentNumber-1].marks[subject] = mark;
+                        writeStream(listStudents);
+                        
+
+                    };
+                   
+                    
+                /* count = 1;
 
                 for ( let key in listStudents[studentNumber-1].marks) {
 
@@ -416,28 +539,29 @@ function writeStream(listStudents) {
                 for ( var key in listStudents[studentNumber-1].marks ) {
 
                     console.log(`\t ${key}:${listStudents[studentNumber-1].marks[key]}\n`)
-                }
+                } */
 
-                } else if ( number === 4 ) {
+                } else if ( number === 5 ) {
 
                     sortListStudents(listStudents);
                     listStudents.splice(studentNumber-1,1);
                     writeStream(listStudents);
-                    console.log(`\nСтудент ${listStudents[studentNumber-1].name} удален\n`);
+                    console.log(`\nСтудент удален\n`);
 
-                } else if ( number === 5 ) {
+                } else if ( number === 6 ) {
 
                     flag = true;
 
-                };
+                }
 
-            };
+            }
 
     } else if ( number === 6 ) {
 
         console.log('Konec')
 
         exit = true;
+        writeStream(listStudents);
 
     }; 
 

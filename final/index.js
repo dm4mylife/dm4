@@ -10,11 +10,13 @@ for ( var i = 1; i <= 12; i++ ) {
     pictures.push(sprite);
 
 }
-var jumpPressed = false;
+var onGround = false;
+
 var dy = 0;
+
  var godzilla = {
 
-    frame_id : 0,
+    x_pos : 5,
     y_pos : 80,
     time : 0
 
@@ -39,45 +41,34 @@ function moveGodzilla() {
     
     godzilla.time +=30;
     
-
-    if ( jumpPressed ) {
-
-        jump();
-
-    };
-
-    function jump() {
         
-        godzilla.y_pos += dy;
+        godzilla.y_pos = godzilla.y_pos + dy;
+        console.log(godzilla.y_pos + ' ' + dy);
+        if ( godzilla.y_pos < 80 ) {
     
-        if ( godzilla.y_pos > 5 ) {
-    
-            dy -= 1;
+            dy += 1;
     
         } else {
-    
-             dy += 1;
 
-        if( dy === 0 ) {
+            onGround = true;
+            godzilla.y_pos =  80;
+            //dy = 0;
 
-            godzilla.y_pos = 80;
-            jumpPressed = false;
+         };
+};
 
-        }
-             
-    
-         }
-    };
-
-}
-
-var timer; 
+var timer = null; 
            
         
     document.onclick = function () { 
 
+        if (timer != null) {
+
+            clearInterval(timer);
+        };
+
         timer = setInterval(moveGodzilla, 20); 
-        console.log('Run');
+        
 
     };
 
@@ -85,20 +76,17 @@ var timer;
         
             clearInterval(timer);
             return false;
-    }
-
-    var dy = 0; 
+    };
 
     document.onkeydown = function (event) {
-    console.log(event)
+    
 
-    if ( event.keyCode === 38 ) {
+    if ( event.keyCode === 38 && onGround) {
 
-            console.log('Pressed jump');
-            jumpPressed = true;
-            
+            onGround = false;
+            dy = -9;
 
-    }
+    };
             
         
 };

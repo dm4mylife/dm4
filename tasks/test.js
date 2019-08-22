@@ -52,9 +52,9 @@ function writeStream() {
     var wstream = fs.createWriteStream('students_list.bin');
 
     function writeInt(value) {
+
         var buffer = Buffer.alloc(4);
         buffer.writeInt32BE(value);
-        console.log(buffer)
         wstream.write(buffer);
     };
     
@@ -66,31 +66,14 @@ function writeStream() {
 
     for ( let i = 0; i < listStudents.length; i++ ) {
 
-        console.log(listStudents[i].name.length)
         writeInt(listStudents[i].name.length);
-        console.log(listStudents[i]['name'])
         writeStr(listStudents[i]['name'])
-        console.log(listStudents[i]['group'])
         writeInt(listStudents[i]['group'])
-        console.log(Object.keys(listStudents[i].marks).length)
         writeInt(Object.keys(listStudents[i].marks).length)
-
-        var count = 0;
-
-        for ( var key in listStudents[i].marks) {
-
-            count++;
-        
-        };
-
-        console.log(count)
-        writeInt(count);
 
         for (var key in listStudents[i].marks) {
 
-            console.log(key);
             writeStr(key);
-            console.log(listStudents[i].marks[key])
             writeInt(listStudents[i].marks[key]);
 
         };
@@ -102,68 +85,76 @@ function writeStream() {
 });
 
 };
-writeStream(listStudents) 
- */
+writeStream(listStudents)  */
 
 
- function readStream() {
+function readStream() {
 
-var fsExt = require('./fsExt');
- 
-var rstreamSync = fsExt.createReadStream('students_list.bin');
-
-var result = ' ';
-
-
-function readInt(value) {
-
-    var buffer = rstreamSync.read(4);
-    console.log(buffer);
-    result += buffer;
-    console.log(result);
-
-};
-
-
-rstreamSync.read(4);
-
- var buf = rstreamSync.read(4);
- buf = rstreamSync.read(4);
-
- while ( buf != null ) {
-
-    readInt();
-
- };
- 
-/* for ( let i = 0; i < listStudents.length; i++ ) {
-
-writeInt(listStudents[i].name.length);
-writeStr(listStudents[i]['name']);
-writeInt(listStudents[i]['group']);
-writeInt(Object.keys(listStudents[i].marks).length);
-
-var count = 0;
-
-for ( var key in listStudents[i].marks) {
-
-    count++;
+    var fsExt = require('./fsExt');
+     
+    var rstreamSync = fsExt.createReadStream('students_list.bin');
     
-};
+    var listStudents= [];
+    
+    var countStudents = readInt();
+    
+    console.log(countStudents)
+    
+    for ( var i = 0; i < countStudents; i++ ) {
+    
+        var nameLength = readInt();
+        console.log(nameLength);
+        var name = readStr(nameLength);
+        console.log(name)
+        var obj = {};
+        obj.name = name;
+        var group = readInt();
+        obj.group = group;
+        console.log(obj)
+        let count = readInt();
+        console.log(count)
+        console.log(readInt())
+        
+        for ( let k = 0; k < count; k++ ) {
 
-writeInt(count);
-
-for (var key in listStudents[i].marks) {
-
-    writeStr(key);
-    writeInt(listStudents[i].marks['key']);
-
-};
-
-};
-*/
- 
-rstreamSync.close();
-};
-readStream(); 
+            var marks = {};
+            var subjectLength = readInt();
+            console.log(subjectLength+' eto dlina')
+            let nameSubject = readStr(subjectLength);
+            console.log(nameSubject)
+            var mark = readInt();
+            marks[name] = mark;
+            console.log(marks)
+            
+    
+        };
+        console.log(marks)
+        obj.marks = marks;
+        listStudents[i] = obj;
+        console.log(listStudents[i])
+    
+    }
+    
+    
+    function readInt() {
+     
+        var buffer = rstreamSync.read(4);
+        var value = buffer.readInt32BE();
+        return value;
+    
+    };
+    
+    function readStr(value) {
+    
+            var buffer = rstreamSync.read(value);
+            var value = buffer.toString('utf8',buffer);
+            return value;
+            
+    
+    };
+    
+    rstreamSync.close();
+    console.log(listStudents);
+    };
+    readStream();
  

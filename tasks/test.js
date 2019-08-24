@@ -160,7 +160,5 @@ function readStream() {
     console.log(listStudents);
 };
     readStream(); */
- var obj = {
-     name: 1
- };
- console.log(obj.length)
+ var arr = []
+ console.log(arr.length);

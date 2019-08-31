@@ -14,6 +14,8 @@ for ( var i = 1; i <= 12; i++ ) {
 var onGround = false;
 
 var dy = 0;
+var x = 320;   
+var y = 100;
 
  var godzilla = {
 
@@ -56,30 +58,48 @@ function moveGodzilla() {
             //dy = 0;
 
          };
+            var godzilla_width_half = 20;
+            var godzilla_height_half = 30;
+            var black_width_half = 10;
+            var black_height_half  = 30;
 
+            var godzilla_x = godzilla.x_pos;
+            var godzilla_x1 = godzilla.x_pos + godzilla_width_half;
+            var square_x = x;
+            var square_x1 = x + black_width_half;
+            var godzilla_y = godzilla.y_pos;
+            var godzilla_y = godzilla.y_pos + 
+            
+            
 
-
-
-
-            var midPointGodX = Math.floor((godzilla.x_pos + (godzilla.x_pos+40)-1) / 2);
-            var midPointGodY = (godzilla.y_pos + (godzilla.y_pos+60)) / 2;
-            var midPointBlackX = Math.floor(x + (x + 10) / 2);
-            var midPointBlackY = y + (y + 40) / 2;
-            console.log(`${midPointBlackX}:${midPointBlackY}---black\n${midPointGodX}:${midPointBlackY}---godzilla`)
-            if ( midPointGodX === midPointBlackX && midPointGodY === midPointBlackY ) {
+            if ( godzilla_x > square_x && godzilla_x < square_x1 ||
+                godzilla_x1 > square_x &&  godzilla_x1 < square_x1 ||
+                square_x > godzilla_x && square_x < godzilla_x1 ||
+                square_x1 > godzilla_x && square_x1 < godzilla_x1 ) {
         
                 console.log("BOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOM");
                 clearInterval(timer);
-                clearInterval(black);
                 
-            }
-        
+            };
+
+            
+
+            if ( x < -10 ) {
+                
+                x = 320;
+            
+            };
+            
+            ctx.fillRect(x,y,10,40);
+            x-=6;
+            
+            score.value = x
+
 };
 
 var timer = null;
 var black = null;
 var black1 = null;
-           
         
     document.onclick = function () { 
 
@@ -89,18 +109,9 @@ var black1 = null;
         };
 
         timer = setInterval(moveGodzilla, 20);
-        black = setInterval(obstacle, 20);
-            
-    
-       
-
-    };
-
-
-
-   
-    
       
+              
+    };
 
     var stop = document.oncontextmenu = function (event) {
         
@@ -111,7 +122,6 @@ var black1 = null;
 
     document.onkeydown = function (event) {
     
-
     if ( event.keyCode === 38 && onGround) {
 
             onGround = false;
@@ -119,47 +129,11 @@ var black1 = null;
 
     };
             
-        
 };
-
-
-var x = 320;
-var y = 100;
-function obstacle() {
-    
-    if ( x < -10 ) {
-        
-        x = 320;
-    
-    };
-    
-    ctx.fillRect(x,y,10,40);
-    x--;
-    
-    score.value = x
-};
-var x_1 = 320;
-/* function obstacle1() {
-    
-    
-    if ( x_1 < -10 ) {
-        
-        x_1 = 320;
-    
-
-    };
-    
-
-    ctx.fillRect(x_1,y,10,40);
-    x_1--;
-   
-   
-}; */
-
 
 
 function getRandom(min, max) {
+
   return Math.random() * (max - min) + min;
-}
 
-
+};

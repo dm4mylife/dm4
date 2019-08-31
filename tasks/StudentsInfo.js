@@ -244,11 +244,10 @@ function writeStream(listStudents) {
             };
     
         };
-    
+        
         wstream.end(function () {
-        console.log('');
-    });
-    
+            console.log('Done');
+        });
 };
 function readStream(listStudents) {
     

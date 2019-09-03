@@ -1,7 +1,25 @@
 #canvas {
+    
     height: 250px; 
     width: 800px;
     border: 2px solid black;
     /* background-image: url('setka1.png') */
-   
+    
 }
+
+@font-face {
+
+	font-family: "bit";
+	src: url('fonts/eight-bit-dragon.eot');
+	src: local('☺'), url('fonts/eight-bit-dragon.woff') format('woff'), url('fonts/eight-bit-dragon.ttf') format('truetype'), url('fonts/eight-bit-dragon.svg') format('svg');
+	font-weight: normal;
+    font-style: normal;
+    
+}
+
+
+.container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}   

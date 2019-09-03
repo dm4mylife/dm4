@@ -439,11 +439,11 @@ if( !fs.existsSync('students_list.bin' )) {
                         
                         console.log(`Студент \n${listStudents[studentNumber-1].name} ${listStudents[studentNumber-1].group}`);
                         
-                        console.log('\n1. Изменить ФИО студента\n2. Изменить номер группы\n3. Изменить предмет\n4. Изменить оценки студента\n5. Удалить студента.\n6. Отмена\n');
+                        console.log('\n1. Изменить ФИО студента\n2. Изменить номер группы\n3. Изменить оценки студента\n4. Удалить студента.\n5. Отмена\n');
                         
                         console.log('\nВведите номер для выбора меню\n');
                         number = readLineSync.questionInt('');
-                        number = isCorrectMenuNumber(number,1,6);
+                        number = isCorrectMenuNumber(number,1,5);
                         
                         if ( number === 1 ) { 
 
@@ -466,59 +466,8 @@ if( !fs.existsSync('students_list.bin' )) {
                             writeStream(listStudents);
                             console.log('Данные изменены');
 
-                        } else if ( number === 3 ) {
                             
-                        
-                            var empty = 0;
-
-                            for (var key in listStudents[studentNumber-1].marks) {
-
-                                empty++;
-
-                            };
-                            var count = 1;
-                            if ( empty > 0 ) {
-
-                                console.log("\nВыберите предмет для изменения\n");
-
-                                
-
-                                for ( let key in listStudents[studentNumber-1].marks ) {
-
-                                console.log(count+'. '+ key+' : '+listStudents[studentNumber-1].marks[key]+"\n");
-                                count +=1;
-                                };
-                                
-                                var subject = readLineSync.question('');
-                                subject = isCorrectMenuNumber(subject,1,count-1)
-                                console.log('Введите оценку\n ');
-                                let mark = readLineSync.questionInt('');
-                                mark = isCorrectMenuNumber(mark,1,5)
-                                listStudents[studentNumber-1].marks[subject] = mark;
-                                writeStream(listStudents);
-
-                            } else {
-
-                                for ( let key in listStudents[studentNumber-1].marks ) {
-
-                                    
-                                    count++;
-
-                                };
-                                
-                                console.log('Введите предмет \n');
-                                var subject = readLineSync.question('');
-                                subject = isCorrectSubject(subject);
-                                console.log('Введите оценку \n');
-                                let mark = readLineSync.questionInt('');
-                                mark = isCorrectMenuNumber(mark,1,5)
-                                listStudents[studentNumber-1].marks[subject] = mark;
-                                writeStream(listStudents); 
-                            
-                            }
-
-                            
-                        } else if ( number === 4 ) {        
+                        } else if ( number === 3 ) {        
 
                             var empty = 0;
 
@@ -569,7 +518,7 @@ if( !fs.existsSync('students_list.bin' )) {
 
                                 }
 
-                        } else if ( number === 5 ) {
+                        } else if ( number === 4 ) {
 
                             sortListStudents(listStudents);
                             listStudents.splice(studentNumber-1,1);
@@ -577,7 +526,7 @@ if( !fs.existsSync('students_list.bin' )) {
                             console.log(`\nСтудент удален\n`);
                             flag = true;
 
-                        } else if ( number === 6 ) {
+                        } else if ( number === 5 ) {
 
                             flag = true;
 

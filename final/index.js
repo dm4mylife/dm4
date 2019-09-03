@@ -48,6 +48,7 @@ var jumpPressed = false;
 var falling = false;
 var endGameTablo = false;
 var duck = false;
+var restart = false;
 var dy = 0;
 var x = 320;   
 var y = 100;
@@ -66,16 +67,16 @@ frame_id = 0;
 
 
 console.log(obstacles)
-/* function startLogo() {
+function startLogo() {
 
         console.log('logo started')
         
         ctx.font = "25px bit";
-        ctx.textAlign = 'center'
-        ctx.fillText('GODZILA MAYHEM',150,80);
+        ctx.textAlign = 'center';
+        ctx.fillText('Press Enter to start game',150,80);
     
     };
-    startLogo(); */
+    startLogo();
 console.log(picturesOthers)
 function updateGame() {
     
@@ -131,15 +132,14 @@ if (!endGameTablo) {
 
             ctx.drawImage(picturesOthers[1],godzilla.x_pos,godzilla.y_pos+23,60,35);
 
-
         } else {
                 
-                ctx.drawImage(pictures[frame_id],godzilla.x_pos,godzilla.y_pos,40,60);
-                
-                godzilla.time +=30;
-            };
+            ctx.drawImage(pictures[frame_id],godzilla.x_pos,godzilla.y_pos,40,60);
+            
+            godzilla.time +=30;
 
-    
+        };
+
     godzilla.y_pos = godzilla.y_pos + dy;
         
         if ( godzilla.y_pos < 80 ) {
@@ -160,7 +160,7 @@ if (!endGameTablo) {
 
         };
 
-   /*  
+    
     if ( duck ) {
         
         var godzilla_height_half = 5;
@@ -170,10 +170,10 @@ if (!endGameTablo) {
         var godzilla_width_half = 20;
         var godzilla_height_half = 30;
 
-    } */
+    }
     var godzilla_width_half = 20;
-        var godzilla_height_half = 30;
-    console.log(godzilla_height_half)
+    var godzilla_height_half = 30;
+    console.log(godzilla_height_half);
     var godzilla_x = godzilla.x_pos;
     var godzilla_x1 = godzilla.x_pos + godzilla_width_half;
     
@@ -244,7 +244,7 @@ if (!endGameTablo) {
 
                 };
 
-                /* for ( let i = 0; i < 3; i++ ) {
+               /*  for ( let i = 0; i < 3; i++ ) {
 
                     if ( x_drone < -50 ) {
                                         
@@ -256,10 +256,10 @@ if (!endGameTablo) {
                     ctx.drawImage(obstacles[1],x_drone,y_drone,24,24)
                     x_drone -= 1.5;
 
-console.log(`${drone_x1}:${drone_y1}---drone\n${tank_x1}:${tank_y1}---tank
-${godzilla_x1}:${godzilla_y1}---godzilla`);
-                }; */
-                
+                    console.log(`${drone_x1}:${drone_y1}---drone\n${tank_x1}:${tank_y1}---tank
+                    ${godzilla_x1}:${godzilla_y1}---godzilla`);
+                };
+                 */
                 
                 
 
@@ -267,6 +267,7 @@ ${godzilla_x1}:${godzilla_y1}---godzilla`);
 
 var timer = null;
 var scoreCount = 0;
+var pressedRestart = 0;
 
     document.onkeydown = function (event) {
     
@@ -276,34 +277,53 @@ var scoreCount = 0;
             jumpPressed = true;
             dy = -11;
 
-    } else if ( event.keyCode === 32 ) {
-        
-        if ( timer !== null ) {
+    } else if ( event.keyCode === 13 ) {
+        console.log('enter pressed')
+            if (restart) {
 
-            console.log('work');
 
-            clearInterval(timer);
+                setTimeout(timer)
+                ctx.clearRect(0,0,canvas.width,canvas.height);
 
-        };
+               /*  if (event.keyCode === 13) {
 
-        timer = setInterval(updateGame, 20);
+                
+                setInterval(updateGame, 20);
+
+                } */
+                restart= false;
+            
+
+            } else {
+
+                    timer = setInterval(updateGame, 20);
+                    restart = true;
+
+            }
+     
+            
+            
+            
+
+       
 
     } else if  ( event.keyCode === 40) {
 
-        
         duck = true;
         
-        };
+    };
             
 };
 document.onkeyup = function (event) {
+
     if  ( event.keyCode === 40) {
 
         console.log('duck');
         
         duck = false;
+
         };
-}
+};
 
 function getRandom(min, max) {
 
@@ -314,16 +334,45 @@ function gameOver() {
 
     ctx.clearRect(200,5,100,30)
     ctx.font = "12px bit";
-    ctx.fillText(`YOUR SCORE ${Math.floor(scoreCount)}`,135,100);
+    ctx.fillText(`YOUR SCORE ${Math.floor(scoreCount)}`,185,100);
 
     ctx.fillStyle = 'black';
     ctx.font = "30px bit";
     ctx.textAlign = 'center'
     ctx.fillText(`GAME OVER` ,150,80);
+
+    ctx.fillStyle = 'grey';
+    ctx.font = "9px bit";
+    ctx.textAlign = 'center'
+    ctx.fillText(`press Enter to restart game` ,220,140);
+
     clearInterval(timer);
+
+     onGround = false;
+    jumpPressed = false;
+    falling = false;
+    endGameTablo = false;
+    duck = false;
+    restart = false;
+    dy = 0;
+    x = 320;   
+    y = 100;
+    x_drone = 600;
+    y_drone = 75;
+
+    godzilla = {
+
+        x_pos : 10,
+        y_pos : 80,
+        time : 0
+
+        };
+
+    frame_id = 0;
+
 
     /* ctx.drawImage(picturesOthers[0],godzilla.x_pos,godzilla.y_pos,55,35); */
 
 };
-
+console.log(document.cookie+" pe4enki")
 

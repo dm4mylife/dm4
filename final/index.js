@@ -12,14 +12,14 @@ var randomTimer = Math.floor(getRandom(2,6)) * 1000;
 for ( var i = 1; i <= 12; i++ ) {
 
     var sprite = new Image();
-    sprite.src = `${i}.png`;
+    sprite.src = `./pics/${i}.png`;
     pictures.push(sprite);
 
 }
 for ( var i = 1; i <= 9; i++ ) {
 
     var sprite = new Image();
-    sprite.src = `jump${i}.png`;
+    sprite.src = `./pics/jump${i}.png`;
     picturesJump.push(sprite);
 
 };
@@ -31,16 +31,16 @@ for ( var i = 1; i <= 9; i++ ) {
 
 } */
 var tank = new Image();
-tank.src = 'tank.png'
+tank.src = './pics/tank.png'
 obstacles.push(tank);
 var dead = new Image()
-dead.src = "dead.png"
+dead.src = "./pics/dead.png"
 picturesOthers.push(dead)
 var duckPic = new Image();
-duckPic.src = 'duck.png';
+duckPic.src = './pics/duck.png';
 picturesOthers.push(duckPic);
 var drone = new Image();
-drone.src = 'drone.png'
+drone.src = './pics/drone.png'
 obstacles.push(drone);
 
 var onGround = false;
@@ -49,24 +49,32 @@ var falling = false;
 var endGameTablo = false;
 var duck = false;
 var restart = false;
-var dy = 0;
-var x = 320;   
-var y = 100;
-var x_drone = 600;
-var y_drone = 75;
+var refresh = false;
 
- var godzilla = {
+var dy = 0;
+frame_id = 0;
+
+var tank = {
+
+    x_pos : 320,   
+    y_pos : 100,
+
+};
+var drone = {
+
+    x_pos : 600,
+    y_pos : 75,
+
+};
+var godzilla = {
 
     x_pos : 10,
     y_pos : 80,
-    time : 0
+    time : 0,
+    duck_y_pos : 103
 
     };
 
-frame_id = 0;
-
-
-console.log(obstacles)
 function startLogo() {
 
         console.log('logo started')
@@ -77,10 +85,8 @@ function startLogo() {
     
     };
     startLogo();
-console.log(picturesOthers)
-function updateGame() {
-    
 
+function updateGame() {
     
 
     ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -90,7 +96,6 @@ if (!endGameTablo) {
          if ( Math.floor(scoreCount) === 30 && Math.floor(scoreCount) !== 0 ) {
             console.log('work blinking')
            
-  
            
          ctx.clearRect(250,5,100,30);
          ctx.fillStyle = 'black'
@@ -130,7 +135,7 @@ if (!endGameTablo) {
 
         } else if ( duck ) {
 
-            ctx.drawImage(picturesOthers[1],godzilla.x_pos,godzilla.y_pos+23,60,35);
+            ctx.drawImage(picturesOthers[1],godzilla.x_pos,godzilla.duck_y_pos,60,36);
 
         } else {
                 
@@ -155,46 +160,50 @@ if (!endGameTablo) {
 
             godzilla.y_pos = 80;
 
-            
-            //dy = 0;
 
         };
 
-    
-    if ( duck ) {
-        
-        var godzilla_height_half = 5;
+        console.log(godzilla.y_pos)
 
-    } else {
-
-        var godzilla_width_half = 20;
-        var godzilla_height_half = 30;
-
-    }
+     
     var godzilla_width_half = 20;
     var godzilla_height_half = 30;
-    console.log(godzilla_height_half);
+
+    if ( duck && onGround) {
+
+         godzilla_width_half = 30;
+         godzilla_height_half = 18;
+
+    };
+
+    console.log(godzilla_width_half,godzilla_height_half)
+
     var godzilla_x = godzilla.x_pos;
     var godzilla_x1 = godzilla.x_pos + godzilla_width_half;
     
     var godzilla_y = godzilla.y_pos;
     var godzilla_y1 = godzilla.y_pos + godzilla_height_half;
 
+    if ( duck && onGround ) {
+
+        godzilla_y = godzilla.duck_y_pos;
+        godzilla_y1 = godzilla.y_pos - godzilla_height_half;
+
+    };
+    
     var tank_width_half = 10;
     var tank_height_half  = 30;
-    var tank_x = x;
-    var tank_x1 = x + tank_width_half;
-    var tank_y = y;
-    var tank_y1 = y + tank_height_half;
+    var tank_x = tank.x_pos;
+    var tank_x1 = tank.x_pos + tank_width_half;
+    var tank_y = tank.y_pos;
+    var tank_y1 = tank.y_pos + tank_height_half;
 
     var drone_width_half = 12;
     var drone_height_half  = 12;
-    var drone_x = x_drone;
-    var drone_x1 = x_drone + drone_width_half;
-    var drone_y = y_drone;
-    var drone_y1 = y_drone + drone_height_half;
-
-    
+    var drone_x = drone.x_pos;
+    var drone_x1 = drone.x_pos + drone_width_half;
+    var drone_y = drone.y_pos;
+    var drone_y1 = drone.y_pos + drone_height_half;
 
         
         if  ( ( ( godzilla_x > tank_x && godzilla_x < tank_x1 ||
@@ -218,54 +227,65 @@ if (!endGameTablo) {
                 drone_y1 > godzilla_y && drone_y1 < godzilla_y1 ) ) ) {
     
             console.log("BOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOM");
+
+            ctx.strokeStyle = 'red';
+            ctx.strokeRect(drone_x,drone_y,24,24)
+            ctx.stroke()
+            ctx.strokeStyle = 'grey';
+            ctx.strokeRect(godzilla_x,godzilla_y,godzilla_x1,godzilla_y1)
+            ctx.stroke()
+            ctx.strokeStyle = 'green';
+            ctx.strokeRect(tank_x,tank_y,50,35)
+            ctx.stroke()
+
             gameOver();
             endGameTablo = true;
             
-        } 
+        };
             
  
- 
-
                 for ( let i = 0; i < 4; i++ ) {
 
-                    if ( x < -50 ) {
+                    if ( tank.x_pos < -50 ) {
                                         
-                        x = Math.floor(getRandom(2,5) * 250);
-                        console.log(`ground object appears at ${x} distance'`)
+                        tank.x_pos = Math.floor(getRandom(2,5) * 250);
+                        console.log(`ground object appears at ${tank.x_pos} distance'`)
                                         
                     };
                 
                 
-                ctx.drawImage(obstacles[0],x,105,50,35)
+                ctx.drawImage(obstacles[0],tank.x_pos,105,50,35)
                 
                 
-                x -= 1.5;
+                tank.x_pos -= 1.5;
                 
 
                 };
 
-               /*  for ( let i = 0; i < 3; i++ ) {
+                for ( let i = 0; i < 3; i++ ) {
 
-                    if ( x_drone < -50 ) {
+                    if ( drone.x_pos < -50 ) {
                                         
-                        x_drone = Math.floor(getRandom(2,5) * 350);
-                        console.log(`fly object appears at ${x_drone} distance'`)
+                        drone.x_pos = Math.floor(getRandom(2,5) * 350);
+                        console.log(`fly object appears at ${drone.x_pos} distance'`)
                                         
                     };
 
-                    ctx.drawImage(obstacles[1],x_drone,y_drone,24,24)
-                    x_drone -= 1.5;
+                    ctx.drawImage(obstacles[1],drone_x,drone_y,24,24)
+                    drone.x_pos -= 1.5;
 
-                    console.log(`${drone_x1}:${drone_y1}---drone\n${tank_x1}:${tank_y1}---tank
-                    ${godzilla_x1}:${godzilla_y1}---godzilla`);
+                    /* console.log(`${drone_x1}:${drone_y1}---drone\n${tank_x1}:${tank_y1}---tank
+                    ${godzilla_x1}:${godzilla_y1}---godzilla`); */
                 };
-                 */
+                
                 
                 
 
 };
 
 var timer = null;
+
+
 var scoreCount = 0;
 var pressedRestart = 0;
 
@@ -278,28 +298,39 @@ var pressedRestart = 0;
             dy = -11;
 
     } else if ( event.keyCode === 13 ) {
-        console.log('enter pressed')
+
+        console.log('enter pressed');
+       
+            
             if (restart) {
 
+                console.log(refresh+' refresh')
 
-                setTimeout(timer)
-                ctx.clearRect(0,0,canvas.width,canvas.height);
+                if (refresh) { 
 
-               /*  if (event.keyCode === 13) {
-
-                
-                setInterval(updateGame, 20);
-
-                } */
-                restart= false;
-            
+                    console.log('work refresh')
+                    dy = 0;
+                    tank.x_pos = 320;   
+                    tank.y_pos = 100;
+                    drone.x_pos = 600;
+                    drone.y_pos = 75;
+        
+                    timer = setInterval(updateGame, 20);
+                    refresh = false;
+                    
+                } 
+                console.log('empty enter')
 
             } else {
 
                     timer = setInterval(updateGame, 20);
                     restart = true;
 
-            }
+            };
+
+            
+
+             
      
             
             
@@ -344,31 +375,11 @@ function gameOver() {
     ctx.fillStyle = 'grey';
     ctx.font = "9px bit";
     ctx.textAlign = 'center'
-    ctx.fillText(`press Enter to restart game` ,220,140);
+    ctx.fillText(`press Space to restart game` ,220,140);
 
     clearInterval(timer);
 
-     onGround = false;
-    jumpPressed = false;
-    falling = false;
-    endGameTablo = false;
-    duck = false;
-    restart = false;
-    dy = 0;
-    x = 320;   
-    y = 100;
-    x_drone = 600;
-    y_drone = 75;
-
-    godzilla = {
-
-        x_pos : 10,
-        y_pos : 80,
-        time : 0
-
-        };
-
-    frame_id = 0;
+    refresh = true;
 
 
     /* ctx.drawImage(picturesOthers[0],godzilla.x_pos,godzilla.y_pos,55,35); */

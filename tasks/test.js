@@ -160,5 +160,21 @@ function readStream() {
     console.log(listStudents);
 };
     readStream(); */
- var arr = []
- console.log(arr.length);
+/*  var arr = []
+ console.log(arr.length); */
+ 
+function bufferWrite() {
+
+    var buffer = Buffer.alloc(4);
+ let count = 0;
+    for ( var key in players ) {
+
+count++;
+        
+    }
+buffer.writeInt32BE(count);
+console.log(buffer);
+
+
+
+}

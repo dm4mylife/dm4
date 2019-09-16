@@ -162,7 +162,7 @@ function readStream() {
     readStream(); */
 /*  var arr = []
  console.log(arr.length); */
- 
+/*  
 function bufferWrite() {
 
     var buffer = Buffer.alloc(4);
@@ -177,4 +177,18 @@ console.log(buffer);
 
 
 
+} */
+function generate(n) {
+    var factors = [2,-1,0.5,-1];
+    var result = [];
+    var m=n;
+    for (var i = 0; i < n; i++ ) {
+        m = m * factors[i%4];
+        result.push(m)
+        console.log(m)
+    }
+    console.log(result)
+    return result;
+    
 }
+generate(20)

@@ -26,7 +26,7 @@ setTimeout(function () {
     
         
 
-},5)
+},10)
 
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
@@ -53,37 +53,36 @@ ctx.imageSmoothingEnabled = false; */
 for ( var i = 1; i <= 2; i++ ) {
 
     var sprite = new Image();
-    sprite.src = `./pics/run${i}.jpg`;
+    sprite.src = `./pics/run${i}.png`;
     pictures.push(sprite);
 
-}
+};
 
 for ( var i = 1; i <= 2; i++ ) {
 
     var sprite = new Image();
-    sprite.src = `./pics/duck${i}.jpg`;
+    sprite.src = `./pics/duck${i}.png`;
     picturesDuck.push(sprite);
 
 };
 
-
     var sprite = new Image();
-    sprite.src = `./pics/jump.jpg`;
+    sprite.src = `./pics/jump.png`;
     picturesJump.push(sprite);
 
-/* for ( var i = 1; i <= 12; i++ ) {
+for ( var i = 1; i <= 2; i++ ) {
 
     var bgr = new Image();
-    bgr.src = `${i}.png`;
-    bgr.push(bgr);
+    bgr.src = `./pics/town${i}.png`;
+    backgrounds.push(bgr);
 
-} */
+}
 
 var tank = new Image();
 tank.src = './pics/tank.png'
 obstacles.push(tank);
 var dead = new Image()
-dead.src = "./pics/dead.jpg"
+dead.src = "./pics/dead.png"
 picturesOthers.push(dead)
 var drone = new Image('./pics/drone.png');
 drone.src = './pics/drone.png'
@@ -139,13 +138,23 @@ var scoreInfo = {
     blink_repeat: 0,
     flag : false
 
+};
+
+var backgroundsInfo = {
+
+    x_pos: 1000,
+    y_pos: 50,
 }
 
 function updateGame() {
     
 
     ctx.clearRect(0,0,canvas.width,canvas.height);
-
+    
+    ctx.drawImage(backgrounds[0],backgroundsInfo.x_pos,backgroundsInfo.y_pos,600,90);
+    backgroundsInfo.x_pos-=1;
+    /* ctx.fillStyle = 'grey' */
+    /* ctx.fillRect(0,0,canvas.width,canvas.height) */
     if ( Math.floor(scoreCount) % 100 === 0 && Math.floor(scoreCount) !== 0  ) {
 
         gameTime-=0.2;
@@ -247,6 +256,9 @@ function updateGame() {
         };
     };
 
+
+    
+
         if ( godzilla.time > 1000) {
 
                 godzilla.time = 0;
@@ -260,11 +272,6 @@ function updateGame() {
             
            
             ctx.drawImage(picturesJump[0],godzilla.x_pos,godzilla.y_pos,godzilla.width,godzilla.height);
-
-            ctx.strokeStyle = 'grey';
-            ctx.strokeRect(godzilla.x_pos,godzilla.y_pos,godzilla.width,godzilla.height);
-           
-            /*   ctx.strokeRect(godzilla.x_pos+20,godzilla.y_pos+30,5,5); */
            
         } else if ( duck ) {
 
@@ -272,33 +279,18 @@ function updateGame() {
             godzilla.height = 50;
 
             ctx.drawImage(picturesDuck[frame_id],godzilla.x_pos,godzilla.duck_y_pos,godzilla.width,godzilla.height);
-            ctx.strokeStyle = 'grey';
-            /* ctx.strokeRect(godzilla.x_pos,godzilla.duck_y_pos,godzilla.width,godzilla.height); */
-            
-            /* ctx.strokeRect(godzilla.x_pos+40,godzilla.duck_y_pos+25,5,5); */
             
             godzilla.time += 140;
             
         } else {
                 
             ctx.drawImage(pictures[frame_id],godzilla.x_pos,godzilla.y_pos,godzilla.width,godzilla.height);
-            ctx.strokeStyle = 'grey'; 
-            /* ctx.strokeRect(godzilla.x_pos,godzilla.y_pos,godzilla.width,godzilla.height);  */
-            
-            /*  ctx.strokeRect(godzilla.x_pos+30,godzilla.y_pos+35,5,5);  */
-            
+              
             godzilla.time += 140;
 
         };
 
-/* 
-        ctx.beginPath();
-        ctx.moveTo(0,drone.y_pos);
-        ctx.lineTo(900,drone.y_pos);
         
-        ctx.stroke();
-        ctx.closePath() */
-
 
     godzilla.y_pos = godzilla.y_pos + dy;
         
@@ -348,8 +340,8 @@ function updateGame() {
     var tank_y = tank.y_pos;
     var tank_y1 = tank.y_pos - tank_height_half;
 
-    var drone_width_half = 30;
-    var drone_height_half  = 30;
+    var drone_width_half = 35;
+    var drone_height_half  = 20;
     var drone_x = drone.x_pos;
     var drone_x1 = drone.x_pos + drone_width_half;
     var drone_y = drone.y_pos;
@@ -375,49 +367,38 @@ function updateGame() {
         drone_y < godzilla_y && drone_y1 > godzilla_y ||
         drone_y < godzilla_y1 && drone_y1 > godzilla_y1 ) ) ) {
 
-        failSound.volume = 0.4
+        failSound.volume = 0.4;
         failSound.play();
         gameOver();
         endGameTablo = true;
-
+        
     };
  
               
     if ( tank.x_pos < -50 ) {
                         
-        tank.x_pos = Math.floor(getRandom(1,6) * 800);
+        tank.x_pos = Math.floor(getRandom(1,6) * 15 + 800);
        
                         
     };
-                
-                
+                             
     ctx.drawImage(obstacles[0],tank.x_pos,tank.y_pos,70,30);
-
-    ctx.strokeStyle = 'green';
-    ctx.strokeRect(tank.x_pos,tank.y_pos,70,30);
     
-    ctx.strokeRect(tank.x_pos+35,tank.y_pos+15,5,5);
-    
-    tank.x_pos -= 6;
+    tank.x_pos -= 5;
     tank.x_pos += gameTime;           
-                
+      console.log(tank.x_pos)        
+
     if ( drone.x_pos < -50 ) {
                         
-        drone.x_pos = Math.floor(getRandom(1,6) * 900);
+        drone.x_pos = Math.floor(getRandom(1,6) * 1050);
                       
     };
 
-    ctx.drawImage(obstacles[1],drone.x_pos,drone.y_pos,40,40);
+    ctx.drawImage(obstacles[1],drone.x_pos,drone.y_pos,70,40);        
     
-    ctx.strokeStyle = 'red';
-    ctx.strokeRect(drone.x_pos,drone.y_pos,40,40);
-    
-    ctx.strokeRect(drone.x_pos+20,drone.y_pos+20,5,5);
-             
-    
-    drone.x_pos -= 6;
+    drone.x_pos -= 5;
     drone.x_pos += gameTime;
-                           
+     
 
 };
 
@@ -435,17 +416,19 @@ document.onkeydown = function (event) {
             
             if (restart) {
 
-                if (refresh) { 
+                if (refresh) {
 
+                    
                     endGameTablo = false;
+                    
                     dy = 0;
                     gameTime = 0;
                     tank.x_pos = 900;   
                     tank.y_pos = 214;
-                    drone.x_pos = 950;
+                    drone.x_pos = 1150;
                     drone.y_pos = 160;
                     scoreCount = 0;
-        
+                    
                     timer = setInterval(updateGame, 20);
                     refresh = false;
                         
@@ -487,21 +470,23 @@ function gameOver() {
         localStorage.setItem('score',`${scoreCount}`);
 
     };
+
+    clearInterval(timer);
+    ctx.clearRect(650,0,150,40);
     
-    ctx.clearRect(400,5,400,30)
     ctx.font = "12px ebit";
-    ctx.fillText(`YOUR SCORE ${Math.floor(scoreCount)}`,350,160);
+    ctx.fillText(`YOUR SCORE ${Math.floor(scoreCount)}`,95,65);
 
     ctx.fillStyle = 'black';
     ctx.font = "30px ebit";
-    ctx.fillText(`GAME OVER` ,300,140);
+    ctx.fillText(`GAME OVER` ,55,50);
 
     ctx.fillStyle = 'grey';
     ctx.font = "9px ebit";
     ctx.textAlign = 'center'
     ctx.fillText(`press Enter to restart game` ,710,240);
 
-    clearInterval(timer);
+    
     
     refresh = true;
 

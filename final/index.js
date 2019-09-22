@@ -26,7 +26,7 @@ setTimeout(function () {
     
         
 
-},10)
+},50)
 
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
@@ -42,13 +42,9 @@ var pictures  = [];
 var picturesJump = [];
 var picturesDuck = [];
 var picturesOthers = [];
+var picturesCloud = [];
 var backgrounds = [];
 var obstacles = [];
-
-/* ctx.mozImageSmoothingEnabled = false;
-ctx.webkitImageSmoothingEnabled = false;
-ctx.msImageSmoothingEnabled = false;
-ctx.imageSmoothingEnabled = false; */
 
 for ( var i = 1; i <= 2; i++ ) {
 
@@ -70,21 +66,21 @@ for ( var i = 1; i <= 2; i++ ) {
     sprite.src = `./pics/jump.png`;
     picturesJump.push(sprite);
 
-for ( var i = 1; i <= 2; i++ ) {
+for ( var i = 1; i <= 3; i++ ) {
 
     var bgr = new Image();
     bgr.src = `./pics/town${i}.png`;
     backgrounds.push(bgr);
 
-}
+};
 
 var tank = new Image();
 tank.src = './pics/tank.png'
 obstacles.push(tank);
-var dead = new Image()
-dead.src = "./pics/dead.png"
-picturesOthers.push(dead)
-var drone = new Image('./pics/drone.png');
+var path = new Image('.pics/path.png');
+path.src = './pics/path.png'
+picturesOthers.push(path);
+var drone = new Image('.pics/drone.png');
 drone.src = './pics/drone.png'
 obstacles.push(drone);
 
@@ -98,24 +94,30 @@ var endGameTablo = false;
 var duck = false;
 var restart = false;
 var refresh = false;
-var currentCount = 0;
+var timer = null;
 
+var currentCount = 0;
+var pathNumber = 0;
 var dy = 0;
 var frame_id = 0;
-var timer = null;
 var scoreCount = 0;
 var gameTime = 0;
+var randomTankTime = getRandom(4,10)*100;
+var randomCloudAppear = getRandom(10,40);
+var endBgr = 2500;
+var countPath = 800; 
+var secondCountPath = 1600;
 
 var tank = {
 
     x_pos : 900,   
-    y_pos : 214
-
+    y_pos : 214,
+    x_rep : 900
 };
 
 var drone = {
 
-    x_pos : 1150,
+    x_pos : 1250,
     y_pos : 160
 };
 
@@ -144,23 +146,59 @@ var backgroundsInfo = {
 
     x_pos: 1000,
     y_pos: 50,
+    path_length: 0,
+    x_rep : 1000,
+    cloud_x_pos : 1000,
+    clod_y_pos : 40
 }
 
 function updateGame() {
     
-
     ctx.clearRect(0,0,canvas.width,canvas.height);
     
-    ctx.drawImage(backgrounds[0],backgroundsInfo.x_pos,backgroundsInfo.y_pos,600,90);
-    backgroundsInfo.x_pos-=1;
-    /* ctx.fillStyle = 'grey' */
-    /* ctx.fillRect(0,0,canvas.width,canvas.height) */
-    if ( Math.floor(scoreCount) % 100 === 0 && Math.floor(scoreCount) !== 0  ) {
-
-        gameTime-=0.2;
-        console.log(gameTime)
+    if ( countPath < 0 ) {
+        countPath = 800;
+        secondCountPath = 1600;
     }
 
+    ctx.drawImage(picturesOthers[0],countPath,230,100,18);
+    
+    var add = -100;
+    for ( var i = 0; i < 8; i++ ) {
+
+        ctx.drawImage(picturesOthers[0],countPath+add,230,100,18);
+        add-=100;
+        
+    };
+    add = -100;
+    for ( var i = 0; i < 8; i++ ) {
+
+        ctx.drawImage(picturesOthers[0],secondCountPath+add,230,100,18);
+        add-=100;
+        
+    };
+
+    secondCountPath-=4-gameTime;
+    countPath-=4-gameTime;
+        
+    if ( endBgr === 0 ) {
+
+        backgroundsInfo.x_pos = 1000;
+        endBgr = 2500;
+    };
+
+    ctx.drawImage(backgrounds[pathNumber],backgroundsInfo.x_pos,backgroundsInfo.y_pos,500,90);
+    ctx.drawImage(backgrounds[pathNumber+1],backgroundsInfo.x_pos+500,backgroundsInfo.y_pos,500,90);
+    ctx.drawImage(backgrounds[pathNumber+2],backgroundsInfo.x_pos+1000,backgroundsInfo.y_pos,500,90);
+    
+    backgroundsInfo.x_pos-=0.8;
+    endBgr -= 0.8+gameTime;
+
+    if ( Math.floor(scoreCount) % 50 === 0 && Math.floor(scoreCount) !== 0  ) {
+
+        gameTime-=0.2;
+        
+    };
 
     if (!endGameTablo) {
         
@@ -185,10 +223,10 @@ function updateGame() {
             
         if ( Math.floor(scoreCount) % 100 === 0 && Math.floor(scoreCount) !== 0 ) {
 
-                    scoreInfo.flag = true; 
-                    moneySound.volume = 0.4;
-                    /* moneySound.play(); */
-                    currentCount = scoreCount;
+            scoreInfo.flag = true; 
+            moneySound.volume = 0.4;
+            moneySound.play();
+            currentCount = scoreCount;
                     
         };
 
@@ -216,10 +254,8 @@ function updateGame() {
                 
                         } else if ( scoreInfo.blink_count < 7 ) {
                 
-                            scoreInfo.blink_count++;
-                            
-                        };
-                
+                            scoreInfo.blink_count++;                     
+                        };         
                     };
 
                 } else {
@@ -236,7 +272,6 @@ function updateGame() {
                     scoreInfo.flag = false;
                     scoreInfo.blink_repeat = 0;
             }
-
 
         } else {
 
@@ -256,57 +291,48 @@ function updateGame() {
         };
     };
 
+    if ( godzilla.time > 1000) {
 
-    
-
-        if ( godzilla.time > 1000) {
-
-                godzilla.time = 0;
-                time = 0;
-                
-        };
-
-        frame_id = Math.floor(godzilla.time / 1000 * pictures.length);
-
-        if ( jumpPressed ) {
+            godzilla.time = 0;
+            time = 0;
             
-           
-            ctx.drawImage(picturesJump[0],godzilla.x_pos,godzilla.y_pos,godzilla.width,godzilla.height);
-           
-        } else if ( duck ) {
+    };
 
-            godzilla.width = 80;
-            godzilla.height = 50;
+    frame_id = Math.floor(godzilla.time / 1000 * pictures.length);
 
-            ctx.drawImage(picturesDuck[frame_id],godzilla.x_pos,godzilla.duck_y_pos,godzilla.width,godzilla.height);
-            
-            godzilla.time += 140;
-            
-        } else {
-                
-            ctx.drawImage(pictures[frame_id],godzilla.x_pos,godzilla.y_pos,godzilla.width,godzilla.height);
-              
-            godzilla.time += 140;
-
-        };
-
+    if ( jumpPressed ) {
         
+        ctx.drawImage(picturesJump[0],godzilla.x_pos,godzilla.y_pos,godzilla.width,godzilla.height);
+        
+    } else if ( duck ) {
+
+        godzilla.width = 80;
+        godzilla.height = 50;
+
+        ctx.drawImage(picturesDuck[frame_id],godzilla.x_pos,godzilla.duck_y_pos,godzilla.width,godzilla.height);
+        
+        godzilla.time += 140;
+        
+    } else {
+            
+        ctx.drawImage(pictures[frame_id],godzilla.x_pos,godzilla.y_pos,godzilla.width,godzilla.height);
+            
+        godzilla.time += 140;
+
+    }; 
 
     godzilla.y_pos = godzilla.y_pos + dy;
         
     if ( godzilla.y_pos < 175 ) {
 
-        dy += 1;   
+        dy += 0.9;   
 
     } else {
 
         jumpPressed = false;
-        
         onGround = true; 
-
         godzilla.y_pos = 175;
         godzilla.duck_y_pos = 193;
-
 
     };
 
@@ -314,18 +340,15 @@ function updateGame() {
 
         var godzilla_width_half = 40;
         var godzilla_height_half = 25;
-
         var godzilla_x = godzilla.x_pos;
         var godzilla_x1 = godzilla.x_pos + godzilla_width_half;
         var godzilla_y = godzilla.duck_y_pos;
         var godzilla_y1 = godzilla.duck_y_pos + godzilla_height_half;
- 
 
     } else {
 
         var godzilla_width_half = 30;
         var godzilla_height_half = 35;
-
         var godzilla_x = godzilla.x_pos;
         var godzilla_x1 = godzilla.x_pos + godzilla_width_half;
         var godzilla_y = godzilla.y_pos;
@@ -368,38 +391,34 @@ function updateGame() {
         drone_y < godzilla_y1 && drone_y1 > godzilla_y1 ) ) ) {
 
         failSound.volume = 0.4;
-        failSound.play();
-        gameOver();
-        endGameTablo = true;
+        failSound.play(); 
+         gameOver(); 
+         endGameTablo = true;
         
     };
- 
-              
+           
     if ( tank.x_pos < -50 ) {
                         
-        tank.x_pos = Math.floor(getRandom(1,6) * 15 + 800);
-       
-                        
+        tank.x_pos = Math.floor(getRandom(1,300) + 800);
+               
     };
-                             
+            
     ctx.drawImage(obstacles[0],tank.x_pos,tank.y_pos,70,30);
-    
-    tank.x_pos -= 5;
-    tank.x_pos += gameTime;           
-      console.log(tank.x_pos)        
-
+   
+    tank.x_pos -= 6;
+    tank.x_pos += gameTime;  
+         
     if ( drone.x_pos < -50 ) {
                         
-        drone.x_pos = Math.floor(getRandom(1,6) * 1050);
+        drone.x_pos = Math.floor(getRandom(300,600) + 1150);
                       
     };
 
     ctx.drawImage(obstacles[1],drone.x_pos,drone.y_pos,70,40);        
     
-    drone.x_pos -= 5;
+    drone.x_pos -= 6;
     drone.x_pos += gameTime;
      
-
 };
 
 document.onkeydown = function (event) {
@@ -418,21 +437,23 @@ document.onkeydown = function (event) {
 
                 if (refresh) {
 
-                    
+                    ctx.clearRect(0,0,canvas.width,canvas.height);
+
                     endGameTablo = false;
-                    
+                    refresh = false;
+
                     dy = 0;
                     gameTime = 0;
                     tank.x_pos = 900;   
                     tank.y_pos = 214;
                     drone.x_pos = 1150;
                     drone.y_pos = 160;
+                    backgroundsInfo.x_pos = 1000;
                     scoreCount = 0;
-                    
+
                     timer = setInterval(updateGame, 20);
-                    refresh = false;
-                        
-                } 
+                         
+                };
 
             } else {
 
@@ -442,7 +463,7 @@ document.onkeydown = function (event) {
             };
 
     } else if  ( event.keyCode === 40) {
-
+       
     duck = true;
         
     };
@@ -483,10 +504,8 @@ function gameOver() {
 
     ctx.fillStyle = 'grey';
     ctx.font = "9px ebit";
-    ctx.textAlign = 'center'
-    ctx.fillText(`press Enter to restart game` ,710,240);
-
     
+    ctx.fillText(`press Enter to restart game` ,63,83);
     
     refresh = true;
 

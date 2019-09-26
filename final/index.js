@@ -107,6 +107,7 @@ var randomCloudAppear = getRandom(10,40);
 var endBgr = 2500;
 var countPath = 800; 
 var secondCountPath = 1600;
+var stopGame = false;
 
 var tank = {
 
@@ -151,7 +152,10 @@ var backgroundsInfo = {
     cloud_x_pos : 1000,
     clod_y_pos : 40
 }
-
+var xz = 0;
+var xz1 = 0;
+var timeTownSpeed = 0;
+var launch = false;
 function updateGame() {
     
     ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -181,22 +185,27 @@ function updateGame() {
     secondCountPath-=4-gameTime;
     countPath-=4-gameTime;
         
-    if ( endBgr === 0 ) {
+    if ( endBgr < 0 ) {
 
         backgroundsInfo.x_pos = 1000;
-        endBgr = 2500;
+        endBgr = 2200;
+        timeTownSpeed +=0.1;
+        console.log('work')
     };
 
-    ctx.drawImage(backgrounds[pathNumber],backgroundsInfo.x_pos,backgroundsInfo.y_pos,500,90);
-    ctx.drawImage(backgrounds[pathNumber+1],backgroundsInfo.x_pos+500,backgroundsInfo.y_pos,500,90);
-    ctx.drawImage(backgrounds[pathNumber+2],backgroundsInfo.x_pos+1000,backgroundsInfo.y_pos,500,90);
+    ctx.drawImage(backgrounds[pathNumber],backgroundsInfo.x_pos,backgroundsInfo.y_pos,400,90);
+    ctx.drawImage(backgrounds[pathNumber+1],backgroundsInfo.x_pos+400,backgroundsInfo.y_pos,400,90);
+    ctx.drawImage(backgrounds[pathNumber+2],backgroundsInfo.x_pos+800,backgroundsInfo.y_pos,400,90);
     
-    backgroundsInfo.x_pos-=0.8;
-    endBgr -= 0.8+gameTime;
 
+    
+    backgroundsInfo.x_pos-= 1 + timeTownSpeed;
+    endBgr -= 1+ timeTownSpeed;
+    
+    
     if ( Math.floor(scoreCount) % 50 === 0 && Math.floor(scoreCount) !== 0  ) {
 
-        gameTime-=0.2;
+        gameTime-=0.1;
         
     };
 
@@ -205,10 +214,9 @@ function updateGame() {
         var zeroCount = '00000';
         ctx.font = '15px ebit';
 
-        if ( scoreCount >= 9 && scoreCount < 100 ) {
+        if ( scoreCount >= 9 && scoreCount < 100 && scoreCount > 0 ) {
             
             zeroCount = '0000';
-            
 
         } else if ( scoreCount > 100 && scoreCount < 999 ) {
             
@@ -217,7 +225,12 @@ function updateGame() {
         } else if ( scoreCount > 1000 && scoreCount < 9999) {
 
             zeroCount = '00';
-        };
+
+        } else if ( scoreCount > 10000 && scoreCount < 99999) {
+
+            zeroCount = '0';
+
+        } 
 
         scoreCount += 0.2;
             
@@ -391,33 +404,49 @@ function updateGame() {
         drone_y < godzilla_y1 && drone_y1 > godzilla_y1 ) ) ) {
 
         failSound.volume = 0.4;
-        failSound.play(); 
-         gameOver(); 
-         endGameTablo = true;
+        failSound.play();
+        gameOver(); 
+        endGameTablo = true; 
         
     };
-           
-    if ( tank.x_pos < -50 ) {
-                        
-        tank.x_pos = Math.floor(getRandom(1,300) + 800);
-               
-    };
-            
-    ctx.drawImage(obstacles[0],tank.x_pos,tank.y_pos,70,30);
-   
-    tank.x_pos -= 6;
-    tank.x_pos += gameTime;  
-         
-    if ( drone.x_pos < -50 ) {
-                        
-        drone.x_pos = Math.floor(getRandom(300,600) + 1150);
-                      
-    };
+        if ( !stopGame ) {
 
-    ctx.drawImage(obstacles[1],drone.x_pos,drone.y_pos,70,40);        
+             if ( tank.x_pos < -50 ) {
+                            
+            tank.x_pos = Math.floor(getRandom(1,300) + 900);
+            console.log(`${xz}: ${tank.x_pos}+ tank`)    
+            xz++
+            launch = true;
     
-    drone.x_pos -= 6;
-    drone.x_pos += gameTime;
+
+        };
+        
+        
+        ctx.drawImage(obstacles[0],tank.x_pos,tank.y_pos,70,30);
+    
+        tank.x_pos -= 6;
+        tank.x_pos += gameTime;  
+   
+        if ( launch ) {
+
+            if ( drone.x_pos < -50 ) {
+                                    
+                    drone.x_pos = Math.floor(getRandom(1,300) + 1350);
+                            console.log(`${xz1}: ${drone.x_pos}+ drone`)   
+                            xz1++
+                            launch = false;
+                    };
+                    ctx.drawImage(obstacles[1],drone.x_pos,drone.y_pos,70,40);        
+                
+                drone.x_pos -= 6;
+                drone.x_pos += gameTime; 
+
+        }
+
+        }
+    
+       
+       
      
 };
 
@@ -444,12 +473,15 @@ document.onkeydown = function (event) {
 
                     dy = 0;
                     gameTime = 0;
+                    timeTownSpeed = 0;
                     tank.x_pos = 900;   
                     tank.y_pos = 214;
                     drone.x_pos = 1150;
                     drone.y_pos = 160;
                     backgroundsInfo.x_pos = 1000;
                     scoreCount = 0;
+                    design.style.visibility = 'hidden';
+                    stopGame = false;
 
                     timer = setInterval(updateGame, 20);
                          
@@ -476,7 +508,7 @@ document.onkeyup = function (event) {
         godzilla.width = 60;
         godzilla.height = 70;
         duck = false;
-
+        dy = 13
         };
 };
 function getRandom(min, max) {
@@ -491,22 +523,37 @@ function gameOver() {
         localStorage.setItem('score',`${scoreCount}`);
 
     };
-
+    stopGame = true;
     clearInterval(timer);
-    ctx.clearRect(650,0,150,40);
-    
+    /* ctx.clearRect(650,0,150,40);
+    ctx.clearRect(0,50,800,100); */
+    ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.font = "12px ebit";
-    ctx.fillText(`YOUR SCORE ${Math.floor(scoreCount)}`,95,65);
-
+    ctx.fillText(`YOUR SCORE ${Math.floor(scoreCount)}`,canvas.width / 2 - 60,canvas.height / 2 );
+    
+    design.style.visibility = 'visible';
     ctx.fillStyle = 'black';
     ctx.font = "30px ebit";
-    ctx.fillText(`GAME OVER` ,55,50);
+    ctx.fillText(`GAME OVER` ,canvas.width / 2 - 95,canvas.height / 2 - 20);
 
     ctx.fillStyle = 'grey';
     ctx.font = "9px ebit";
     
-    ctx.fillText(`press Enter to restart game` ,63,83);
+    ctx.fillText(`press Enter to restart game` ,canvas.width / 2 - 85,canvas.height / 2 + 15);
     
     refresh = true;
 
 };
+ 
+var design = document.getElementById('design');
+
+function designer() {
+
+    design.style.visibility = 'hidden';
+    
+    ctx.font = '13px ebit'
+    ctx.fillText(`inspired by Schoolbolt`,100,40);
+    ctx.fillText(`code by Nikita Biryukov` ,300,55);
+    ctx.fillText(`design by Alena Stepanova` ,500,70);
+}
+    

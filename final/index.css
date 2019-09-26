@@ -18,12 +18,25 @@
 
 
 .container {
-
+    position: relative;
     font-family: 'ebit';
     display: flex;
     justify-content: center;
     margin-top: 50px;
     
-};
+}
+
+#design {
+    
+    position: absolute;
+   /*  left: 15%; */
+   
+    cursor: pointer;
+    font-family: "ebit";
+    text-align: center;
+    /* border: 2px solid black; */
+    visibility: hidden;
+
+}
 
 

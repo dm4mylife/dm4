@@ -178,7 +178,7 @@ console.log(buffer);
 
 
 } */
-function generate(n) {
+/* function generate(n) {
     var factors = [2,-1,0.5,-1];
     var result = [];
     var m=n;
@@ -191,4 +191,14 @@ function generate(n) {
     return result;
     
 }
-generate(20)
+generate(20) */
+if (getRandom(0,1) > 0.5) {
+    console.log('true')
+} else {
+    console.log('false')
+};
+function getRandom(min, max) {
+
+    return Math.random() * (max - min) + min;
+  
+  };

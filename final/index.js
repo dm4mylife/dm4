@@ -120,26 +120,31 @@ var tank = {
 
     x_pos : 900,   
     y_pos : 214,
-    x_rep : 900
+    x_rep : 900,
+    width : 70,
+    height : 30
 };
 
 var drone = {
 
     x_pos : 1250,
-    y_pos : 150
+    y_pos : 150,
+    width : 70,
+    height : 40
 };
 
 var godzilla = {
 
     x_pos : 20,
     y_pos : 200,
-    time : 0,
-    duck_y_pos : 193,
     width : 60,
     height : 70,
+    duck_y_pos : 193,
+    y_pos_size : 175,
     duck_width: 80,
     duck_height: 50,
-    y_pos_size : 175
+    time : 0
+    
 };
 
 var scoreInfo = {
@@ -178,7 +183,9 @@ var casualGameMod = {
 };
 
 
-
+var tankCollision = null;
+var droneCollision = null;
+var heartCollision = null;
 var notPressed = false;
 var choseIcon = new Image();
 choseIcon.src = './pics/choseIcon.png';
@@ -192,7 +199,7 @@ var heartInfo = {
     width: 30,
     height: 30,
     
-}
+};
 
 function choseDifficult() {
 
@@ -385,11 +392,11 @@ function casualGame() {
         
         godzilla.width += 2;
         godzilla.height += 2;
-        godzilla.duck_width +=2;
-        godzilla.duck_height +=2;
+        godzilla.duck_width += 2;
+        godzilla.duck_height += 2;
         godzilla.y_pos_size -= 2;
         godzilla.duck_y_pos -= 2;
-        dy -=2
+        dy -=2;
        
         changeSizeFlag = 0;
     };
@@ -434,133 +441,120 @@ function casualGame() {
 
     };
     
-    var godzilla_width_half = 30*2;
-    var godzilla_height_half = 35*2;
     var godzilla_x = godzilla.x_pos;
-    var godzilla_x1 = godzilla.x_pos + godzilla_width_half;
+    var godzilla_x2 = godzilla.x_pos + godzilla.width;
     var godzilla_y = godzilla.y_pos;
-    var godzilla_y1 = godzilla.y_pos + godzilla_height_half;
+    var godzilla_y2 = godzilla.y_pos + godzilla.height;
 
     if ( duck && onGround ) {
 
-        var godzilla_width_half = 40*2;
-        var godzilla_height_half = 25*2;
         var godzilla_x = godzilla.x_pos;
-        var godzilla_x1 = godzilla.x_pos + godzilla_width_half;
+        var godzilla_x2 = godzilla.x_pos + godzilla.width;
         var godzilla_y = godzilla.duck_y_pos;
-        var godzilla_y1 = godzilla.duck_y_pos + godzilla_height_half;
+        var godzilla_y2 = godzilla.duck_y_pos + godzilla.height;
 
     };
-
     
-    var tank_width_half = 35*2;
-    var tank_height_half  = 15*2;
     var tank_x = tank.x_pos;
-    var tank_x1 = tank.x_pos + tank_width_half;
+    var tank_x2 = tank.x_pos + tank.width;
     var tank_y = tank.y_pos;
-    var tank_y1 = tank.y_pos + tank_height_half;
+    var tank_y2 = tank.y_pos + tank.height;
 
-    var drone_width_half = 35*2;
-    var drone_height_half  = 20*2;
     var drone_x = drone.x_pos;
-    var drone_x1 = drone.x_pos + drone_width_half;
+    var drone_x2 = drone.x_pos + drone.width;
     var drone_y = drone.y_pos;
-    var drone_y1 = drone.y_pos + drone_height_half;
+    var drone_y2 = drone.y_pos + drone.height;
 
-    if  ( ( ( godzilla_x1 > tank_x && godzilla_x1 < tank_x1 ||
-        godzilla_x > tank_x &&  godzilla_x < tank_x1 ||
-        godzilla_x < tank_x && godzilla_x1 > tank_x1 ||
-        tank_x < godzilla_x && tank_x1 > godzilla_x1 ) &&
-
-    ( godzilla_y > tank_y && godzilla_y < tank_y1 ||
-        tank_y > godzilla_y &&  tank_y < godzilla_y1 ||
-        godzilla_y < tank_y && godzilla_y1 > tank_y1 ||
-        tank_y < godzilla_y && tank_y1 > godzilla_y1 )  ) ||
+    tankCollision = collision(godzilla_x,godzilla_x2,tank_x,tank_x2,godzilla_y,godzilla_y2,tank_y,tank_y2);
+    droneCollision = collision(godzilla_x,godzilla_x2,drone_x,drone_x2,godzilla_y,godzilla_y2,drone_y,drone_y2);
     
-    ( ( godzilla_x1 > drone_x && godzilla_x1 < drone_x1 ||
-        godzilla_x > drone_x &&  godzilla_x < drone_x1 ||
-        godzilla_x < drone_x && godzilla_x1 > drone_x1 ||
-        drone_x < godzilla_x && drone_x1 > godzilla_x1 ) &&
 
-    ( godzilla_y > drone_y && godzilla_y < drone_y1 ||
-        drone_y > godzilla_y &&  drone_y < godzilla_y1 ||
-        godzilla_y < drone_y && godzilla_y1 > drone_y1 ||
-        drone_y < godzilla_y && drone_y1 > godzilla_y1 ) ) ) {
+    if ( tankCollision || droneCollision ) {
 
-       /*  failSound.volume = 0.4;
+        failSound.volume = 0.4;
         failSound.play();
         gameOver(); 
-        endGameTablo = true;  */
-        
+        endGameTablo = true;  
+
     };
 
     if ( !stopGame ) {
 
         if ( tank.x_pos < -50 ) {
-                        
-            tank.x_pos = Math.floor(getRandom(1,300) + 900);
-            launch = true;
+
+            if ( drone.x_pos > 800 ) {
+
+                tank.x_pos = Math.floor(getRandom(drone.x_pos+100,drone.x_pos+400));
+
+            } else {
+
+                tank.x_pos = Math.floor(getRandom(850,1250));
             
+            };           
         };
     
-        ctx.drawImage(obstacles[0],tank.x_pos,tank.y_pos,70,30);
-        ctx.strokeRect(tank_x,tank_y,70,30)
+        ctx.drawImage(obstacles[0],tank.x_pos,tank.y_pos,tank.width,tank.height);
+        ctx.strokeRect(tank_x,tank_y,tank.width,tank.height)
         
         tank.x_pos -= 6;
         tank.x_pos += gameTime;  
 
-        if ( launch ) {
+       
+        if ( drone.x_pos < -50 ) {
+                    
+            if ( tank.x_pos > 800 ) {
 
-            if ( drone.x_pos < -50 ) {
-                                    
-                drone.x_pos = Math.floor(getRandom(1,300) + 1300);
-                launch = false;
-                
-                
+                drone.x_pos = Math.floor(getRandom(tank.x_pos+100,tank.x_pos+400));
+
+            } else {
+
+                drone.x_pos = Math.floor(getRandom(850,1250));
 
             };
+        
+        };
 
-        ctx.drawImage(obstacles[1],drone.x_pos,drone.y_pos,70,40);
-        ctx.strokeRect(drone_x,drone_y,70,40)
-          
+        ctx.drawImage(obstacles[1],drone.x_pos,drone.y_pos,drone.width,drone.height);
+        ctx.strokeRect(drone_x,drone_y,drone.width,drone.height)
+            
         drone.x_pos -= 6;
         drone.x_pos += gameTime; 
 
-        };
+        changeSizeFlag  = appearHeart(scoreCount,godzilla_x2,godzilla_x,godzilla_y,godzilla_y2);
 
     };
 
-    changeSizeFlag  = appearHeart(scoreCount,godzilla_x1,godzilla_x,godzilla_y,godzilla_y1);
+    
      
+
+            
 };
 
+var takenHeart = false;
 
-function appearHeart(scoreCount,godzilla_x1,godzilla_x,godzilla_y,godzilla_y1) {
+var loadedLogo = false;
 
+function appearHeart(scoreCount,godzilla_x2,godzilla_x,godzilla_y,godzilla_y2) {
+    
     if (Math.floor(scoreCount) % 100 === 0 ) {
 
         takenHeart = true;
         changeSizeFlag = 0;
     };
-   
-    var heart_x1 = heartInfo.x_pos + 15;
-    var heart_y1 = heartInfo.y_pos + 15;
 
-    if  ( ( godzilla_x1 > heartInfo.x_pos && godzilla_x1 < heart_x1 ||
-        godzilla_x > heartInfo.x_pos &&  godzilla_x < heart_x1 ||
-        godzilla_x < heartInfo.x_pos && godzilla_x1 > heart_x1 ||
-        heartInfo.x_pos < godzilla_x && heart_x1 > godzilla_x1 ) &&
+    var heart_x = heartInfo.x_pos;
+    var heart_y = heartInfo.y_pos
+    var heart_x2 = heartInfo.x_pos + 15;
+    var heart_y2 = heartInfo.y_pos + 15;
 
-    ( godzilla_y > heartInfo.y_pos && godzilla_y < heart_y1 ||
-        heartInfo.y_pos > godzilla_y &&  heartInfo.y_pos < godzilla_y1 ||
-        godzilla_y < heartInfo.y_pos && godzilla_y1 > heart_y1 ||
-        heartInfo.y_pos < godzilla_y && heart_y1 > godzilla_y1 )  )  {
-
+    heartCollision = collision(godzilla_x,godzilla_x2,heart_x,heart_x2,godzilla_y,godzilla_y2,heart_y,heart_y2);
         
+    if  ( heartCollision  )  {
+          
         heartInfo.x_pos = 1000 + Math.floor(50 * getRandom(1,7));
         takenHeart = false;  
         
-        if (getRandom(0,1) > 0.5) {
+        if ( getRandom(0,1) > 0.5 ) {
             
             heartInfo.y_pos = 120;
 
@@ -583,10 +577,9 @@ function appearHeart(scoreCount,godzilla_x1,godzilla_x,godzilla_y,godzilla_y1) {
         heartInfo.x_pos = 1000 + Math.floor(50 * getRandom(1,7));
         
     }; 
-
-            
+       
     ctx.drawImage(heart,heartInfo.x_pos,heartInfo.y_pos,heartInfo.width,heartInfo.height);      
-    heartInfo.x_pos -= 5;
+    heartInfo.x_pos -= 15;
     
     if ( !takenHeart ) {
         console.log('work size in func');
@@ -594,16 +587,13 @@ function appearHeart(scoreCount,godzilla_x1,godzilla_x,godzilla_y,godzilla_y1) {
         changeSizeFlag = 1;
         return changeSizeFlag;
 
-    } 
-            
-};
-
-var takenHeart = false;
-
-var loadedLogo = false;
-
-document.onkeydown = function (event) {
+    }; 
     
+
+};
+document.onkeydown = function (event) {
+    var CASUAL = "Casual";
+    var HARD = "Hard"
     if ( event.keyCode === 38 && onGround) {
 
         onGround = false;
@@ -612,84 +602,72 @@ document.onkeydown = function (event) {
         /* jumpSound.volume = 0.3;
         jumpSound.play(); */
 
-    } else if ( event.keyCode === 32 && choosenMode === 'Casual' ) {
+    } else if ( event.keyCode === 32 && choosenMode === CASUAL ) {
             
-            if (restart) {
 
                 if (refresh) {
 
-                    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-                    endGameTablo = false;
-                    refresh = false;
-
-                    dy = 0;
-                    gameTime = 0;
-                    timeTownSpeed = 0;
-                    tank.x_pos = 900;   
-                    tank.y_pos = 214;
-                    drone.x_pos = 1250;
-                    drone.y_pos = 150;
-                    backgroundsInfo.x_pos = 1000;
-                    scoreCount = 0;
-                    design.style.visibility = 'hidden';
-                    stopGame = false;
-
-                    timer = setInterval(casualGame, 20);
+                    reset();
                          
                 };
 
-            } else {
 
+            if (restart) {
+
+                
+
+            } else if (restart) {
+
+                    console.log('run restart')
                     timer = setInterval(casualGame, 20);
-                    restart = true;
+                    
 
             };
 
        
     } else if ( event.keyCode === 32 && !loadedLogo ) { //       SPACE
       
-        if ( choosenMode === 'Casual' ) {
+        if ( choosenMode === CASUAL ) {
 
             timer = setInterval(casualGame, 20);
             notPressed = false;
+            loadedLogo = false;
+            console.log('run casual')
+            
             
 
-        } else if ( choosenMode === 'Hard' ) { 
+        } else if ( choosenMode === HARD ) { 
             
             timer = setInterval(hardcoreGame, 20);
-            notPressed = false; 
+            notPressed = false;
+            loadedLogo = false;  
             console.log('temporary doesnt work');
+            console.log(notPressed)
+            
+            
+        } else {
+
+            choseDifficult()
+            loadedLogo = true;
+            notPressed = true;
+            
         };
 
-        loadedLogo = true;
-        choseDifficult();
-        notPressed = true;
-        console.log('work pressed')
-
-    } else if ( event.keyCode === 39 && notPressed ) {
+    } else if ( event.keyCode === 39 && notPressed && loadedLogo  ) {
 
         choseIconInfo.x_pos = 650;
         choseDifficult();
-        choosenMode = "Casual";
-        loadedLogo = true;
+        choosenMode = CASUAL;
         
-        
-        
-
-    } else if ( event.keyCode === 37 && notPressed ) {
+    } else if ( event.keyCode === 37 && notPressed && loadedLogo ) {
 
         choseIconInfo.x_pos = 140;
         choseDifficult();
-        choosenMode = 'Hard';
-        loadedLogo = true;
-        
-        
-
+        choosenMode = HARD;
+    
     } else if ( event.keyCode === 40) {
 
         duck = true;
-    
 
     };
 
@@ -754,5 +732,55 @@ function designer() {
     ctx.fillText(`design by Alena Stepanova` ,500,70);
 
 };
+function reset() {
 
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    endGameTablo = false;
+    refresh = false;
+    stopGame = false;
+    restart = true;
+
+    dy = 0;
+    gameTime = 0;
+    timeTownSpeed = 0;
+    tank.x_pos = 900;   
+    tank.y_pos = 214;
+    drone.x_pos = 1250;
+    drone.y_pos = 150;
+    godzilla.width = 60;
+    godzilla.height = 70;
+    godzilla.y_pos = 200;
+    godzilla.duck_y_pos = 193;
+    godzilla.duck_width = 80;
+    godzilla.duck_height = 50;
+    godzilla.y_pos_size = 175;
+    backgroundsInfo.x_pos = 1000;
+    scoreCount = 0;
+    design.style.visibility = 'hidden';
+
+    timer = setInterval(casualGame, 20);
+
+};
+function collision(gx1,gx2,tx1,tx2,gy1,gy2,ty1,ty2) {
+
+    if ( ( gx2 > tx1 && gx2 < tx2 ||
+        gx1 > tx1 &&  gx1 < tx2 ||
+        gx1 < tx1 && gx2 > tx2 ||
+        tx1 < gx1 && gx2 < tx2 ) &&
+
+    (   gy1 > ty1 && gy1 < ty2 ||
+        ty1 > gy1 &&  ty1 < gy2 ||
+        gy1 < ty1 && gy2 > ty2 ||
+        ty1 < gy1 && ty2 > gy2 )  ) {
+
+        return true;
+
+        } else {
+
+        return false;
+
+        };
+
+};
  

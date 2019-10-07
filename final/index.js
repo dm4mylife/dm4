@@ -1,120 +1,67 @@
-window.onload = function () {
-
-    if ( localStorage.getItem('score') !== null ) {
-
-        var local = localStorage.getItem('score');
-           
-    } else {
-        
-        var local = undefined;
-       
-    };
-   
-     
-};
-setTimeout(function () {
-    
-    var canvas = document.getElementById('canvas');
-     
-    var ctx = canvas.getContext('2d');
-    canvas.width = 800;
-    canvas.height = 250;
- 
-    ctx.fillStyle = 'grey';
-    ctx.font = "25px ebit"
-    ctx.fillText('Press Space to start game',canvas.width / 2 - 200,canvas.height / 2);
-    
-        
-
-},50)
-
-var canvas = document.getElementById('canvas');
-var ctx = canvas.getContext('2d');
-canvas.width = 800;
-canvas.height = 250;
-
-ctx.fillStyle = 'grey';
-ctx.font = "25px ebit"
-ctx.fillText('Press Space to start game',canvas.width / 2 - 150,canvas.height / 2);
-        
-
-var pictures  = [];
-var picturesJump = [];
-var picturesDuck = [];
-var picturesOthers = [];
-var picturesCloud = [];
-var backgrounds = [];
-var obstacles = [];
-
-for ( var i = 1; i <= 2; i++ ) {
-
-    var sprite = new Image();
-    sprite.src = `./pics/run${i}.png`;
-    pictures.push(sprite);
-
-};
-
-for ( var i = 1; i <= 2; i++ ) {
-
-    var sprite = new Image();
-    sprite.src = `./pics/duck${i}.png`;
-    picturesDuck.push(sprite);
-
-};
-
-    var sprite = new Image();
-    sprite.src = `./pics/jump.png`;
-    picturesJump.push(sprite);
-
-for ( var i = 1; i <= 3; i++ ) {
-
-    var bgr = new Image();
-    bgr.src = `./pics/town${i}.png`;
-    backgrounds.push(bgr);
-
-};
-
-var tank = new Image();
-tank.src = './pics/tank.png'
-obstacles.push(tank);
-var path = new Image('.pics/path.png');
-path.src = './pics/path.png'
-picturesOthers.push(path);
-var drone = new Image('.pics/drone.png');
-drone.src = './pics/drone.png'
-obstacles.push(drone);
-var explode = new Image();
-explode.src = './pics/explode.gif';
+var pictures  = [],
+    picturesJump = [],
+    picturesDuck = [],
+    picturesOthers = [],
+    backgrounds = [],
+    obstacles = [],
+    picturesExplosion = [];
 
 
+loadIFilesArr(3,'town',backgrounds,'png');
+loadIFilesArr(2,'run',pictures,'png');
+loadIFilesArr(2,'duck',picturesDuck,'png');
+loadIFilesArr(1,'jump',picturesJump,'png');
+loadIFilesArr(12,'exp',picturesExplosion,'gif');
 
-var failSound = new Audio('./sounds/fail.mp3');
-var moneySound = new Audio('./sounds/money.mp3');
-var jumpSound = new Audio('./sounds/jump.mp3');
+var tank = loadIFilesOthers('tank',obstacles),
+    drone = loadIFilesOthers('drone',obstacles),
+    path = loadIFilesOthers('path',picturesOthers),
 
-var onGround = false;
-var jumpPressed = false;
-var endGameTablo = false;
-var duck = false;
-var restart = false;
-var refresh = false;
-var timer = null;
-var launch = false;
-var stopGame = false;
-var choosenMode = '';
+    heart = loadIFilesOthers('heart',picturesOthers),
+    choseIcon = loadIFilesOthers('choseIcon',picturesOthers),
 
-var currentCount = 0;
-var pathNumber = 0;
-var dy = 0;
-var frame_id = 0;
-var scoreCount = 0;
-var gameTime = 0;
-var randomTankTime = getRandom(4,10)*100;
-var randomCloudAppear = getRandom(10,40);
-var endBgr = 2200;
-var countPath = 800; 
-var secondCountPath = 1600;
-var timeTownSpeed = 0;
+    failSound = new Audio('./sounds/fail.mp3'),
+    moneySound = new Audio('./sounds/money.mp3'),
+    jumpSound = new Audio('./sounds/jump.mp3'),
+    heartSound = new Audio('./sounds/heart.mp3');
+
+var onGround = false,
+    jumpPressed = false,
+    endGameTablo = false,
+    duck = false,
+    restart = false,
+    timer = null,
+    launch = false,
+    stopGame = false,
+    takenHeart = false,
+    loadedLogo = false,
+    tankCollision = null,
+    droneCollision = null,
+    heartCollision = null,
+    notPressed = false,
+    cheat = false,
+    cheat2 = false,
+    explosionFlag = false,
+    endExplosion = false;
+    choosenMode = '';
+
+var currentCount = 0,
+    pathNumber = 0,
+    dy = 0,
+    frame_id = 0,
+    scoreCount = 0,
+    gameTime = 0,
+    randomTankTime = getRandom(4,10)*100,
+    randomCloudAppear = getRandom(10,40),
+    endBgr = 2200,
+    countPath = 800,
+    secondCountPath = 1600,
+    timeTownSpeed = 0,
+    changeSizeFlag = 0,
+    explosion_frames = 0,
+    potentialGrow = 1.0,
+    potentialGrowJump = 0,
+    time_explosion = 0;
 
 var tank = {
 
@@ -127,8 +74,8 @@ var tank = {
 
 var drone = {
 
-    x_pos : 1250,
-    y_pos : 150,
+    x_pos : 1350,
+    y_pos : 142,
     width : 70,
     height : 40
 };
@@ -163,80 +110,155 @@ var backgroundsInfo = {
     y_pos: 50,
     path_length: 0,
     x_rep : 1000,
-    cloud_x_pos : 1000,
-    clod_y_pos : 40
-}
+    
+};
 
 var choseIconInfo = {
-
 
     x_pos: 140,
     y_pos: 190,
     x_speed: 0
 
 };
-var casualGameMod = {
 
+var gameMode = {
 
-
-
+    CASUAL : "Casual",
+    HARD : "Hard"
 };
-
-
-var tankCollision = null;
-var droneCollision = null;
-var heartCollision = null;
-var notPressed = false;
-var choseIcon = new Image();
-choseIcon.src = './pics/choseIcon.png';
-var heart = new Image();
-heart.src = './pics/heart.png';
 
 var heartInfo = {
 
-    x_pos : 800,
+    x_pos : 2800,
     y_pos : 200,
     width: 30,
     height: 30,
     
 };
+var limitSize = {
+
+    x_pos : 20,
+    y_pos : 125,
+    width : 110,
+    height : 120,
+    duck_y_pos : 193,
+    y_pos_size : 125,
+    duck_width: 80,
+    duck_height: 50
+
+};
+
+var explosionInfo = {
+
+    x_pos : 200,
+    y_pos : 200,
+    explosion_frames : 0,
+    time_explosion : 0
+
+};
+
+window.onload = function () {
+
+    if ( localStorage.getItem('score') !== null ) {
+
+        var local = localStorage.getItem('score');
+           
+    } else {
+        
+        var local = undefined;
+       
+    };
+   
+     
+};
+setTimeout(function () {
+    
+    var canvas = document.getElementById('canvas');
+     
+    var ctx = canvas.getContext('2d');
+    canvas.width = 800;
+    canvas.height = 250;
+
+    changeTextStyle('grey','25px ebit');
+    ctx.fillText('Press Space to start game',canvas.width / 2 - 200,canvas.height / 2);   
+
+},50);
+
+var design = document.getElementById('design');
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+canvas.width = 800;
+canvas.height = 250;
+
+changeTextStyle('grey','25px ebit');
+ctx.fillText('Press Space to start game',canvas.width / 2 - 150,canvas.height / 2);
 
 function choseDifficult() {
 
-    ctx.clearRect(0,0,canvas.width,canvas.height )
-    ctx.fillStyle = 'grey';
-    ctx.font = "25px ebit";
+    ctx.clearRect(0,0,canvas.width,canvas.height );
+
+    changeTextStyle('grey','25px ebit');
     ctx.fillText('Hardcore mode',50,125);
     ctx.fillText('Casual mode',575,125);
-    ctx.font = "16px ebit";
-    ctx.fillStyle = 'black';
+
+    changeTextStyle('black','16px ebit');
     ctx.fillText('Running for the highest score',40, 170);
     ctx.fillText('Reach 5000 to win a game ',550, 170);
 
-    ctx.drawImage(choseIcon,choseIconInfo.x_pos,choseIconInfo.y_pos,30,30);
-
-};
-
-var changeSizeFlag = 0;
+    ctx.drawImage(picturesOthers[2],choseIconInfo.x_pos,choseIconInfo.y_pos,30,30);
     
+}; 
+
+
+
+
+
+
 function hardcoreGame() {
     console.log("xyu")
 };
-    
-    
-
-
-
-
-
 function casualGame() {
     
     ctx.clearRect(0,0,canvas.width,canvas.height);
     
+
+    explosionFlag = limitSizeCompare();
+
+
+    if ( explosionFlag ) {
+
+        console.log('work comparasion');
+
+        if ( tankCollision ) {
+
+            explosionInfo.x_pos = tank.x_pos;
+            explosionInfo.y_pos = tank.y_pos;
+
+            ctx.clearRect(tank.x_pos,tank.y_pos,tank.width,tank.height); 
+            explosion(tank.x_pos,tank.y_pos-15,50,50);
+            console.log('work explosion')
+            
+        };
+        if ( droneCollision ) {
+
+            explosionInfo.x_pos = drone.x_pos;
+            explosionInfo.y_pos = drone.y_pos;
+    
+            ctx.clearRect(drone.x_pos,drone.y_pos,drone.width,drone.height); 
+            explosion(drone.x_pos,drone.y_pos,50,50);
+            console.log('work explosion')
+         
+
+        };
+        
+
+    };
+
+
     if ( countPath < 0 ) {
         countPath = 800;
         secondCountPath = 1600;
-    }
+    };
 
     ctx.drawImage(picturesOthers[0],countPath,230,100,18);
     
@@ -263,17 +285,15 @@ function casualGame() {
         backgroundsInfo.x_pos = 1000;
         endBgr = 2200;
         timeTownSpeed +=0.1;
-        console.log('work')
+      
     };
 
     ctx.drawImage(backgrounds[pathNumber],backgroundsInfo.x_pos,backgroundsInfo.y_pos,400,90);
     ctx.drawImage(backgrounds[pathNumber+1],backgroundsInfo.x_pos+400,backgroundsInfo.y_pos,400,90);
     ctx.drawImage(backgrounds[pathNumber+2],backgroundsInfo.x_pos+800,backgroundsInfo.y_pos,400,90);
     
-
-    
-    backgroundsInfo.x_pos-= 1 + timeTownSpeed;
-    endBgr -= 1+ timeTownSpeed;
+    backgroundsInfo.x_pos -= 1 + timeTownSpeed;
+    endBgr -= 1 + timeTownSpeed;
     
     
     if ( Math.floor(scoreCount) % 50 === 0 && Math.floor(scoreCount) !== 0  ) {
@@ -285,8 +305,8 @@ function casualGame() {
     if (!endGameTablo) {
         
         var zeroCount = '00000';
-        ctx.font = '15px ebit';
-
+        changeTextStyle('15px ebit')
+        
         if ( scoreCount >= 9 && scoreCount < 100 && scoreCount > 0 ) {
             
             zeroCount = '0000';
@@ -380,7 +400,6 @@ function casualGame() {
     if ( godzilla.time > 1000) {
 
             godzilla.time = 0;
-            time = 0;
             
     };
 
@@ -388,38 +407,31 @@ function casualGame() {
     
     
     if (changeSizeFlag) {
-
         
-        godzilla.width += 2;
-        godzilla.height += 2;
-        godzilla.duck_width += 2;
-        godzilla.duck_height += 2;
-        godzilla.y_pos_size -= 2;
-        godzilla.duck_y_pos -= 2;
-        dy -=2;
-       
+        godzilla.width += potentialGrow;
+        godzilla.height += potentialGrow;
+        godzilla.duck_width += potentialGrow;
+        godzilla.duck_height += potentialGrow;
+        godzilla.y_pos_size -= potentialGrow;
+        godzilla.duck_y_pos -= potentialGrow;
+        potentialGrowJump += 0.02;
+        
         changeSizeFlag = 0;
     };
-
+    
     if ( jumpPressed ) {
         
         ctx.drawImage(picturesJump[0],godzilla.x_pos,godzilla.y_pos,godzilla.width,godzilla.height);
         
-        ctx.strokeRect(godzilla.x_pos,godzilla.y_pos,godzilla.width,godzilla.height)
-        
     } else if ( duck ) {
 
         ctx.drawImage(picturesDuck[frame_id],godzilla.x_pos,godzilla.duck_y_pos,godzilla.duck_width,godzilla.duck_height);
-        
-        ctx.strokeRect(godzilla.x_pos,godzilla.duck_y_pos,godzilla.width,godzilla.height)
         
         godzilla.time += 140;
         
     } else {
            
         ctx.drawImage(pictures[frame_id],godzilla.x_pos,godzilla.y_pos,godzilla.width,godzilla.height);
-        
-        ctx.strokeRect(godzilla.x_pos,godzilla.y_pos,godzilla.width,godzilla.height)
             
         godzilla.time += 140;
 
@@ -429,8 +441,8 @@ function casualGame() {
         
     if ( godzilla.y_pos < godzilla.y_pos_size ) {
 
-        dy += 0.9;   
-        console.log(dy);
+        dy += 0.8-potentialGrowJump;   
+     
 
     } else {
 
@@ -465,227 +477,149 @@ function casualGame() {
     var drone_y = drone.y_pos;
     var drone_y2 = drone.y_pos + drone.height;
 
-    tankCollision = collision(godzilla_x,godzilla_x2,tank_x,tank_x2,godzilla_y,godzilla_y2,tank_y,tank_y2);
-    droneCollision = collision(godzilla_x,godzilla_x2,drone_x,drone_x2,godzilla_y,godzilla_y2,drone_y,drone_y2);
     
-
-    if ( tankCollision || droneCollision ) {
-
-        failSound.volume = 0.4;
-        failSound.play();
-        gameOver(); 
-        endGameTablo = true;  
-
-    };
-
-    if ( !stopGame ) {
-
-        if ( tank.x_pos < -50 ) {
-
-            if ( drone.x_pos > 800 ) {
-
-                tank.x_pos = Math.floor(getRandom(drone.x_pos+100,drone.x_pos+400));
-
-            } else {
-
-                tank.x_pos = Math.floor(getRandom(850,1250));
-            
-            };           
-        };
-    
-        ctx.drawImage(obstacles[0],tank.x_pos,tank.y_pos,tank.width,tank.height);
-        ctx.strokeRect(tank_x,tank_y,tank.width,tank.height)
-        
-        tank.x_pos -= 6;
-        tank.x_pos += gameTime;  
-
-       
-        if ( drone.x_pos < -50 ) {
-                    
-            if ( tank.x_pos > 800 ) {
-
-                drone.x_pos = Math.floor(getRandom(tank.x_pos+100,tank.x_pos+400));
-
-            } else {
-
-                drone.x_pos = Math.floor(getRandom(850,1250));
-
-            };
-        
-        };
-
-        ctx.drawImage(obstacles[1],drone.x_pos,drone.y_pos,drone.width,drone.height);
-        ctx.strokeRect(drone_x,drone_y,drone.width,drone.height)
-            
-        drone.x_pos -= 6;
-        drone.x_pos += gameTime; 
-
-        changeSizeFlag  = appearHeart(scoreCount,godzilla_x2,godzilla_x,godzilla_y,godzilla_y2);
-
-    };
-
-    
-     
-
-            
-};
-
-var takenHeart = false;
-
-var loadedLogo = false;
-
-function appearHeart(scoreCount,godzilla_x2,godzilla_x,godzilla_y,godzilla_y2) {
-    
-    if (Math.floor(scoreCount) % 100 === 0 ) {
-
-        takenHeart = true;
-        changeSizeFlag = 0;
-    };
-
     var heart_x = heartInfo.x_pos;
     var heart_y = heartInfo.y_pos
     var heart_x2 = heartInfo.x_pos + 15;
     var heart_y2 = heartInfo.y_pos + 15;
 
+    ctx.drawImage(picturesOthers[1],heartInfo.x_pos,heartInfo.y_pos,heartInfo.width,heartInfo.height);      
+    heartInfo.x_pos -= 20;
+    
     heartCollision = collision(godzilla_x,godzilla_x2,heart_x,heart_x2,godzilla_y,godzilla_y2,heart_y,heart_y2);
-        
-    if  ( heartCollision  )  {
-          
-        heartInfo.x_pos = 1000 + Math.floor(50 * getRandom(1,7));
-        takenHeart = false;  
-        
-        if ( getRandom(0,1) > 0.5 ) {
-            
-            heartInfo.y_pos = 120;
+    tankCollision = collision(godzilla_x,godzilla_x2,tank_x,tank_x2,godzilla_y,godzilla_y2,tank_y,tank_y2);
+    droneCollision = collision(godzilla_x,godzilla_x2,drone_x,drone_x2,godzilla_y,godzilla_y2,drone_y,drone_y2);
+    console.log(`${godzilla.x_pos} ${godzilla.y_pos} --- x,y \n${godzilla.width} ${godzilla.height} --- size `);
 
-        } else {
+    if ( !cheat ) {
 
-            heartInfo.y_pos = 200;
-        };
+        if ( tankCollision || droneCollision ) {
 
-    } else if (heartInfo.x_pos < -50 ) {
+         failSound.volume = 0.4;
+        /* failSound.play(); */  
+        gameOver(); 
+        endGameTablo = true; 
 
-        if (getRandom(0,1) > 0.5) {
-            
-            heartInfo.y_pos = 120;
+        }; 
 
-        } else {
+    };
 
-            heartInfo.y_pos = 200;
-        };
+    if ( cheat2 ) {
 
-        heartInfo.x_pos = 1000 + Math.floor(50 * getRandom(1,7));
-        
-    }; 
-       
-    ctx.drawImage(heart,heartInfo.x_pos,heartInfo.y_pos,heartInfo.width,heartInfo.height);      
-    heartInfo.x_pos -= 15;
-    
-    if ( !takenHeart ) {
-        console.log('work size in func');
-        takenHeart = true;
-        changeSizeFlag = 1;
-        return changeSizeFlag;
+        godzilla.width = limitSize.width;
+        godzilla.height = limitSize.height;
+        godzilla.y_pos = limitSize.y_pos;
 
-    }; 
-    
+    };
 
-};
-document.onkeydown = function (event) {
-    var CASUAL = "Casual";
-    var HARD = "Hard"
-    if ( event.keyCode === 38 && onGround) {
+    if ( !stopGame ) {
 
-        onGround = false;
-        jumpPressed = true;
-        dy = -13;
-        /* jumpSound.volume = 0.3;
-        jumpSound.play(); */
-
-    } else if ( event.keyCode === 32 && choosenMode === CASUAL ) {
-            
-
-                if (refresh) {
-
-                    reset();
-                         
-                };
-
-
-            if (restart) {
-
+        if  ( heartCollision )  {
                 
+            heartSound.volume = 0.4
+            heartSound.play();
+            takenHeart = true;  
+            changeSizeFlag = 1;
 
-            } else if (restart) {
+            if ( getRandom(0,1) > 0.5 ) {
+                
+                heartInfo.y_pos = 120;
 
-                    console.log('run restart')
-                    timer = setInterval(casualGame, 20);
-                    
+            } else {
 
+                heartInfo.y_pos = 210;
             };
 
-       
-    } else if ( event.keyCode === 32 && !loadedLogo ) { //       SPACE
-      
-        if ( choosenMode === CASUAL ) {
+            heartInfo.x_pos = 1000 + Math.floor(50 * getRandom(1,7));
 
-            timer = setInterval(casualGame, 20);
-            notPressed = false;
-            loadedLogo = false;
-            console.log('run casual')
-            
-            
+        } else if ( heartInfo.x_pos < -50 ) {
 
-        } else if ( choosenMode === HARD ) { 
-            
-            timer = setInterval(hardcoreGame, 20);
-            notPressed = false;
-            loadedLogo = false;  
-            console.log('temporary doesnt work');
-            console.log(notPressed)
-            
-            
-        } else {
+            if ( getRandom(0,1) > 0.5 ) {
+                
+                heartInfo.y_pos = 120;
 
-            choseDifficult()
-            loadedLogo = true;
-            notPressed = true;
+            } else {
+
+                heartInfo.y_pos = 210;
+            };
+
+            heartInfo.x_pos = 1000 + Math.floor(50 * getRandom(1,7));
+
+        };
             
+        if ( takenHeart ) {
+            
+            takenHeart = false;
+            changeSizeFlag = 1;
+        
+        }; 
+
+        if (!tankCollision) {
+
+            if ( tank.x_pos < -50 ) {
+
+                if ( drone.x_pos > 800 ) {
+
+                    tank.x_pos = Math.floor(getRandom(drone.x_pos+175,drone.x_pos+375));
+
+                } else {
+
+                    tank.x_pos = Math.floor(getRandom(850,1250));
+                
+                };           
+            };
+
+        ctx.drawImage(obstacles[0],tank.x_pos,tank.y_pos,tank.width,tank.height);
+        
+        tank.x_pos -= 6;
+        tank.x_pos += gameTime;
+
+        };
+            
+        if (!droneCollision) {
+
+            if ( drone.x_pos < -50 ) {
+                    
+                if ( tank.x_pos > 800 ) {
+
+                    drone.x_pos = Math.floor(getRandom(tank.x_pos+175,tank.x_pos+375));
+
+                } else {
+
+                    drone.x_pos = Math.floor(getRandom(850,1250));
+
+                };
+        
         };
 
-    } else if ( event.keyCode === 39 && notPressed && loadedLogo  ) {
-
-        choseIconInfo.x_pos = 650;
-        choseDifficult();
-        choosenMode = CASUAL;
-        
-    } else if ( event.keyCode === 37 && notPressed && loadedLogo ) {
-
-        choseIconInfo.x_pos = 140;
-        choseDifficult();
-        choosenMode = HARD;
-    
-    } else if ( event.keyCode === 40) {
-
-        duck = true;
-
-    };
-
-};
+        ctx.drawImage(obstacles[1],drone.x_pos,drone.y_pos,drone.width,drone.height);
             
-document.onkeyup = function (event) {
+        drone.x_pos -= 6;
+        drone.x_pos += gameTime; 
 
-    if  ( event.keyCode === 40) {
-       
+        };
 
-        duck = false;
-        /* godzilla.width = 60;
-        godzilla.height = 70; */
-        
     };
+            
 };
+function loadIFilesOthers(name,arr) {
 
+    var file = new Image();
+    file.src = `./pics/${name}.png`;
+    arr.push(file);
     
+};
+function loadIFilesArr(countPicture,namePicture,arrName,exe) {
+
+    for ( var i = 1; i <= countPicture; i++ ) {
+
+        var file = new Image();
+        file.src = `./pics/${namePicture}${i}.${exe}`;
+        arrName.push(file);
+    
+    };
+    return arrName;
+};
 function getRandom(min, max) {
 
   return Math.random() * (max - min) + min;
@@ -698,30 +632,59 @@ function gameOver() {
         localStorage.setItem('score',`${scoreCount}`);
 
     };
+
     stopGame = true;
+    restart = true;
     clearInterval(timer);
-    /* ctx.clearRect(650,0,150,40);
-    ctx.clearRect(0,50,800,100); */
+
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.font = "12px ebit";
+
+    changeTextStyle('black',"30px ebit")
+    ctx.fillText(`GAME OVER` ,canvas.width / 2 - 95,canvas.height / 2 - 20);
+
+    changeTextStyle('grey','9px ebit')
+    ctx.fillText(`press Space to restart game` ,canvas.width / 2 - 85,canvas.height / 2 + 15);
+
+    changeTextStyle('grey','12px ebit')
     ctx.fillText(`YOUR SCORE ${Math.floor(scoreCount)}`,canvas.width / 2 - 60,canvas.height / 2 );
     
     design.style.visibility = 'visible';
-    ctx.fillStyle = 'black';
-    ctx.font = "30px ebit";
-    ctx.fillText(`GAME OVER` ,canvas.width / 2 - 95,canvas.height / 2 - 20);
 
-    ctx.fillStyle = 'grey';
-    ctx.font = "9px ebit";
+
+}; 
+function explosion(x,y,w,h) {
+
+    if (!endExplosion) {
+
+        if ( explosionInfo.time_explosion > 1000) {
+
+        explosionInfo.time_explosion = 0;
+        endExplosion = true;
+        
+    };
+
+    explosionInfo.explosion_frames = Math.floor(explosionInfo.time_explosion / 1000 * picturesExplosion.length);
+
+    ctx.drawImage(picturesExplosion[explosionInfo.explosion_frames],x,y,w,h);
+
+    explosionInfo.time_explosion += 33;
+
+    };
     
-    ctx.fillText(`press Enter to restart game` ,canvas.width / 2 - 85,canvas.height / 2 + 15);
-    
-    refresh = true;
 
 };
- 
-var design = document.getElementById('design');
+function limitSizeCompare() {
 
+    if ( limitSize.width <= godzilla.width && limitSize.height <= godzilla.height ) {
+
+        return true;
+
+    } else {
+
+        return false;
+    };
+
+};
 function designer() {
 
     design.style.visibility = 'hidden';
@@ -737,17 +700,19 @@ function reset() {
     ctx.clearRect(0,0,canvas.width,canvas.height);
 
     endGameTablo = false;
-    refresh = false;
     stopGame = false;
     restart = true;
-
+    cheat = false;
+    cheat2 = false;
+    
     dy = 0;
     gameTime = 0;
     timeTownSpeed = 0;
+    endBgr = 2200;
     tank.x_pos = 900;   
     tank.y_pos = 214;
-    drone.x_pos = 1250;
-    drone.y_pos = 150;
+    drone.x_pos = 1350;
+    drone.y_pos = 145;
     godzilla.width = 60;
     godzilla.height = 70;
     godzilla.y_pos = 200;
@@ -755,9 +720,13 @@ function reset() {
     godzilla.duck_width = 80;
     godzilla.duck_height = 50;
     godzilla.y_pos_size = 175;
+    heartInfo.x_pos = 2800;
     backgroundsInfo.x_pos = 1000;
     scoreCount = 0;
     design.style.visibility = 'hidden';
+    potentialGrowJump = 1;
+    potentialGrowJump = 0;
+
 
     timer = setInterval(casualGame, 20);
 
@@ -783,4 +752,84 @@ function collision(gx1,gx2,tx1,tx2,gy1,gy2,ty1,ty2) {
         };
 
 };
- 
+function changeTextStyle(style,font) {
+
+    ctx.fillStyle = style;
+    ctx.font = font;
+
+};
+document.onkeydown = function (event) {
+    
+    if ( event.keyCode === 38 && onGround) {
+
+        onGround = false;
+        jumpPressed = true;
+        dy = -13-potentialGrowJump;
+    
+    } else if ( event.keyCode === 32 ) { //       SPACE
+       
+
+        if ( choosenMode === gameMode.CASUAL ) {
+
+            timer = setInterval(casualGame, 20);
+            notPressed = false;
+            loadedLogo = true;
+            choosenMode = '';
+            
+
+        } else if ( choosenMode === gameMode.HARD ) { 
+            
+            /* timer = setInterval(hardcoreGame, 20); */
+            notPressed = false;
+            loadedLogo = true;  
+            choosenMode = '';
+            
+        } else if (!loadedLogo  && !restart) {
+
+            choseDifficult()
+            notPressed = true;
+            loadedLogo = true;
+
+        }  else if (restart) {
+
+            reset();
+            restart = false;
+
+        };
+
+    } else if ( event.keyCode === 39 && notPressed  ) {
+
+        choseIconInfo.x_pos = 650;
+        choseDifficult();
+        choosenMode = gameMode.CASUAL;
+        loadedLogo = true;
+        
+    } else if ( event.keyCode === 37 && notPressed  ) {
+
+        choseIconInfo.x_pos = 140;
+        choseDifficult();
+        choosenMode = gameMode.HARD;
+        loadedLogo = true;
+    
+    } else if ( event.keyCode === 40) {
+
+        duck = true;
+
+        dy = 10;
+
+    } else if ( event.keyCode === 70 ) {
+        console.log('cheat activated')
+        cheat = true;
+    } else if ( event.keyCode === 71 ) {
+        cheat2 = true;
+    };
+
+};           
+document.onkeyup = function (event) {
+
+    if  ( event.keyCode === 40) {
+
+        duck = false;
+        
+    };
+};

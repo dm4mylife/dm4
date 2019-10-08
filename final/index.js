@@ -43,6 +43,7 @@ var onGround = false,
     cheat2 = false,
     explosionFlag = false,
     endExplosion = false;
+    endGame = false;
     choosenMode = '';
 
 var currentCount = 0,
@@ -141,10 +142,10 @@ var limitSize = {
     y_pos : 125,
     width : 110,
     height : 120,
-    duck_y_pos : 193,
+    duck_y_pos : 143,
     y_pos_size : 125,
-    duck_width: 80,
-    duck_height: 50
+    duck_width: 130,
+    duck_height: 100
 
 };
 
@@ -224,33 +225,53 @@ function casualGame() {
 
     explosionFlag = limitSizeCompare();
 
+    if ( endGame ) {
 
+        heartCollision = null;
+     /*    console.log('ENDGAME'); */
+        
+    };
     if ( explosionFlag ) {
 
-        console.log('work comparasion');
-
+        /* console.log(`${tank.x_pos} --- tank`);
+        console.log(`${drone.x_pos} --- drone`);
+ */
         if ( tankCollision ) {
 
             explosionInfo.x_pos = tank.x_pos;
             explosionInfo.y_pos = tank.y_pos;
 
-            ctx.clearRect(tank.x_pos,tank.y_pos,tank.width,tank.height); 
-            explosion(tank.x_pos,tank.y_pos-15,50,50);
-            console.log('work explosion')
+            /* ctx.clearRect(tank.x_pos,tank.y_pos,tank.width,tank.height);  */
+            explosion(explosionInfo.x_pos,explosionInfo.y_pos-15,50,50);
+            /* console.log('work tank explosion') */
+            if ( tank.x_pos < -50 ) {
+
+                /* console.log('v refreshe'+drone.x_pos) */
+                tank.x_pos = Math.floor(getRandom(850,950));
+            };
+            
             
         };
         if ( droneCollision ) {
 
             explosionInfo.x_pos = drone.x_pos;
             explosionInfo.y_pos = drone.y_pos;
-    
+            console.log(drone.x_pos)
             ctx.clearRect(drone.x_pos,drone.y_pos,drone.width,drone.height); 
-            explosion(drone.x_pos,drone.y_pos,50,50);
-            console.log('work explosion')
-         
+            explosion(explosionInfo.x_pos,explosionInfo.y_pos,50,50);
+            /* console.log('work drone explosion') */
+            if ( drone.x_pos < -50 ) {
 
+                console.log('v refreshe'+tank.x_pos);
+                drone.x_pos = Math.floor(getRandom(1050,1150));
+    
+            };
+            explosionInfo.x_pos -=6;
+            
         };
-        
+ 
+        /* tank.x_pos -= 6;
+        drone.x_pos -= 6; */
 
     };
 
@@ -453,7 +474,7 @@ function casualGame() {
 
     };
     
-    var godzilla_x = godzilla.x_pos;
+    var godzilla_x = godzilla.x_pos+30;
     var godzilla_x2 = godzilla.x_pos + godzilla.width;
     var godzilla_y = godzilla.y_pos;
     var godzilla_y2 = godzilla.y_pos + godzilla.height;
@@ -462,7 +483,7 @@ function casualGame() {
 
         var godzilla_x = godzilla.x_pos;
         var godzilla_x2 = godzilla.x_pos + godzilla.width;
-        var godzilla_y = godzilla.duck_y_pos;
+        var godzilla_y = godzilla.duck_y_pos+30;
         var godzilla_y2 = godzilla.duck_y_pos + godzilla.height;
 
     };
@@ -489,7 +510,6 @@ function casualGame() {
     heartCollision = collision(godzilla_x,godzilla_x2,heart_x,heart_x2,godzilla_y,godzilla_y2,heart_y,heart_y2);
     tankCollision = collision(godzilla_x,godzilla_x2,tank_x,tank_x2,godzilla_y,godzilla_y2,tank_y,tank_y2);
     droneCollision = collision(godzilla_x,godzilla_x2,drone_x,drone_x2,godzilla_y,godzilla_y2,drone_y,drone_y2);
-    console.log(`${godzilla.x_pos} ${godzilla.y_pos} --- x,y \n${godzilla.width} ${godzilla.height} --- size `);
 
     if ( !cheat ) {
 
@@ -499,16 +519,19 @@ function casualGame() {
         /* failSound.play(); */  
         gameOver(); 
         endGameTablo = true; 
-
+        
         }; 
 
     };
 
     if ( cheat2 ) {
-
+        
+        godzilla.duck_width = limitSize.duck_width;
+        godzilla.duck_height = limitSize.duck_height;
         godzilla.width = limitSize.width;
         godzilla.height = limitSize.height;
         godzilla.y_pos = limitSize.y_pos;
+        godzilla.duck_y_pos = limitSize.duck_y_pos;
 
     };
 
@@ -668,7 +691,8 @@ function explosion(x,y,w,h) {
     ctx.drawImage(picturesExplosion[explosionInfo.explosion_frames],x,y,w,h);
 
     explosionInfo.time_explosion += 33;
-
+    x -= 6;
+    
     };
     
 

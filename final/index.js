@@ -43,6 +43,7 @@ var onGround = false,
     cheat2 = false,
     explosionFlag = false,
     endExplosion = false;
+    endExplosion2 = false;
     endGame = false;
     choosenMode = '';
 
@@ -227,7 +228,8 @@ function casualGame() {
     
     if ( explosionFlag ) {
 
-        var godzilla_x = godzilla.x_pos+30,
+        console.log('worx explosionFlag')
+         var godzilla_x = godzilla.x_pos+30,
         godzilla_x2 = godzilla.x_pos + godzilla.width,
         godzilla_y = godzilla.y_pos,
         godzilla_y2 = godzilla.y_pos + godzilla.height;
@@ -246,36 +248,51 @@ function casualGame() {
         heart_y = heartInfo.y_pos,
         heart_x2 = heartInfo.x_pos + 15,
         heart_y2 = heartInfo.y_pos + 15;
-        
-        tank.x_pos = launchObject(tank.x_pos,tank.y_pos,tank.width,tank.height,drone.x_pos,gameTime,obstacles,0);
-        console.log(`${tank.x_pos} ${tank.y_pos} ${tank.width} ${tank.height} ${drone.x_pos} ${gameTime}`)
-        console.log(`${godzilla_x} ${godzilla_x2} ${godzilla_y} ${godzilla_y2} ${tank_y} ${tank_y2}`)
+
         tankCollision = collision(godzilla_x,godzilla_x2,tank_x,tank_x2,godzilla_y,godzilla_y2,tank_y,tank_y2);
-        drone.x_pos = launchObject(drone.x_pos,drone.y_pos,drone.width,drone.height,tank.x_pos,gameTime,obstacles,1);
-        
         droneCollision = collision(godzilla_x,godzilla_x2,drone_x,drone_x2,godzilla_y,godzilla_y2,drone_y,drone_y2);
-        console.log(tankCollision);
+console.log(tankCollision,droneCollision)
+        if (tankCollision === undefined) {
+
+            tank.x_pos = launchObject(tank.x_pos,tank.y_pos,tank.width,tank.height,drone.x_pos,gameTime,obstacles,0);
+            console.log('worDD')
+            
+       
+
+        } 
+         if (droneCollision === undefined) {
+
+            drone.x_pos = launchObject(drone.x_pos,drone.y_pos,drone.width,drone.height,tank.x_pos,gameTime,obstacles,1);
+        
+            
+      
+        };
+
 
         if ( tankCollision ) {
 
             console.log('work tank boom');
             
-            endExplosion = explosion(godzilla.x_pos,tank.y_pos-15,50,50);
-            
+            if (endExplosion != 1) {
+                endExplosion = explosion(tank.x_pos,tank.y_pos-15,50,50);
+                
+            };
             /* tank.x_pos = launchObject(tank.x_pos,tank.y_pos,tank.width,tank.height,drone.x_pos,gameTime,obstacles,0); */
-
+            
         };
 
         if ( droneCollision ) {
 
             console.log('work drone boom');   
             
-            /* endExplosion = explosion(godzilla.x_pos,drone.y_pos,50,50); */
+            if (endExplosion2 != 1) {
+                endExplosion2 = explosion(drone.x_pos,drone.y_pos-15,50,50);
+            };
           
-            drone.x_pos = launchObject(drone.x_pos,drone.y_pos,drone.width,drone.height,tank.x_pos,gameTime,obstacles,1);
-
+            /* drone.x_pos = launchObject(drone.x_pos,drone.y_pos,drone.width,drone.height,tank.x_pos,gameTime,obstacles,1); */
+            
         };
-             
+         
     };
 
 
@@ -547,7 +564,7 @@ function casualGame() {
     };
 
     if ( !stopGame && !explosionFlag ) {
-       
+       console.log('work without explosionFlag')
         if  ( heartCollision )  {
                 
             heartSound.volume = 0.4
@@ -696,7 +713,7 @@ function explosion(x,y,w,h) {
 
     explosionInfo.time_explosion += 33;
 
-
+    return 0;
 };
 function limitSizeCompare() {
 

@@ -64,6 +64,7 @@ var currentCount = 0,
     potentialGrowJump = 0,
     time_explosion = 0;
 
+   
 var tank = {
 
     x_pos : 900,   
@@ -211,9 +212,7 @@ function choseDifficult() {
 }; 
 
 
-
-
-
+var objectExplosion = false;
 
 function hardcoreGame() {
     console.log("xyu")
@@ -225,60 +224,67 @@ function casualGame() {
 
     explosionFlag = limitSizeCompare();
 
-    if ( endGame ) {
-
-        heartCollision = null;
-     /*    console.log('ENDGAME'); */
-        
-    };
+    
     if ( explosionFlag ) {
 
-        /* console.log(`${tank.x_pos} --- tank`);
-        console.log(`${drone.x_pos} --- drone`);
- */
+        var godzilla_x = godzilla.x_pos+30,
+        godzilla_x2 = godzilla.x_pos + godzilla.width,
+        godzilla_y = godzilla.y_pos,
+        godzilla_y2 = godzilla.y_pos + godzilla.height;
+        
+        var tank_x = tank.x_pos,
+        tank_x2 = tank.x_pos + tank.width,
+        tank_y = tank.y_pos,
+        tank_y2 = tank.y_pos + tank.height,
+
+        drone_x = drone.x_pos,
+        drone_x2 = drone.x_pos + drone.width,
+        drone_y = drone.y_pos,
+        drone_y2 = drone.y_pos + drone.height,
+
+        heart_x = heartInfo.x_pos,
+        heart_y = heartInfo.y_pos,
+        heart_x2 = heartInfo.x_pos + 15,
+        heart_y2 = heartInfo.y_pos + 15;
+        
+        tank.x_pos = launchObject(tank.x_pos,tank.y_pos,tank.width,tank.height,drone.x_pos,gameTime,obstacles,0);
+        console.log(`${tank.x_pos} ${tank.y_pos} ${tank.width} ${tank.height} ${drone.x_pos} ${gameTime}`)
+        console.log(`${godzilla_x} ${godzilla_x2} ${godzilla_y} ${godzilla_y2} ${tank_y} ${tank_y2}`)
+        tankCollision = collision(godzilla_x,godzilla_x2,tank_x,tank_x2,godzilla_y,godzilla_y2,tank_y,tank_y2);
+        drone.x_pos = launchObject(drone.x_pos,drone.y_pos,drone.width,drone.height,tank.x_pos,gameTime,obstacles,1);
+        
+        droneCollision = collision(godzilla_x,godzilla_x2,drone_x,drone_x2,godzilla_y,godzilla_y2,drone_y,drone_y2);
+        console.log(tankCollision);
+
         if ( tankCollision ) {
 
-            explosionInfo.x_pos = tank.x_pos;
-            explosionInfo.y_pos = tank.y_pos;
-
-            /* ctx.clearRect(tank.x_pos,tank.y_pos,tank.width,tank.height);  */
-            explosion(explosionInfo.x_pos,explosionInfo.y_pos-15,50,50);
-            /* console.log('work tank explosion') */
-            if ( tank.x_pos < -50 ) {
-
-                /* console.log('v refreshe'+drone.x_pos) */
-                tank.x_pos = Math.floor(getRandom(850,950));
-            };
+            console.log('work tank boom');
             
+            endExplosion = explosion(godzilla.x_pos,tank.y_pos-15,50,50);
             
+            /* tank.x_pos = launchObject(tank.x_pos,tank.y_pos,tank.width,tank.height,drone.x_pos,gameTime,obstacles,0); */
+
         };
+
         if ( droneCollision ) {
 
-            explosionInfo.x_pos = drone.x_pos;
-            explosionInfo.y_pos = drone.y_pos;
-            console.log(drone.x_pos)
-            ctx.clearRect(drone.x_pos,drone.y_pos,drone.width,drone.height); 
-            explosion(explosionInfo.x_pos,explosionInfo.y_pos,50,50);
-            /* console.log('work drone explosion') */
-            if ( drone.x_pos < -50 ) {
-
-                console.log('v refreshe'+tank.x_pos);
-                drone.x_pos = Math.floor(getRandom(1050,1150));
-    
-            };
-            explosionInfo.x_pos -=6;
+            console.log('work drone boom');   
             
-        };
- 
-        /* tank.x_pos -= 6;
-        drone.x_pos -= 6; */
+            /* endExplosion = explosion(godzilla.x_pos,drone.y_pos,50,50); */
+          
+            drone.x_pos = launchObject(drone.x_pos,drone.y_pos,drone.width,drone.height,tank.x_pos,gameTime,obstacles,1);
 
+        };
+             
     };
+
 
 
     if ( countPath < 0 ) {
+
         countPath = 800;
         secondCountPath = 1600;
+
     };
 
     ctx.drawImage(picturesOthers[0],countPath,230,100,18);
@@ -470,47 +476,52 @@ function casualGame() {
         jumpPressed = false;
         onGround = true; 
         godzilla.y_pos = godzilla.y_pos_size;
-        /* godzilla.duck_y_pos = 193; */
+      
 
     };
     
-    var godzilla_x = godzilla.x_pos+30;
-    var godzilla_x2 = godzilla.x_pos + godzilla.width;
-    var godzilla_y = godzilla.y_pos;
-    var godzilla_y2 = godzilla.y_pos + godzilla.height;
+    var godzilla_x = godzilla.x_pos+30,
+        godzilla_x2 = godzilla.x_pos + godzilla.width,
+        godzilla_y = godzilla.y_pos,
+        godzilla_y2 = godzilla.y_pos + godzilla.height;
 
     if ( duck && onGround ) {
 
-        var godzilla_x = godzilla.x_pos;
-        var godzilla_x2 = godzilla.x_pos + godzilla.width;
-        var godzilla_y = godzilla.duck_y_pos+30;
-        var godzilla_y2 = godzilla.duck_y_pos + godzilla.height;
+        var godzilla_x = godzilla.x_pos,
+            godzilla_x2 = godzilla.x_pos + godzilla.width,
+            godzilla_y = godzilla.duck_y_pos+30,
+            godzilla_y2 = godzilla.duck_y_pos + godzilla.height;
 
     };
     
-    var tank_x = tank.x_pos;
-    var tank_x2 = tank.x_pos + tank.width;
-    var tank_y = tank.y_pos;
-    var tank_y2 = tank.y_pos + tank.height;
+    var tank_x = tank.x_pos,
+        tank_x2 = tank.x_pos + tank.width,
+        tank_y = tank.y_pos,
+        tank_y2 = tank.y_pos + tank.height,
 
-    var drone_x = drone.x_pos;
-    var drone_x2 = drone.x_pos + drone.width;
-    var drone_y = drone.y_pos;
-    var drone_y2 = drone.y_pos + drone.height;
+        drone_x = drone.x_pos,
+        drone_x2 = drone.x_pos + drone.width,
+        drone_y = drone.y_pos,
+        drone_y2 = drone.y_pos + drone.height,
 
-    
-    var heart_x = heartInfo.x_pos;
-    var heart_y = heartInfo.y_pos
-    var heart_x2 = heartInfo.x_pos + 15;
-    var heart_y2 = heartInfo.y_pos + 15;
+        heart_x = heartInfo.x_pos,
+        heart_y = heartInfo.y_pos,
+        heart_x2 = heartInfo.x_pos + 15,
+        heart_y2 = heartInfo.y_pos + 15;
 
+
+
+    if (!explosionFlag) {
+        
     ctx.drawImage(picturesOthers[1],heartInfo.x_pos,heartInfo.y_pos,heartInfo.width,heartInfo.height);      
     heartInfo.x_pos -= 20;
-    
     heartCollision = collision(godzilla_x,godzilla_x2,heart_x,heart_x2,godzilla_y,godzilla_y2,heart_y,heart_y2);
     tankCollision = collision(godzilla_x,godzilla_x2,tank_x,tank_x2,godzilla_y,godzilla_y2,tank_y,tank_y2);
     droneCollision = collision(godzilla_x,godzilla_x2,drone_x,drone_x2,godzilla_y,godzilla_y2,drone_y,drone_y2);
 
+    };
+
+  
     if ( !cheat ) {
 
         if ( tankCollision || droneCollision ) {
@@ -535,8 +546,8 @@ function casualGame() {
 
     };
 
-    if ( !stopGame ) {
-
+    if ( !stopGame && !explosionFlag ) {
+       
         if  ( heartCollision )  {
                 
             heartSound.volume = 0.4
@@ -578,52 +589,43 @@ function casualGame() {
         }; 
 
         if (!tankCollision) {
-
-            if ( tank.x_pos < -50 ) {
-
-                if ( drone.x_pos > 800 ) {
-
-                    tank.x_pos = Math.floor(getRandom(drone.x_pos+175,drone.x_pos+375));
-
-                } else {
-
-                    tank.x_pos = Math.floor(getRandom(850,1250));
-                
-                };           
-            };
-
-        ctx.drawImage(obstacles[0],tank.x_pos,tank.y_pos,tank.width,tank.height);
-        
-        tank.x_pos -= 6;
-        tank.x_pos += gameTime;
-
+          
+        tank.x_pos = launchObject(tank.x_pos,tank.y_pos,tank.width,tank.height,drone.x_pos,gameTime,obstacles,0);
+           
         };
-            
+   
         if (!droneCollision) {
 
-            if ( drone.x_pos < -50 ) {
-                    
-                if ( tank.x_pos > 800 ) {
-
-                    drone.x_pos = Math.floor(getRandom(tank.x_pos+175,tank.x_pos+375));
-
-                } else {
-
-                    drone.x_pos = Math.floor(getRandom(850,1250));
-
-                };
-        
-        };
-
-        ctx.drawImage(obstacles[1],drone.x_pos,drone.y_pos,drone.width,drone.height);
+        drone.x_pos = launchObject(drone.x_pos,drone.y_pos,drone.width,drone.height,tank.x_pos,gameTime,obstacles,1);
             
-        drone.x_pos -= 6;
-        drone.x_pos += gameTime; 
-
         };
-
+        
     };
             
+};
+function launchObject(object1XPos,object1YPos,object1Width,object1Height,object2XPos,gameTime,arrElement,i) {
+
+    if ( object1XPos < -50 ) {
+
+        if ( object2XPos > 800 ) {
+
+            object1XPos = Math.floor(getRandom(object2XPos+175,object2XPos+375));
+            
+        } else {
+
+            object1XPos = Math.floor(getRandom(850,1250));
+           
+        };           
+    };
+    
+   
+    ctx.drawImage(arrElement[i],object1XPos,object1YPos,object1Width,object1Height);
+
+    object1XPos -= 6;
+    object1XPos += gameTime;
+    
+   
+    return object1XPos;
 };
 function loadIFilesOthers(name,arr) {
 
@@ -677,24 +679,23 @@ function gameOver() {
 }; 
 function explosion(x,y,w,h) {
 
-    if (!endExplosion) {
 
-        if ( explosionInfo.time_explosion > 1000) {
+    if ( explosionInfo.time_explosion > 1000) {
 
-        explosionInfo.time_explosion = 0;
-        endExplosion = true;
+    explosionInfo.time_explosion = 0;
+    
+    return 1;
         
     };
 
-    explosionInfo.explosion_frames = Math.floor(explosionInfo.time_explosion / 1000 * picturesExplosion.length);
 
+    explosionInfo.explosion_frames = Math.floor(explosionInfo.time_explosion / 1000 * picturesExplosion.length);
+    console.log(explosionInfo.time_explosion+'  vremya vzriva')
     ctx.drawImage(picturesExplosion[explosionInfo.explosion_frames],x,y,w,h);
 
+
     explosionInfo.time_explosion += 33;
-    x -= 6;
-    
-    };
-    
+
 
 };
 function limitSizeCompare() {
@@ -709,6 +710,7 @@ function limitSizeCompare() {
     };
 
 };
+
 function designer() {
 
     design.style.visibility = 'hidden';
@@ -766,14 +768,10 @@ function collision(gx1,gx2,tx1,tx2,gy1,gy2,ty1,ty2) {
         ty1 > gy1 &&  ty1 < gy2 ||
         gy1 < ty1 && gy2 > ty2 ||
         ty1 < gy1 && ty2 > gy2 )  ) {
-
+            console.log('work')
         return true;
 
-        } else {
-
-        return false;
-
-        };
+        }
 
 };
 function changeTextStyle(style,font) {

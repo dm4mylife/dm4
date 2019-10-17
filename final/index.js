@@ -42,9 +42,10 @@ var onGround = false,
     cheat = false,
     cheat2 = false,
     explosionFlag = false,
-    endExplosion = false;
-    endExplosion2 = false;
-    endGame = false;
+    endExplosion = false,
+    endExplosion2 = false,
+    endGame = false,
+    objectExplosion = false,
     choosenMode = '';
 
 var currentCount = 0,
@@ -138,6 +139,7 @@ var heartInfo = {
     height: 30,
     
 };
+
 var limitSize = {
 
     x_pos : 20,
@@ -154,26 +156,13 @@ var limitSize = {
 var explosionInfo = {
 
     x_pos : 200,
+    x_pos2 : 200,
     y_pos : 200,
     explosion_frames : 0,
     time_explosion : 0
 
 };
-
-window.onload = function () {
-
-    if ( localStorage.getItem('score') !== null ) {
-
-        var local = localStorage.getItem('score');
-           
-    } else {
-        
-        var local = undefined;
-       
-    };
-   
      
-};
 setTimeout(function () {
     
     var canvas = document.getElementById('canvas');
@@ -196,24 +185,9 @@ canvas.height = 250;
 changeTextStyle('grey','25px ebit');
 ctx.fillText('Press Space to start game',canvas.width / 2 - 150,canvas.height / 2);
 
-function choseDifficult() {
-
-    ctx.clearRect(0,0,canvas.width,canvas.height );
-
-    changeTextStyle('grey','25px ebit');
-    ctx.fillText('Hardcore mode',50,125);
-    ctx.fillText('Casual mode',575,125);
-
-    changeTextStyle('black','16px ebit');
-    ctx.fillText('Running for the highest score',40, 170);
-    ctx.fillText('Reach 5000 to win a game ',550, 170);
-
-    ctx.drawImage(picturesOthers[2],choseIconInfo.x_pos,choseIconInfo.y_pos,30,30);
-    
-}; 
 
 
-var objectExplosion = false;
+
 
 function hardcoreGame() {
     console.log("xyu")
@@ -228,13 +202,12 @@ function casualGame() {
     
     if ( explosionFlag ) {
 
-        console.log('worx explosionFlag')
-         var godzilla_x = godzilla.x_pos+30,
+    var godzilla_x = godzilla.x_pos + 30,
         godzilla_x2 = godzilla.x_pos + godzilla.width,
         godzilla_y = godzilla.y_pos,
         godzilla_y2 = godzilla.y_pos + godzilla.height;
         
-        var tank_x = tank.x_pos,
+    var tank_x = tank.x_pos,
         tank_x2 = tank.x_pos + tank.width,
         tank_y = tank.y_pos,
         tank_y2 = tank.y_pos + tank.height,
@@ -242,59 +215,43 @@ function casualGame() {
         drone_x = drone.x_pos,
         drone_x2 = drone.x_pos + drone.width,
         drone_y = drone.y_pos,
-        drone_y2 = drone.y_pos + drone.height,
+        drone_y2 = drone.y_pos + drone.height;
 
-        heart_x = heartInfo.x_pos,
-        heart_y = heartInfo.y_pos,
-        heart_x2 = heartInfo.x_pos + 15,
-        heart_y2 = heartInfo.y_pos + 15;
+        tank.x_pos = launchObject(-50,tank.x_pos,tank.y_pos,tank.width,tank.height,drone.x_pos,gameTime,obstacles,0);
+        drone.x_pos = launchObject(-50,drone.x_pos,drone.y_pos,drone.width,drone.height,tank.x_pos,gameTime,obstacles,1);
 
         tankCollision = collision(godzilla_x,godzilla_x2,tank_x,tank_x2,godzilla_y,godzilla_y2,tank_y,tank_y2);
         droneCollision = collision(godzilla_x,godzilla_x2,drone_x,drone_x2,godzilla_y,godzilla_y2,drone_y,drone_y2);
-console.log(tankCollision,droneCollision)
-        if (tankCollision === undefined) {
-
-            tank.x_pos = launchObject(tank.x_pos,tank.y_pos,tank.width,tank.height,drone.x_pos,gameTime,obstacles,0);
-            console.log('worDD')
-            
-       
-
-        } 
-         if (droneCollision === undefined) {
-
-            drone.x_pos = launchObject(drone.x_pos,drone.y_pos,drone.width,drone.height,tank.x_pos,gameTime,obstacles,1);
-        
-            
-      
-        };
-
 
         if ( tankCollision ) {
 
-            console.log('work tank boom');
+            endExplosion = 0;
+            explosionInfo.x_pos = tank.x_pos;
+            tank.x_pos = launchObject(220,tank.x_pos,tank.y_pos,tank.width,tank.height,drone.x_pos,gameTime,obstacles,0);
             
-            if (endExplosion != 1) {
-                endExplosion = explosion(tank.x_pos,tank.y_pos-15,50,50);
-                
-            };
-            /* tank.x_pos = launchObject(tank.x_pos,tank.y_pos,tank.width,tank.height,drone.x_pos,gameTime,obstacles,0); */
-            
+        };
+
+        if (endExplosion != 1) {    
+
+            endExplosion = explosion(explosionInfo.x_pos,tank.y_pos-15,50,50);
+
+        };
+
+         if (endExplosion2 != 1) { 
+
+            endExplosion2 = explosion(explosionInfo.x_pos2,drone.y_pos,50,50);
+
         };
 
         if ( droneCollision ) {
 
-            console.log('work drone boom');   
-            
-            if (endExplosion2 != 1) {
-                endExplosion2 = explosion(drone.x_pos,drone.y_pos-15,50,50);
-            };
-          
-            /* drone.x_pos = launchObject(drone.x_pos,drone.y_pos,drone.width,drone.height,tank.x_pos,gameTime,obstacles,1); */
+            endExplosion2 = 0;   
+            explosionInfo.x_pos2 = drone.x_pos;
+            drone.x_pos = launchObject(220,drone.x_pos,drone.y_pos,drone.width,drone.height,tank.x_pos,gameTime,obstacles,1);
             
         };
-         
-    };
 
+    };
 
 
     if ( countPath < 0 ) {
@@ -564,7 +521,7 @@ console.log(tankCollision,droneCollision)
     };
 
     if ( !stopGame && !explosionFlag ) {
-       console.log('work without explosionFlag')
+    
         if  ( heartCollision )  {
                 
             heartSound.volume = 0.4
@@ -607,22 +564,37 @@ console.log(tankCollision,droneCollision)
 
         if (!tankCollision) {
           
-        tank.x_pos = launchObject(tank.x_pos,tank.y_pos,tank.width,tank.height,drone.x_pos,gameTime,obstacles,0);
+        tank.x_pos = launchObject(-50,tank.x_pos,tank.y_pos,tank.width,tank.height,drone.x_pos,gameTime,obstacles,0);
            
         };
    
         if (!droneCollision) {
 
-        drone.x_pos = launchObject(drone.x_pos,drone.y_pos,drone.width,drone.height,tank.x_pos,gameTime,obstacles,1);
+        drone.x_pos = launchObject(-50,drone.x_pos,drone.y_pos,drone.width,drone.height,tank.x_pos,gameTime,obstacles,1);
             
         };
         
     };
             
 };
-function launchObject(object1XPos,object1YPos,object1Width,object1Height,object2XPos,gameTime,arrElement,i) {
+function choseDifficult() {
 
-    if ( object1XPos < -50 ) {
+    ctx.clearRect(0,0,canvas.width,canvas.height );
+
+    changeTextStyle('grey','25px ebit');
+    ctx.fillText('Hardcore mode',50,125);
+    ctx.fillText('Casual mode',575,125);
+
+    changeTextStyle('black','16px ebit');
+    ctx.fillText('Running for the highest score',40, 170);
+    ctx.fillText('Reach 5000 to win a game ',550, 170);
+
+    ctx.drawImage(picturesOthers[2],choseIconInfo.x_pos,choseIconInfo.y_pos,30,30);
+    
+}; 
+function launchObject(distance,object1XPos,object1YPos,object1Width,object1Height,object2XPos,gameTime,arrElement,i) {
+
+    if ( object1XPos < distance ) {
 
         if ( object2XPos > 800 ) {
 
@@ -634,7 +606,6 @@ function launchObject(object1XPos,object1YPos,object1Width,object1Height,object2
            
         };           
     };
-    
    
     ctx.drawImage(arrElement[i],object1XPos,object1YPos,object1Width,object1Height);
 
@@ -707,7 +678,6 @@ function explosion(x,y,w,h) {
 
 
     explosionInfo.explosion_frames = Math.floor(explosionInfo.time_explosion / 1000 * picturesExplosion.length);
-    console.log(explosionInfo.time_explosion+'  vremya vzriva')
     ctx.drawImage(picturesExplosion[explosionInfo.explosion_frames],x,y,w,h);
 
 
@@ -727,7 +697,6 @@ function limitSizeCompare() {
     };
 
 };
-
 function designer() {
 
     design.style.visibility = 'hidden';

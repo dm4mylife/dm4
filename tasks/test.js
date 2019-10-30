@@ -1,7 +1,22 @@
-var elem = document.querySelector('.ty-product-options__item.product-list-field select');  
-var arr = [];
-for (let i = 1; i < elem.options.length; i++) {
-var text = elem.options[i].innerHTML;
-arr.push(text);
-}
-console.log(arr)
+var XMLHttpRequest = require('xhr2')
+
+let xhttp = new XMLHttpRequest();
+var textHtml ='';
+xhttp.onreadystatechange = function () {
+
+    if ( this.status === 200 && this.readyState === 4) {
+
+        textHtml = this.responseText;
+
+    };
+
+};
+xhttp.open('GET','http://getpost.itgid.info/');
+xhttp.send();
+console.log(textHtml);
+
+
+
+var el = document.querySelectorAll('._sizes_').click();
+
+console.log(el)

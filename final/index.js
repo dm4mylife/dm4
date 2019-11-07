@@ -459,7 +459,7 @@ function runGame() {
         tank_y = tank.y_pos,
         tank_y2 = tank.y_pos + tank.height,
 
-        drone_x = drone.x_pos,
+        drone_x = drone.x_pos+10,
         drone_x2 = drone.x_pos + drone.width-45,
         drone_y = drone.y_pos,
         drone_y2 = drone.y_pos + drone.height,
@@ -470,15 +470,15 @@ function runGame() {
         heart_y2 = heartInfo.y_pos + 15;
 
     if (!tankCollision) {
-          
+         
         tank.x_pos = launchObject(-50,tank.x_pos,tank.y_pos,tank.width,tank.height,drone.x_pos,gameTime,obstacles,0);
-           
+        
     };
    
     if (!droneCollision) {
 
         drone.x_pos = launchObject(-50,drone.x_pos,drone.y_pos,drone.width,drone.height,tank.x_pos,gameTime,obstacles,1);
-        
+           
     };
 
     if (!explosionFlag) {
@@ -490,7 +490,7 @@ function runGame() {
             heartCollision = collision(godzilla_x,godzilla_x2,heart_x,heart_x2,godzilla_y,godzilla_y2,heart_y,heart_y2);
 
         };
-
+       
         tankCollision = collision(godzilla_x,godzilla_x2,tank_x,tank_x2,godzilla_y,godzilla_y2,tank_y,tank_y2);
         droneCollision = collision(godzilla_x,godzilla_x2,drone_x,drone_x2,godzilla_y,godzilla_y2,drone_y,drone_y2);
 
@@ -607,9 +607,9 @@ function launchObject(distance,object1XPos,object1YPos,object1Width,object1Heigh
     if ( object1XPos < distance ) {
 
         if ( object2XPos > 800 ) {
-
+           
             object1XPos = Math.floor(getRandom(object2XPos+200,object2XPos+375));
-            
+           
         } else {
 
             object1XPos = Math.floor(getRandom(950,1250));

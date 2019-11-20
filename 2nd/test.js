@@ -1,45 +1,27 @@
 class ItemProps {
 
-    constructor() {
+    constructor(health, damage, defense) {
 
-        this.health = 10;
-        this.damage = 2;
-        this.defence = 2;
+        this._health = health;
+        this.damage = damage;
+        this.defense = defense;
 
     };
 
+    get health() {
+        if ( this._health < 0 ) return 0;
+        return this._health;
+    }
+
+    set health(value) {
+        if ( value >= 0 )  {
+            this._health = value;
+        }
+    }
+
 };
 
-var shineHelmet = new ItemProps();
-
-shineHelmet.defence = 5;
-shineHelmet.health = 20;
-
-var roughChest = new ItemProps();
-
-roughChest.health = 30;
-roughChest.defence = 4;
-
-var spikeShoulders = new ItemProps();
-
-spikeShoulders.health = 30;
-spikeShoulders.defence = 4;
-
-var fastGloves = new ItemProps();
-
-fastGloves.health = 14;
-fastGloves.defence = 3;
-
-var chaosSword = new ItemProps();
-
-chaosSword.damage = 5;
-
-
-var travelBoots = new ItemProps();
-
-travelBoots.damage = 3;
-travelBoots.health = 10;
-travelBoots.defence = 1;
+const dummyItem = new ItemProps(0, 0, 0);
 
 class Creature {
 
@@ -48,76 +30,84 @@ class Creature {
         this.name = '';
         this.health = 1000;
         this.damage = 60
-        this.defence = 5;
-        this.helmet = null;
-        this.chest = null;
-        this.shoulders = null;
-        this.gloves = null;
-        this.pants = null;
-        this.boots = null;
-        this.sword = null;
+        this.defense = 5;
+        this.helmet = dummyItem;
+        this.chest = dummyItem;
+        this.shoulders = dummyItem;
+        this.gloves = dummyItem;
+        this.pants = dummyItem;
+        this.boots = dummyItem;
+        this.sword = dummyItem;
 
 
     };
 
+    /* getItemDamage(item) {
+        return item === null ? 0 ? item.damage
+    } */
+
+    // isWearItem(item) {
+
+    //     if ( item != null ) {
+
+    //         return item;
+
+    //     } else {
+
+    //         item = 0;
+
+    //     };
+    // };
+
+    takeDamage(damage) {
+
+        let totalAlliesDefense = this.defense + this.helmet.defense + this.shoulders.defense + this.chest.defense + this.pants.defense + this.gloves.defense + this.boots.defense;
+
+        if (damage > totalAlliesDefense) {
+            
+            if ( totalAlliesDefense > 3) {
+
+                var effectiveDamage = damage - totalAlliesDefense -3
+
+            } else if ( totalAlliesDefense > 5) {
+
+                var effectiveDamage = damage - totalAlliesDefense -2
+
+            } else if ( totalAlliesDefense > 7) {
+
+                var effectiveDamage = damage - totalAlliesDefense -1
+
+            }
+            var effectiveDamage = damage - totalAlliesDefense;
+            this.health -= effectiveDamage;
+            if (this.helmet.health > 0) this.helmet.health--;
+            if (this.shoulders.health > 0) this.shoulders.health--;
+            if (this.chest.health > 0) this.chest.health--;
+            if (this.pants.health > 0) this.pants.health--;
+            if (this.boots.health > 0) this.boots.health--;
+            this.damage -= .5;
+          
+            if (this.defense > 0 ) {
+
+                  this.defense -= .5;
+
+            }
+        }
+        
+    }
+
+
     battle(enemy) {
 
 
-        var defenceStatsAxis = 0;
+        var totalAlliesHealth = this.health + this.helmet.health + this.shoulders.health + this.chest.health + this.pants.health + this.gloves.health + this.boots.health;
+        var totalAlliesAttack = this.damage + this.sword.damage;
+        var totalAlliesDefense = this.defense + this.helmet.defense + this.shoulders.defense + this.chest.defense + this.pants.defense + this.gloves.defense + this.boots.defense;
 
-        if ( enemy.helmet != null) {
+        console.log(`${this.name}:\n${totalAlliesHealth} --- hp  \n${totalAlliesAttack} --- dmg  \n${totalAlliesDefense} --- def `);
 
-            defenceStatsAxis += enemy.helmet.defence;
+        enemy.takeDamage(totalAlliesAttack);
 
-        } else if ( enemy.shoulders != null) {
-
-            defenceStatsAxis += enemy.shoulders.defence;
-
-        } else if ( enemy.chest != null) {
-
-            defenceStatsAxis += enemy.chest.defence;
-
-        } else if ( enemy.gloves != null) {
-
-            defenceStatsAxis += enemy.gloves.defence;
-
-        } else if ( enemy.pants != null) {
-
-            defenceStatsAxis += enemy.pants.defence;
-
-        } else if ( enemy.boots != null) {
-
-            defenceStatsAxis += enemy.boots.defence;
-
-        };
-
-        defenceStatsAxis = enemy.defence + enemy.helmet.defence + enemy.shoulders.defence+ enemy.chest.defence+ enemy.pants.defence+ enemy.gloves.defence+ enemy.boots.defence;
-
-        var damageStatsAlies = this.damage + this.sword.damage;
-
-        console.log(defenceStatsAxis,enemy)
-
-        if ( defenceStatsAxis > 10 ) {
-
-            enemy.health -= damageStatsAlies - defenceStatsAxis - 5 ;
-            
-        } else if ( defenceStatsAxis > 7 ) {
-
-            enemy.health -= damageStatsAlies - defenceStatsAxis - 1 ;
-            
-        } else if ( defenceStatsAxis > 5 ) {
-
-            enemy.health -= damageStatsAlies - defenceStatsAxis - 1 ;
-            
-        } else {
-
-            enemy.health -= damageStatsAlies - defenceStatsAxis;
-
-        };
-
-       
-        damageStatsAlies -= .5;
-        enemy.health -= damageStatsAlies;
         
     };
 };
@@ -125,34 +115,47 @@ class Creature {
 var hollyKnight = new Creature();
 
 hollyKnight.name = 'HollyKnight';
-hollyKnight.helmet = shineHelmet;
-hollyKnight.chest = roughChest;
-hollyKnight.gloves = fastGloves;
+hollyKnight.helmet = new ItemProps(20, 0, 5);
+hollyKnight.chest = new ItemProps(5, 0, 2);
+hollyKnight.gloves = new ItemProps(10, 0, 3);
+
 
 var ghoul = new Creature();
 
 ghoul.name = 'Ghoul';
-ghoul.chest = roughChest;
-ghoul.sword = chaosSword;
-ghoul.boots = travelBoots;
+ghoul.chest = new ItemProps(15, 0, 3);
+ghoul.sword = new ItemProps(20, 10, 2);
+ghoul.boots = new ItemProps(10, 0, 4);
 
-while ( ghoul.health > 0 || hollyKnight.health > 0) {
 
+var turn = 0; 
+
+while ( ghoul.health > 0 && hollyKnight.health > 0 ) {
+
+
+    console.log("Turn: "+ turn);
     hollyKnight.battle(ghoul);
     ghoul.battle(hollyKnight);
+    turn++;
 
-    printStats(hollyKnight);
-    printStats(ghoul);
-
-};
-
-function printStats(unit) {
-
-    console.log(`Stats ${unit.name}:\n${unit.health} ---health\n${unit.defence} ---defence\n${unit.damage} --- damage`);
     
-     if (unit.health < 0) {
+    
 
-         return console.log('Winner is '+ unit.name);
-
-     };
 };
+if (ghoul.health < 0 ) {
+
+        console.log(`${hollyKnight.health} KNIGHT vs ${ghoul.health} GHOUL`)
+        console.log(`Winner is \n\t${hollyKnight.name}`);
+        
+
+    } else if (hollyKnight.health < 0 ) {
+
+        console.log(`${hollyKnight.health} KNIGHT vs ${ghoul.health} GHOUL`)
+        console.log('Winner is '+ ghoul.name);
+        
+
+    };
+
+
+
+

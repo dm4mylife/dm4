@@ -21,7 +21,7 @@ xhr.onreadystatechange = function () {
 }; */
 
 
-const xhr = new XMLHttpRequest();
+/* const xhr = new XmlHttpRequest();
 
 function main() {
 
@@ -43,13 +43,12 @@ function main() {
 
                 console.log("Success in getting request, keep doing shit");
 
-                resolve( 
+                 
                     setTimeout( function() {
-                        resolve(console.log('Thats winner delay'));
-                    },2000)
-                )
 
-                getReceipt.then( () => console.log(xhr.response));
+                        resolve(xhr.response);
+                    },2000)
+               
             
             } else if  ( xhr.readyState === 3 ) {
 
@@ -62,13 +61,39 @@ function main() {
             };
         };
         
+        
     });
    
-   
-};
+   getReceipt.then( (data) => console.log(data));
+
+}; 
 main();
+*/
+
+ const fetch = require('node-fetch');
+
+var engr1 = 'oniuns';
+var engr2 = 'garlic';
+var search = 'omelet';
+var page = 1;
+var url = `http://www.recipepuppy.com/api/?i=${engr1},${engr2}&q=${search}&p=${page}`;
 
 
+async function getReceipt() {
 
+    async function delay(ms) {
+        
+        setTimeout( () => console.log('DELAY'),ms)
+    };
+    try {
 
+        var response = await fetch(url);
+        await delay(1500);
+        console.log(await response.text())
 
+    } catch (error) {
+            console.error(error);
+    };
+
+};
+getReceipt();

@@ -69,30 +69,70 @@ function main() {
 }; 
 main();
 */
-
- const fetch = require('node-fetch');
-
+/* 
 var engr1 = 'oniuns';
 var engr2 = 'garlic';
 var search = 'omelet';
 var page = 1;
 var url = `http://www.recipepuppy.com/api/?i=${engr1},${engr2}&q=${search}&p=${page}`;
 
+async function getReceipt() {
+
+    async function delay(ms) {
+		
+		return new Promise( (resolve,reject) => {
+
+             setTimeout( () => resolve(console.log('DELAY IS WORKING')),ms);
+        })
+    };           
+    try {
+
+        var response = await fetch(url);
+        await delay(300);
+		console.log(console.log(await response.text()));
+        var jsonResponse = await JSON.stringify(response);
+        if (typeof jsonResponse == "object") {
+			console.log('obj');
+        } else if (typeof jsonResponse == "string" ) {
+			console.log('string');
+        }; 
+		
+    } catch (error) {
+            console.log(error);
+    };
+
+};
+getReceipt(); */
+const fetch = require('node-fetch')
+
 
 async function getReceipt() {
 
     async function delay(ms) {
-        
-        setTimeout( () => console.log('DELAY'),ms)
-    };
+		
+		return new Promise( (resolve,reject) => {
+
+             setTimeout( () => resolve(console.log('DELAY IS WORKING')),ms);
+        })
+    };           
     try {
 
+        var url = `https://reqres.in/api/users?page=2`;
         var response = await fetch(url);
-        await delay(1500);
-        console.log(await response.text())
+        await delay(300);
+        var obj =  JSON.parse(await response.text());
+        console.log(obj);
+        var result = '';
+        for ( let key in obj ) {
+          
+            if ( key === "page") {
+                
+            }
 
+        };
+		
     } catch (error) {
-            console.error(error);
+            console.log(error);
     };
 
 };
